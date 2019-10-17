@@ -12,23 +12,34 @@ class ConfiguracoesPiramide extends StatelessWidget {
       appBar: AppBar(
         title: Text('dd'),
       ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Text('piramide.'),
-              Checkbox(
-                value: true,
-                onChanged: (d) {},
-              ),
-            ],
-          )
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: <Widget>[
+            Container(
+              height: 20,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Text('PÚBLICA'),
+                Checkbox(
+                  value: false,
+                  onChanged: (d) {},
+                ),
+              ],
+            ),
+            // Container(
+            //   height: 30,
+            //   child: Center(
+            //     child: Text('Lista Usuários'),
+            //   ),
+            // ),
+       
+          ],
+        ),
       ),
     );
   }
+
+
 }

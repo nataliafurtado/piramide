@@ -9,6 +9,7 @@ class Relato {
   String usuarioRelatouId;
   List<PerguntaRelato> perguntasRelato;
   String usarioNome;
+  String relatoId;
 
   Relato(
       {this.datacriacao,
@@ -17,7 +18,8 @@ class Relato {
       this.numeroCamada,
       this.qtdPerguntas,
       this.usuarioRelatouId,
-      this.usarioNome});
+      this.usarioNome,
+      this.relatoId});
 
   Map toMap() {
     Map<String, dynamic> map = {
@@ -46,13 +48,13 @@ class Relato {
     return map;
   }
 
-  Relato.fromMap(Map map) {
+  Relato.fromMap(Map map, String relatoPassadoId) {
     datacriacao = map['datacriacao'];
     piramideId = map['piramideId'];
     numeroCamada = map['numeroCamada'];
     usuarioRelatouId = map['usuarioRelatouId'];
-      usarioNome = map['usarioNome'];
-    
+    usarioNome = map['usarioNome'];
+    relatoId = relatoPassadoId;
     if (perguntasRelato == null) {
       perguntasRelato = [];
     }

@@ -62,11 +62,11 @@ class NovoRelatoBloc extends BlocBase {
         return 'Todas a perguntas obrigatórias devem ser respondidas';
       }
     }
-
+//pega usuario
     DocumentSnapshot result =
         await db.collection('usuarios').document(uid).get();
     Usuario user1 = Usuario.fromMap(result.data, result.documentID);
-
+//carrega relato
     Relato relato = Relato(
       piramideId: piramideId.piramideId,
       datacriacao: DateTime.now().toIso8601String(),

@@ -43,6 +43,11 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
 
     super.initState();
   }
+  @override
+  void dispose() {
+    blocProcPiramide.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {

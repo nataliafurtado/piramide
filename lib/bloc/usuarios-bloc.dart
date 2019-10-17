@@ -1,10 +1,8 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comportamentocoletivo/model/enums.dart';
-import 'package:comportamentocoletivo/model/informacoes.dart';
 import 'package:comportamentocoletivo/model/pedido.dart';
 import 'package:comportamentocoletivo/model/periodo.dart';
-import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/model/relato.dart';
 import 'package:comportamentocoletivo/model/usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -12,8 +10,8 @@ import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
 
-class VerRelatosBloc extends BlocBase {
-  VerRelatosBloc();
+class UsuariosBloc extends BlocBase {
+  UsuariosBloc();
 
   // final cpiController = BehaviorSubject<bool>.seeded(false);
   // Observable<bool> get cpiFluxo => cpiController.stream;
@@ -36,10 +34,6 @@ class VerRelatosBloc extends BlocBase {
 
   static List<Relato> list = [];
 
-  var relatosController = BehaviorSubject<List<Relato>>.seeded(list);
-  Observable<List<Relato>> get realatoFluxo => relatosController.stream;
-  Sink<List<Relato>> get relatoEvent => relatosController.sink;
-
   var usuariosController = BehaviorSubject<List<Usuario>>.seeded([]);
   Observable<List<Usuario>> get usuariosFluxo => usuariosController.stream;
   Sink<List<Usuario>> get usuariosEvent => usuariosController.sink;
@@ -49,10 +43,6 @@ class VerRelatosBloc extends BlocBase {
   var txController = BehaviorSubject<TextEditingController>.seeded(ff);
   Observable<TextEditingController> get txFluxo => txController.stream;
   Sink<TextEditingController> get txEvent => txController.sink;
-
-  var usuariosVisivelController = BehaviorSubject<bool>.seeded(true);
-  Observable<bool> get usuariosVisivelFluxo => usuariosVisivelController.stream;
-  Sink<bool> get usuariosVisivelEvent => usuariosVisivelController.sink;
 
   String usuaId = null;
 
@@ -98,7 +88,7 @@ class VerRelatosBloc extends BlocBase {
     list = l;
     // print(l.length.toString() + 'lenth');
 
-    relatoEvent.add(list);
+    // relatoEvent.add(list);
 //print('depos');
     // for (var i = 0; i < l.length; i++) {
     //   print(l[i].datacriacao);
@@ -147,68 +137,44 @@ class VerRelatosBloc extends BlocBase {
       l.add(Relato.fromMap(data.data,data.documentID));
     });
     list.addAll(l);
-
-    relatoEvent.add(list);
   }
 
-  void carregaRelatosVazio(
-      String piramideId, int camada, Periodo periodo) async {
-    List<DocumentSnapshot> documents;
-    if (periodo == null) {
-      final QuerySnapshot result = await db
-          .collection('relatos')
-          .where('piramideId', isEqualTo: piramideId)
-          .where('numeroCamada', isEqualTo: camada)
-          .orderBy('datacriacao', descending: true)
-          .limit(5)
-          .getDocuments();
-      documents = result.documents;
-    } else {
-      String dataFim;
-      if (periodo.dataFim == null) {
-        dataFim = DateTime.now().add(Duration(days: 1)).toIso8601String();
-      } else {
-        dataFim = periodo.dataFim;
-      }
+  void carregaVazio(String piramideId) async {
+    // print(piramideId);
+    final QuerySnapshot result = await db
+        .collection('usuarios')
+        .where('piramidesPodeRelatarId', arrayContains: piramideId)
+        //.orderBy('nome')
+        .limit(10)
+        .getDocuments();
+    List<DocumentSnapshot> documents = result.documents;
 
-      final QuerySnapshot result = await db
-          .collection('relatos')
-          .where('piramideId', isEqualTo: piramideId)
-          .where('numeroCamada', isEqualTo: camada)
-          .orderBy('datacriacao', descending: true)
-          .limit(5)
-          .startAfter([dataFim]).endAt([periodo.dataInicio]).getDocuments();
-      documents = result.documents;
-    }
-
-    List<Relato> l = [];
-    //print(documents.length);
+    List<Usuario> l = [];
     documents.forEach((data) {
-      l.add(Relato.fromMap(data.data,data.documentID));
+      l.add(Usuario.fromMap(data.data, data.documentID));
     });
-    list = l;
 
-    relatoEvent.add(list);
+    usuariosEvent.add(l);
   }
 
   @override
   void dispose() {
-    relatosController.close();
+    txController.value.text = '';
+    txEvent.add(txController.value);
     txController.close();
+   // print('fechou controller tx ');
     usuariosController.close();
-    usuariosVisivelController.close();
     super.dispose();
   }
 
-  void carregaUmUsuariDeRelatos(
-      String autocomplete, String piramideId, int camada) async {
+  void carregaUsuarios(String autocomplete, String piramideId) async {
     final QuerySnapshot result = await db
         .collection('usuarios')
         .where('nome', isGreaterThan: autocomplete)
         .where('nome', isLessThan: autocomplete + 'z')
         .where('piramidesPodeRelatarId', arrayContains: piramideId)
         .orderBy('nome')
-        .limit(6)
+        .limit(10)
         .getDocuments();
     List<DocumentSnapshot> documents = result.documents;
 
@@ -225,63 +191,12 @@ class VerRelatosBloc extends BlocBase {
     // }
   }
 
-  void excluirRelato(Relato relato, Piramide piramide, Informacoes info) async {
-
-    piramide.camadasDaPiramide[relato.numeroCamada].total =
-        piramide.camadasDaPiramide[relato.numeroCamada].total - 1;
+  void excluirUsuario(String piramideId, int indexUsuarios) async {
+    Usuario user = usuariosController.value[indexUsuarios];
+    user.piramidesPodeRelatarId.removeWhere((t) => t == piramideId);
     await db
-        .collection('piramides')
-        .document(piramide.piramideId)
-        .updateData(piramide.toMap());
-
-    info = _excluirRelatoDaInfo(info, relato);
-    await db
-        .collection('informacoes')
-        .document(info.informacoesId)
-        .updateData(info.toMap());
-
-
-         await db
-        .collection('relatos')
-        .document(relato.relatoId)
-        .delete();
-  }
-
-  Informacoes _excluirRelatoDaInfo(Informacoes infor, Relato relato) {
-    int numerocamada = relato.numeroCamada;
-    for (var i = 0; i < infor.periodos.length; i++) {
-      if (infor.periodos[i].geral) {
-        infor.periodos[i].totalTodasAsCamadas =
-            infor.periodos[i].totalTodasAsCamadas - 1;
-        for (var idd = 0; idd < infor.periodos[i].camadasInfo.length; idd++) {
-          if (infor.periodos[i].camadasInfo[idd].camada == numerocamada) {
-            infor.periodos[i].camadasInfo[numerocamada].totalCamada =
-                infor.periodos[i].camadasInfo[numerocamada].totalCamada - 1;
-          }
-        }
-      } else {
-        //print(infor.periodos[i].dataInicio);
-        DateTime inicio = DateTime.parse(infor.periodos[i].dataInicio);
-        DateTime fim;
-        if (infor.periodos[i].dataFim == null) {
-          fim = DateTime.now();
-        } else {
-          fim = DateTime.parse(infor.periodos[i].dataFim);
-        }
-        DateTime criacao = DateTime.parse(relato.datacriacao);
-        print('craicai   : ' + relato.datacriacao);
-        if (inicio.isBefore(criacao) && fim.isAfter(criacao)) {
-          infor.periodos[i].totalTodasAsCamadas =
-              infor.periodos[i].totalTodasAsCamadas - 1;
-          for (var idd = 0; idd < infor.periodos[i].camadasInfo.length; idd++) {
-            if (infor.periodos[i].camadasInfo[idd].camada == numerocamada) {
-              infor.periodos[i].camadasInfo[numerocamada].totalCamada =
-                  infor.periodos[i].camadasInfo[numerocamada].totalCamada - 1;
-            }
-          }
-        }
-      }
-    }
-    return infor;
+        .collection('usuarios')
+        .document(usuariosController.value[indexUsuarios].usuarioId)
+        .updateData(user.toMap());
   }
 }

@@ -1,7 +1,11 @@
 import 'package:comportamentocoletivo/aux/draw-tronco.dart';
 import 'package:comportamentocoletivo/model/enums.dart';
+import 'package:comportamentocoletivo/model/informacoes.dart';
+import 'package:comportamentocoletivo/model/periodo.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/model/relato.dart';
+import 'package:comportamentocoletivo/ui/aceitar-usuarios/aceitar-usuarios-ui.dart';
+import 'package:comportamentocoletivo/ui/ver-relatos.ui.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -9,14 +13,17 @@ class RelatoUi extends StatefulWidget {
   static const route = '/relato';
   final Relato relato;
   final Piramide piramide;
-  RelatoUi({this.relato, this.piramide});
+  final int camada;
+  final Periodo periodo;
+  final Informacoes informacoes;
+  RelatoUi({this.relato, this.piramide, this.informacoes,this.camada,this.periodo});
   @override
   _RelatoUiState createState() => _RelatoUiState();
 }
 
 class _RelatoUiState extends State<RelatoUi> {
-@override
-  void initState() {   
+  @override
+  void initState() {
     super.initState();
   }
 
@@ -25,38 +32,88 @@ class _RelatoUiState extends State<RelatoUi> {
     return Scaffold(
       appBar: AppBar(
         title: Text('RELATO'),
+        actions: <Widget>[
+          FlatButton(
+            onPressed: () async {
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return AlertDialog(
+                      title: Text('ATENÇÃO'),
+                      content:
+                          Text('Tem certeza que deseja excluir esse relato?'),
+                      actions: <Widget>[
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: Text('CANCELAR'),
+                        ),
+                        FlatButton(
+                          onPressed: () async {
+                           await verRealatoBloc.excluirRelato(
+                                widget.relato, widget.piramide,widget.informacoes);
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            Navigator.of(context).pop();
+                            
+                          //    Future.delayed(Duration(seconds: 2));
+                          //  print(widget.informacoes.numeroCamadas.toString()+'  eee');
+                           Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => VerRelatos(
+                                                piramide: widget.piramide,
+                                                camada: widget.camada,
+                                                periodo: widget.periodo,
+                                                informacoes: widget.informacoes,
+                                              )));
+                          },
+                          child: Text('EXCLUIR'),
+                        ),
+                      ],
+                    );
+                  });
+
+              // Navigator.of(context).pop();
+            },
+            child: Text(
+              'EXCLUIR',
+              style: TextStyle(color: Colors.white, fontSize: 15),
+            ),
+          ),
+        ],
       ),
       body: SingleChildScrollView(
-              child: Center(
+        child: Center(
           child: Card(
             elevation: 3,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: <Widget>[
-
-                  Padding(
-                    padding: EdgeInsets.all(15),
-                                      child: Row(                    
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(
-                height: MediaQuery.of(context).size.width * 0.12,
-                width: MediaQuery.of(context).size.width * (0.12 * (2 + 1)),
-                child: CustomPaint(
-                    painter: DrawTronco(widget.relato.numeroCamada,
-                        widget.piramide.camadasDaPiramide.length),
-                    child: Container(
-                      //  color: Colors.amber,
-                      alignment: Alignment(0, 0.5),
-                    ),
-                ),
-              ),
-              Text(widget.piramide.camadasDaPiramide[widget.relato.numeroCamada].nome)
-            ],
-          ),
+                Padding(
+                  padding: EdgeInsets.all(15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        height: MediaQuery.of(context).size.width * 0.12,
+                        width: MediaQuery.of(context).size.width *
+                            (0.12 * (2 + 1)),
+                        child: CustomPaint(
+                          painter: DrawTronco(widget.relato.numeroCamada,
+                              widget.piramide.camadasDaPiramide.length),
+                          child: Container(
+                            //  color: Colors.amber,
+                            alignment: Alignment(0, 0.5),
+                          ),
+                        ),
+                      ),
+                      Text(widget.piramide
+                          .camadasDaPiramide[widget.relato.numeroCamada].nome)
+                    ],
                   ),
-
-          
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
@@ -77,7 +134,7 @@ class _RelatoUiState extends State<RelatoUi> {
                     Text(widget.relato.usarioNome),
                   ],
                 ),
-                    Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Text('DATA CRIAÇÂO: '),
@@ -91,9 +148,9 @@ class _RelatoUiState extends State<RelatoUi> {
                   height: 20,
                 ),
                 Container(
-                   height:
-                  // //double.infinity,
-                    500 * widget.relato.perguntasRelato.length.toDouble(),
+                  height:
+                      // //double.infinity,
+                      500 * widget.relato.perguntasRelato.length.toDouble(),
                   child: ListView.builder(
                     itemCount: widget.relato.perguntasRelato.length,
                     itemBuilder: (ctx, index) {
@@ -109,7 +166,8 @@ class _RelatoUiState extends State<RelatoUi> {
                               widget.relato.perguntasRelato[index].resposta ==
                                       null
                                   ? widget.relato.datacriacao
-                                  : widget.relato.perguntasRelato[index].resposta,
+                                  : widget
+                                      .relato.perguntasRelato[index].resposta,
                             ),
 
                             // Container(

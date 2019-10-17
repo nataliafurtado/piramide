@@ -1,5 +1,6 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:comportamentocoletivo/bloc/ver-relatos-bloc.dart';
+import 'package:comportamentocoletivo/model/informacoes.dart';
 import 'package:comportamentocoletivo/model/periodo.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/model/relato.dart';
@@ -13,7 +14,8 @@ class VerRelatos extends StatefulWidget {
   final Piramide piramide;
   final int camada;
   final Periodo periodo;
-  VerRelatos({this.piramide, this.camada, this.periodo});
+  final Informacoes informacoes;
+  VerRelatos({this.piramide, this.camada, this.periodo,this.informacoes});
   static const route = '/ver-relatos';
   @override
   _VerRelatosState createState() => _VerRelatosState();
@@ -25,6 +27,7 @@ class _VerRelatosState extends State<VerRelatos> {
   @override
   void initState() {
     verRealatoBloc = VerRelatosBloc();
+   // print(widget.periodo.geral);
     verRealatoBloc.carregaRelatosVazio(
         widget.piramide.piramideId, widget.camada, widget.periodo);
     super.initState();
@@ -198,6 +201,9 @@ class _VerRelatosState extends State<VerRelatos> {
                                                         builder: (context) => RelatoUi(
                                                               relato: snapshotRelatos.data[index],
                                                               piramide: widget.piramide,
+                                                              camada: widget.camada,
+                                                              periodo: widget.periodo,
+                                                              informacoes: widget.informacoes,
                                                             )));
                                               },
                                               child: Card(

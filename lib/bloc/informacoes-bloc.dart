@@ -211,7 +211,7 @@ class InformacoesBloc extends BlocBase {
     List<Relato> lpr = [];
     documents.forEach((data) {
       // l.add(Pergunta.fromMap(data.data, data.documentID));
-      lpr.add(Relato.fromMap(data.data));
+      lpr.add(Relato.fromMap(data.data,data.documentID));
     });
     print(informacoesController.value.periodos[periIndex].dataInicio +
         '  : inicio');

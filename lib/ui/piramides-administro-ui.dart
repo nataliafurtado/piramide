@@ -2,6 +2,7 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comportamentocoletivo/aux/draw-tronco.dart';
 import 'package:comportamentocoletivo/bloc/abas-bloc.dart';
+import 'package:comportamentocoletivo/ui/aceitar-usuarios/aba-usuarios-ui.dart';
 import 'package:comportamentocoletivo/ui/aceitar-usuarios/aceitar-usuarios-ui.dart';
 
 import 'package:comportamentocoletivo/ui/configuracoes-piramide.dart';
@@ -227,10 +228,11 @@ Widget _piramideCard(int index, BuildContext context) {
               color: Colors.blueAccent,
               icon: Icon(Icons.directions_run),
               onPressed: () {
+              
                 Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => AceitarUsuario(
+                        builder: (context) => AbaUsuariosUI(
                               pramideId: abasBloc
                                   .piramidesController.value[index].piramideId,
                             )));

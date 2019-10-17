@@ -22,15 +22,16 @@ class _AceitarUsuarioState extends State<AceitarUsuario> {
     aceitarUsuarioBloc.carregaPedidos(widget.pramideId);
     super.initState();
   }
+  @override
+  void dispose() {
+    aceitarUsuarioBloc.dispose();
+    super.dispose();
+  }
 
 //  final List<String> items = List<String>.generate(30, (i) => 'itans ${i + 1}');
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('ACEITAR NOVOS RELATORES'),
-        ),
-        body: SingleChildScrollView(
+    return SingleChildScrollView(
           child: Column(
             //  mainAxisSize: MainAxisSize.max,
             children: <Widget>[
@@ -48,6 +49,7 @@ class _AceitarUsuarioState extends State<AceitarUsuario> {
                           itemCount: snap.data.length,
                           itemBuilder: (cox, pedidoIndex) {
                             return Dismissible(
+                              key: Key(UniqueKey().toString()),
                               background: Container(
                                 margin: EdgeInsets.only(right: 10, left: 10),
                                 color: Colors.amber,
@@ -66,7 +68,7 @@ class _AceitarUsuarioState extends State<AceitarUsuario> {
                                 alignment: Alignment.centerRight,
                                 padding: EdgeInsets.only(right: 15, left: 15),
                               ),
-                              key: ValueKey(snap.data[pedidoIndex].pedidoId),
+                            //  key: ValueKey(snap.data[pedidoIndex].pedidoId),
                               onDismissed: (direction) {
                                 if (direction == DismissDirection.endToStart) {
                                   aceitarUsuarioBloc
@@ -130,9 +132,6 @@ class _AceitarUsuarioState extends State<AceitarUsuario> {
               ),
             ],
           ),
-        )
-
-        //   Text(aceitarUsuarioBloc.pedidosController.value.length==0 ? 'ZERO' : aceitarUsuarioBloc.pedidosController.value[0].nome),
         );
   }
 }

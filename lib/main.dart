@@ -6,11 +6,13 @@ import 'package:comportamentocoletivo/bloc/informacoes-bloc.dart';
 import 'package:comportamentocoletivo/bloc/nova-piramide-bloc.dart';
 import 'package:comportamentocoletivo/bloc/novo-relato-bloc.dart';
 import 'package:comportamentocoletivo/bloc/procurar-piramide-bloc.dart';
+import 'package:comportamentocoletivo/bloc/usuarios-bloc.dart';
 import 'package:comportamentocoletivo/bloc/ver-relatos-bloc.dart';
 import 'package:comportamentocoletivo/login/login-bloc.dart';
 import 'package:comportamentocoletivo/login/login.dart';
 import 'package:comportamentocoletivo/model/relato.dart';
 import 'package:comportamentocoletivo/ui/abas-ui.dart';
+import 'package:comportamentocoletivo/ui/aceitar-usuarios/aba-usuarios-ui.dart';
 import 'package:comportamentocoletivo/ui/aceitar-usuarios/aceitar-usuarios-ui.dart';
 import 'package:comportamentocoletivo/ui/ajuda/ajuda-ui.dart';
 
@@ -48,6 +50,7 @@ class MyApp extends StatelessWidget {
             Bloc((i) => AceitarUsuarioBloc()),
             Bloc((i) => InformacoesBloc()),
             Bloc((i) => VerRelatosBloc()),
+            Bloc((i) => UsuariosBloc()),
           ],
           child: LoginScreen3(),
           //   child: AbaUi(),
@@ -66,6 +69,8 @@ class MyApp extends StatelessWidget {
         VerRelatos.route: (context) => VerRelatos(),
         RelatoUi.route: (context) => RelatoUi(),
         AjudaUi.route: (context) => AjudaUi(),
+        AbaUsuariosUI.route: (context) => AbaUsuariosUI(),
+        AbaUsuariosUI.route: (context) => AbaUsuariosUI(),
       },
     );
   }

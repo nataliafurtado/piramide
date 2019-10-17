@@ -1,9 +1,5 @@
-import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:comportamentocoletivo/bloc/abas-bloc.dart';
-import 'package:comportamentocoletivo/bloc/nova-piramide-bloc.dart';
-import 'package:comportamentocoletivo/login/login.dart';
+
 import 'package:comportamentocoletivo/main.dart';
-import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/ui/ajuda/ajuda-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-pode-relatar-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-ui.dart';

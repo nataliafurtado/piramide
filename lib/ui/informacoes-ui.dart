@@ -168,6 +168,7 @@ class _InformacoesUiState extends State<InformacoesUi> {
                               painter: DrawTronco2(camadaIndex),
                               child: InkWell(
                                 onTap: () {
+                                  //print(infoBloc.informacoesController.value.periodos.length);
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
@@ -175,6 +176,9 @@ class _InformacoesUiState extends State<InformacoesUi> {
                                                 piramide: widget.piramide,
                                                 camada: camadaIndex,
                                                 periodo: null,
+                                                informacoes: infoBloc
+                                                    .informacoesController
+                                                    .value,
                                               )));
                                 },
                                 splashColor: Colors.deepOrange,
@@ -312,6 +316,9 @@ class _InformacoesUiState extends State<InformacoesUi> {
                                                     .informacoesController
                                                     .value
                                                     .periodos[periIndex],
+                                                informacoes: infoBloc
+                                                    .informacoesController
+                                                    .value,
                                               )));
                                 },
                                 splashColor: Colors.deepOrange,

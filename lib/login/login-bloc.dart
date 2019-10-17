@@ -119,10 +119,10 @@ class LoginBloc extends BlocBase {
     String uid = '';
     print(_emailController.value);
 
-    // _emailController.value = 'qq@qq.com';
-    // _senhaCotroller.value = 'qqqqqq';
-   _emailController.value = 'ee@ee.com';
-    _senhaCotroller.value = 'eeeeee';
+    _emailController.value = 'qq@qq.com';
+    _senhaCotroller.value = 'qqqqqq';
+  //  _emailController.value = 'ee@ee.com';
+  //   _senhaCotroller.value = 'eeeeee';
     //   _emailController.value='qqq@qqq.com';
     // _senhaCotroller.value='qqqqqq';
     _controllerLoading.add(!_controllerLoading.value);
@@ -164,6 +164,9 @@ class LoginBloc extends BlocBase {
       aviso = null;
     } catch (e) {
       aviso = e.code;
+    }
+    if (nomeCotroller.value==null ||  nomeCotroller.value.length<2) {
+      return 'Nome de ter pelo menos 3 caracteres';
     }
 
     if (uid != null) {

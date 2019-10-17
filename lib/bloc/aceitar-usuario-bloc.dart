@@ -1,7 +1,10 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comportamentocoletivo/model/enums.dart';
+import 'package:comportamentocoletivo/model/informacoes.dart';
 import 'package:comportamentocoletivo/model/pedido.dart';
+import 'package:comportamentocoletivo/model/piramide.dart';
+import 'package:comportamentocoletivo/model/relato.dart';
 import 'package:comportamentocoletivo/model/usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
@@ -35,7 +38,7 @@ class AceitarUsuarioBloc extends BlocBase {
   Sink<List<Pedido>> get pedidosEvent => pedidosController.sink;
 
   void recusarUsuario(int pedidoIndex) async {
-   // print('ac eitar usuario');
+    // print('ac eitar usuario');
     //mudar status do pedido e colocar no usuario na lista uma piramide q agora ele pode relatar
     Pedido pedido = pedidosController.value[pedidoIndex];
     pedido.situacaoPedido = pedidosEnum.negado;
@@ -44,15 +47,15 @@ class AceitarUsuarioBloc extends BlocBase {
         .document(pedido.pedidoId)
         .updateData(pedido.toMap());
 
-  //  print(pedido.usuarioId + '2222222');
+    //  print(pedido.usuarioId + '2222222');
     DocumentSnapshot result =
         await db.collection('usuarios').document(pedido.usuarioId).get();
 
     // print(result.data.toString());
-    Usuario user1 = Usuario.fromMap(result.data,result.documentID);
+    Usuario user1 = Usuario.fromMap(result.data, result.documentID);
 //print(result.data['piramidesPodeRelatarId'].toString());
 // print(user1.piramidesPodeRelatarId.toString()+'length');
-       user1.piramidesPodeRelatarId.add(pedido.piramideId);
+    user1.piramidesPodeRelatarId.add(pedido.piramideId);
 
     await db
         .collection('usuarios')
@@ -60,8 +63,7 @@ class AceitarUsuarioBloc extends BlocBase {
         .updateData(user1.toMap());
   }
 
-
-    void aceitarUsuario(int pedidoIndex) async {
+  void aceitarUsuario(int pedidoIndex) async {
     print('ac eitar usuario');
     //mudar status do pedido e colocar no usuario na lista uma piramide q agora ele pode relatar
     Pedido pedido = pedidosController.value[pedidoIndex];
@@ -71,15 +73,15 @@ class AceitarUsuarioBloc extends BlocBase {
         .document(pedido.pedidoId)
         .updateData(pedido.toMap());
 
-  //  print(pedido.usuarioId + '2222222');
+    //  print(pedido.usuarioId + '2222222');
     DocumentSnapshot result =
         await db.collection('usuarios').document(pedido.usuarioId).get();
 
     // print(result.data.toString());
-    Usuario user1 = Usuario.fromMap(result.data,result.documentID);
+    Usuario user1 = Usuario.fromMap(result.data, result.documentID);
 //print(result.data['piramidesPodeRelatarId'].toString());
 // print(user1.piramidesPodeRelatarId.toString()+'length');
-       user1.piramidesPodeRelatarId.add(pedido.piramideId);
+    user1.piramidesPodeRelatarId.add(pedido.piramideId);
 
     await db
         .collection('usuarios')
@@ -94,8 +96,8 @@ class AceitarUsuarioBloc extends BlocBase {
 
   void carregaUsuario(String usuarioId) {}
   void carregaPedidos(String piramideId) async {
-    print(piramideId);
-    print('enttraste');
+    // print(piramideId);
+    // print('enttraste');
     //  final FirebaseUser user = await _auth.currentUser();
     //final String uid = user.uid;
     /// db.collection('pedidos').where('',isEqualTo: autocomplete).getDocuments();
@@ -131,4 +133,5 @@ class AceitarUsuarioBloc extends BlocBase {
     super.dispose();
   }
 
+  
 }
