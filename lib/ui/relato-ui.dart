@@ -16,7 +16,12 @@ class RelatoUi extends StatefulWidget {
   final int camada;
   final Periodo periodo;
   final Informacoes informacoes;
-  RelatoUi({this.relato, this.piramide, this.informacoes,this.camada,this.periodo});
+  RelatoUi(
+      {this.relato,
+      this.piramide,
+      this.informacoes,
+      this.camada,
+      this.periodo});
   @override
   _RelatoUiState createState() => _RelatoUiState();
 }
@@ -27,6 +32,8 @@ class _RelatoUiState extends State<RelatoUi> {
     super.initState();
   }
 
+  bool mostrarCircularProgress = false;
+  bool excluir = false;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,7 +42,7 @@ class _RelatoUiState extends State<RelatoUi> {
         actions: <Widget>[
           FlatButton(
             onPressed: () async {
-              showDialog(
+              await showDialog(
                   context: context,
                   builder: (context) {
                     return AlertDialog(
@@ -51,31 +58,40 @@ class _RelatoUiState extends State<RelatoUi> {
                         ),
                         FlatButton(
                           onPressed: () async {
-                           await verRealatoBloc.excluirRelato(
-                                widget.relato, widget.piramide,widget.informacoes);
+                            print('ecluir dialog');
+                            excluir = true;
+                            setState(() {
+                              mostrarCircularProgress = true;
+                            });
                             Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            Navigator.of(context).pop();
-                            
-                          //    Future.delayed(Duration(seconds: 2));
-                          //  print(widget.informacoes.numeroCamadas.toString()+'  eee');
-                           Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => VerRelatos(
-                                                piramide: widget.piramide,
-                                                camada: widget.camada,
-                                                periodo: widget.periodo,
-                                                informacoes: widget.informacoes,
-                                              )));
+
+                            //    Future.delayed(Duration(seconds: 2));
+                            //  print(widget.informacoes.numeroCamadas.toString()+'  eee');
                           },
                           child: Text('EXCLUIR'),
                         ),
                       ],
                     );
                   });
-//iiiiiii
-              // Navigator.of(context).pop();
+              print('comrcou aqui');
+              print(excluir);
+              if (excluir) {
+                await verRealatoBloc.excluirRelato(
+                    widget.relato, widget.piramide, widget.informacoes);
+              }
+              excluir = false;
+              //  Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.of(context).pop();
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => VerRelatos(
+                            piramide: widget.piramide,
+                            camada: widget.camada,
+                            periodo: widget.periodo,
+                            informacoes: widget.informacoes,
+                          )));
             },
             child: Text(
               'EXCLUIR',
@@ -84,106 +100,114 @@ class _RelatoUiState extends State<RelatoUi> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Card(
-            elevation: 3,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.all(15),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+      body: mostrarCircularProgress
+          ? Center(child: CircularProgressIndicator(),)
+          : SingleChildScrollView(
+              child: Center(
+                child: Card(
+                  elevation: 3,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
-                      Container(
-                        height: MediaQuery.of(context).size.width * 0.12,
-                        width: MediaQuery.of(context).size.width *
-                            (0.12 * (2 + 1)),
-                        child: CustomPaint(
-                          painter: DrawTronco(widget.relato.numeroCamada,
-                              widget.piramide.camadasDaPiramide.length),
-                          child: Container(
-                            //  color: Colors.amber,
-                            alignment: Alignment(0, 0.5),
-                          ),
+                      Padding(
+                        padding: EdgeInsets.all(15),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Container(
+                              height: MediaQuery.of(context).size.width * 0.12,
+                              width: MediaQuery.of(context).size.width *
+                                  (0.12 * (2 + 1)),
+                              child: CustomPaint(
+                                painter: DrawTronco(widget.relato.numeroCamada,
+                                    widget.piramide.camadasDaPiramide.length),
+                                child: Container(
+                                  //  color: Colors.amber,
+                                  alignment: Alignment(0, 0.5),
+                                ),
+                              ),
+                            ),
+                            Text(widget
+                                .piramide
+                                .camadasDaPiramide[widget.relato.numeroCamada]
+                                .nome)
+                          ],
                         ),
                       ),
-                      Text(widget.piramide
-                          .camadasDaPiramide[widget.relato.numeroCamada].nome)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text('PIRAMIDE : '),
+                          Container(
+                            width: 10,
+                          ),
+                          Text(widget.piramide.nome),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text('USUÁRIO: '),
+                          Container(
+                            width: 10,
+                          ),
+                          Text(widget.relato.usarioNome),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text('DATA CRIAÇÂO: '),
+                          Container(
+                            width: 10,
+                          ),
+                          Text(_formataData(widget.relato.datacriacao)),
+                        ],
+                      ),
+                      Container(
+                        height: 20,
+                      ),
+                      Container(
+                        height:
+                            // //double.infinity,
+                            500 *
+                                widget.relato.perguntasRelato.length.toDouble(),
+                        child: ListView.builder(
+                          itemCount: widget.relato.perguntasRelato.length,
+                          itemBuilder: (ctx, index) {
+                            return Card(
+                              elevation: 5,
+                              child: Column(
+                                // mainAxisAlignment: MainAxisAlignment.center,
+                                // mainAxisSize: MainAxisSize.max,
+                                children: <Widget>[
+                                  Text(PerguntasEnumConverter().converter(widget
+                                      .relato
+                                      .perguntasRelato[index]
+                                      .perguntaEnum)),
+                                  Text(
+                                    widget.relato.perguntasRelato[index]
+                                                .resposta ==
+                                            null
+                                        ? widget.relato.datacriacao
+                                        : widget.relato.perguntasRelato[index]
+                                            .resposta,
+                                  ),
+
+                                  // Container(
+                                  //   height: 30,
+                                  // )
+                                ],
+                              ),
+                            );
+                          },
+                        ),
+                      )
                     ],
                   ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('PIRAMIDE : '),
-                    Container(
-                      width: 10,
-                    ),
-                    Text(widget.piramide.nome),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('USUÁRIO: '),
-                    Container(
-                      width: 10,
-                    ),
-                    Text(widget.relato.usarioNome),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('DATA CRIAÇÂO: '),
-                    Container(
-                      width: 10,
-                    ),
-                    Text(_formataData(widget.relato.datacriacao)),
-                  ],
-                ),
-                Container(
-                  height: 20,
-                ),
-                Container(
-                  height:
-                      // //double.infinity,
-                      500 * widget.relato.perguntasRelato.length.toDouble(),
-                  child: ListView.builder(
-                    itemCount: widget.relato.perguntasRelato.length,
-                    itemBuilder: (ctx, index) {
-                      return Card(
-                        elevation: 5,
-                        child: Column(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          // mainAxisSize: MainAxisSize.max,
-                          children: <Widget>[
-                            Text(PerguntasEnumConverter().converter(widget
-                                .relato.perguntasRelato[index].perguntaEnum)),
-                            Text(
-                              widget.relato.perguntasRelato[index].resposta ==
-                                      null
-                                  ? widget.relato.datacriacao
-                                  : widget
-                                      .relato.perguntasRelato[index].resposta,
-                            ),
-
-                            // Container(
-                            //   height: 30,
-                            // )
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                )
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
     );
   }
 

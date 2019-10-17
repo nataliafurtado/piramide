@@ -89,6 +89,14 @@ class _NovaPiramideState extends State<NovaPiramide> {
                 } else {
                  
                   Navigator.of(context).pop();
+
+//  Navigator.pushReplacement(
+//               context,
+//               MaterialPageRoute(
+//                   builder: (context) => AbaUi(
+//                         aba: 0,
+//                       )));
+
                   Navigator.pushNamedAndRemoveUntil(
                       context, AbaUi.route, ModalRoute.withName(AbaUi.route));
                 }
@@ -130,9 +138,11 @@ class _NovaPiramideState extends State<NovaPiramide> {
                     color: Colors.blueGrey.shade50,
                     child: Center(
                       child: TextField(
+
                         onChanged: (tx) {
                           bloc.nomePiramide(tx);
                         },
+                        textCapitalization: TextCapitalization.characters,
                         decoration: InputDecoration(
                             border: InputBorder.none,
                             icon: Icon(Icons.change_history),

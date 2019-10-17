@@ -78,8 +78,20 @@ class ProcurarPiramideBloc extends BlocBase {
   //   return null;
   // }
 
+  void aceitarUsuario(String piramideId) async {
+    final FirebaseUser user = await _auth.currentUser();
+    final String uid = user.uid;
+    DocumentSnapshot result =
+        await db.collection('usuarios').document(uid).get();
+
+    Usuario user1 = Usuario.fromMap(result.data, result.documentID);
+
+    user1.piramidesPodeRelatarId.add(piramideId);
+
+    await db.collection('usuarios').document(uid).updateData(user1.toMap());
+  }
+
   void novoPedido(String piramideId) async {
-    print('fffrrrr');
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
     //todo singleton usuario

@@ -64,7 +64,7 @@ class AceitarUsuarioBloc extends BlocBase {
   }
 
   void aceitarUsuario(int pedidoIndex) async {
-    print('ac eitar usuario');
+
     //mudar status do pedido e colocar no usuario na lista uma piramide q agora ele pode relatar
     Pedido pedido = pedidosController.value[pedidoIndex];
     pedido.situacaoPedido = pedidosEnum.aceito;

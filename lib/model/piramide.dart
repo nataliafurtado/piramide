@@ -56,7 +56,7 @@ class Piramide {
   Piramide.fromMap(Map map, String documentIdPasado) {
     //  id = map['idColumn'];
     nome = map['nome'];
-    publica = map['public'];
+    publica = map['publica'];
     dataInicio = map['dataInicio'];
     piramideId = documentIdPasado;
     usuarioId = map['usuarioId'];

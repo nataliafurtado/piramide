@@ -43,6 +43,7 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
 
     super.initState();
   }
+
   @override
   void dispose() {
     blocProcPiramide.dispose();
@@ -106,56 +107,73 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
                           return InkWell(
                             splashColor: Colors.orange,
                             onTap: () {
-                              showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text('PEDIDO DE PARTICIPAÇÃO'),
-                                      content: Text(
-                                          'Gostaria de pedir autorização para participar dessa piramide ?'),
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          onPressed: () {
-                                               blocProcPiramide.novoPedido(snapshot.data[index].piramideId);
-                                            Navigator.of(context).pop();
+                              if (snapshot.data[index].publica) {
+                                blocProcPiramide.aceitarUsuario(snapshot.data[index].piramideId);
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text('AVISO'),
+                                        content: Text(
+                                            'Agora voçe pode realizar Relatos para essa piramide'),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('OK'),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              } else {
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text('PEDIDO DE PARTICIPAÇÃO'),
+                                        content: Text(
+                                            'Gostaria de pedir autorização para participar dessa piramide ?'),
+                                        actions: <Widget>[
+                                          FlatButton(
+                                            onPressed: () {
+                                              blocProcPiramide.novoPedido(
+                                                  snapshot
+                                                      .data[index].piramideId);
+                                              Navigator.of(context).pop();
 
-                                             showDialog(
-                                  context: context,
-                                  builder: (context) {
-                                    return AlertDialog(
-                                      title: Text('AVISO'),
-                                      content:
-                                     
-                                          Text(
-                                            'Pedido realizado com sucesso. Aguarde ADM da piramide aceitar pedido.'),
-                                           
-                                       
-                                      actions: <Widget>[
-                                        FlatButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                     
-                                          },
-                                          child: Text('OK'),
-                                        ),
-                                     
-                                      ],
-                                    );
-                                  });
-                     
-                                          },
-                                          child: Text('SIM'),
-                                        ),
-                                        FlatButton(
-                                          onPressed: () {
-                                            Navigator.of(context).pop();
-                                         
-                                          },
-                                          child: Text('NÃO'),
-                                        ),
-                                      ],
-                                    );
-                                  });
+                                              showDialog(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return AlertDialog(
+                                                      title: Text('AVISO'),
+                                                      content: Text(
+                                                          'Pedido realizado com sucesso. Aguarde ADM da piramide aceitar pedido.'),
+                                                      actions: <Widget>[
+                                                        FlatButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: Text('OK'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  });
+                                            },
+                                            child: Text('SIM'),
+                                          ),
+                                          FlatButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop();
+                                            },
+                                            child: Text('NÃO'),
+                                          ),
+                                        ],
+                                      );
+                                    });
+                              }
                             },
                             child: Card(
                               color: Colors.blueGrey.shade50,
@@ -163,7 +181,16 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
                               // height: 40,
                               child: Padding(
                                 padding: EdgeInsets.all(16.0),
-                                child: Text(snapshot.data[index].nome),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: <Widget>[
+                                    Text(snapshot.data[index].nome),
+                                    snapshot.data[index].publica
+                                        ? Icon(Icons.lock_open)
+                                        : Icon(Icons.lock)
+                                  ],
+                                ),
                               ),
                             ),
                           );

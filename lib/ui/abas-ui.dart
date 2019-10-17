@@ -63,7 +63,7 @@ class _AbaUiState extends State<AbaUi> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      initialIndex: widget.aba,
+      initialIndex: widget.aba==null?0:widget.aba,
       length: 3,
       child: Scaffold(
         appBar: AppBar(
