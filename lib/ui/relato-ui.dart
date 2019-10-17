@@ -78,7 +78,7 @@ class _RelatoUiState extends State<RelatoUi> {
               // Navigator.of(context).pop();
             },
             child: Text(
-              'EXCLUIR',
+              'EXCLUIRs',
               style: TextStyle(color: Colors.white, fontSize: 15),
             ),
           ),
