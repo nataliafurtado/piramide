@@ -19,7 +19,9 @@ class InformacoesUi extends StatefulWidget {
 }
 
 class _InformacoesUiState extends State<InformacoesUi> {
-  bool pronta = false;
+  /// bool pronta = false;
+  bool podeSalvar = false;
+  bool mostrarCircularProgress = false;
   @override
   void initState() {
     infoBloc = InformacoesBloc();
@@ -41,44 +43,59 @@ class _InformacoesUiState extends State<InformacoesUi> {
     return Scaffold(
       appBar: AppBar(
         actions: <Widget>[
-          FlatButton(
-            onPressed: () {
-              infoBloc.salvar();
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              'Salvar',
-              style: TextStyle(color: Colors.white),
+          Visibility(
+            visible: podeSalvar,
+            child: FlatButton(
+              onPressed: () async {
+                setState(() {
+                  mostrarCircularProgress = true;
+                });
+                await infoBloc.salvar(widget.piramide);
+
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                'Salvar',
+                style: TextStyle(color: Colors.white),
+              ),
             ),
           )
         ],
         title: Text(widget.piramide.nome),
       ),
-      body: StreamBuilder(
-        stream: infoBloc.informacoesFluxo,
-        builder: (ctx, snapshot) {
-          return infoBloc.informacoesController.value != null
-              ? ListView.builder(
-                  itemCount: widget.usuarioAdm == true
-                      ? infoBloc.informacoesController.value.periodos.length + 1
-                      : infoBloc.informacoesController.value.periodos.length,
-                  itemBuilder: (ctx, periIndex) {
-                    if (periIndex ==
-                        infoBloc.informacoesController.value.periodos.length) {
-                      return _addPeriodo();
-                    } else if (infoBloc.informacoesController.value
-                        .periodos[periIndex].geral) {
-                      return _piramideCardGeral(periIndex);
-                    } else {
-                      return _piramideCard(periIndex);
-                    }
-                  },
-                )
-              : Center(
-                  child: CircularProgressIndicator(),
-                );
-        },
-      ),
+      body: mostrarCircularProgress
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : StreamBuilder(
+              stream: infoBloc.informacoesFluxo,
+              builder: (ctx, snapshot) {
+                return infoBloc.informacoesController.value != null
+                    ? ListView.builder(
+                        itemCount: widget.usuarioAdm == true
+                            ? infoBloc.informacoesController.value.periodos
+                                    .length +
+                                1
+                            : infoBloc
+                                .informacoesController.value.periodos.length,
+                        itemBuilder: (ctx, periIndex) {
+                          if (periIndex ==
+                              infoBloc.informacoesController.value.periodos
+                                  .length) {
+                            return _addPeriodo();
+                          } else if (infoBloc.informacoesController.value
+                              .periodos[periIndex].geral) {
+                            return _piramideCardGeral(periIndex);
+                          } else {
+                            return _piramideCard(periIndex);
+                          }
+                        },
+                      )
+                    : Center(
+                        child: CircularProgressIndicator(),
+                      );
+              },
+            ),
     );
   }
 
@@ -93,6 +110,9 @@ class _InformacoesUiState extends State<InformacoesUi> {
           IconButton(
             icon: Icon(Icons.add_circle),
             onPressed: () {
+              setState(() {
+                podeSalvar = true;
+              });
               infoBloc.novoPeriodo(widget.piramide);
             },
           )
@@ -394,6 +414,9 @@ class _InformacoesUiState extends State<InformacoesUi> {
                                   .periodos[periIndex]
                                   .dataInicio)),
                               onPressed: () async {
+                                setState(() {
+                                  podeSalvar = true;
+                                });
                                 await _selectDateInicio(periIndex);
                                 infoBloc.recalcularInfoPeriodo(periIndex);
                               },
@@ -424,6 +447,9 @@ class _InformacoesUiState extends State<InformacoesUi> {
                                     .periodos[periIndex]
                                     .dataFim)),
                                 onPressed: () async {
+                                  setState(() {
+                                    podeSalvar = true;
+                                  });
                                   await _selectDateFim(periIndex);
                                   infoBloc.recalcularInfoPeriodo(periIndex);
                                 },

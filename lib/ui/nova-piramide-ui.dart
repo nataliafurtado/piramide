@@ -23,10 +23,9 @@ class NovaPiramide extends StatefulWidget {
 }
 
 class _NovaPiramideState extends State<NovaPiramide> {
-
-@override
+  @override
   void initState() {
-   bloc.carregaModelo(widget.modelo);
+    bloc.carregaModelo(widget.modelo);
     super.initState();
   }
 
@@ -56,6 +55,7 @@ class _NovaPiramideState extends State<NovaPiramide> {
     }
   }
 
+  TextEditingController txNomecontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -87,7 +87,6 @@ class _NovaPiramideState extends State<NovaPiramide> {
                         );
                       });
                 } else {
-                 
                   Navigator.of(context).pop();
 
 //  Navigator.pushReplacement(
@@ -138,9 +137,13 @@ class _NovaPiramideState extends State<NovaPiramide> {
                     color: Colors.blueGrey.shade50,
                     child: Center(
                       child: TextField(
+                        controller: txNomecontroller,
+                        onChanged: (value) {
+                          if (txNomecontroller.text != value.toUpperCase())
+                            txNomecontroller.value = txNomecontroller.value
+                                .copyWith(text: value.toUpperCase());
 
-                        onChanged: (tx) {
-                          bloc.nomePiramide(tx);
+                          bloc.nomePiramide(value.toUpperCase());
                         },
                         textCapitalization: TextCapitalization.characters,
                         decoration: InputDecoration(
@@ -369,7 +372,8 @@ Widget _piramideCard(BuildContext context) {
             alignment: Alignment.center,
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
-              // key: new Key(),
+              key: Key(UniqueKey().toString()),
+
               itemCount: bloc.camadasController.value.length <= 4
                   ? bloc.camadasController.value.length + 1
                   : bloc.camadasController.value.length,

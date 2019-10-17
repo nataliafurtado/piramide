@@ -143,16 +143,21 @@ class NovaPiramideBLoc extends BlocBase {
           ),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
-        // Camada(nome: 'Ato Inseguro', perguntaDaCamada: [
-        //   Pergunta(perguntaTitulo: 'perg leve1'),
-        //   Pergunta(perguntaTitulo: 'perg le2'),
-        //   Pergunta(perguntaTitulo: 'perg leve33'),
-        // ]),
-        // Camada(nome: 'Condição Insegura', perguntaDaCamada: [
-        //   Pergunta(perguntaTitulo: 'perg leve1'),
-        //   Pergunta(perguntaTitulo: 'perg le2'),
-        //   Pergunta(perguntaTitulo: 'perg leve33'),
-        // ]),
+          Camada(nome: 'Camada 4', perguntaDaCamada: [
+          Pergunta(perguntaEnum: perguntasEnum.como),
+          Pergunta(
+            perguntaEnum: perguntasEnum.como,
+          ),
+          Pergunta(perguntaEnum: perguntasEnum.como),
+        ]),
+          Camada(nome: 'Camada 5', perguntaDaCamada: [
+          Pergunta(perguntaEnum: perguntasEnum.como),
+          Pergunta(
+            perguntaEnum: perguntasEnum.como,
+          ),
+          Pergunta(perguntaEnum: perguntasEnum.como),
+        ]),
+    
       ];
     }
     camadaEvent.add(list);

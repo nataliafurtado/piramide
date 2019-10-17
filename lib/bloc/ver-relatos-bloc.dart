@@ -93,7 +93,7 @@ class VerRelatosBloc extends BlocBase {
 
     List<Relato> l = [];
     documents.forEach((data) {
-      l.add(Relato.fromMap(data.data,data.documentID));
+      l.add(Relato.fromMap(data.data, data.documentID));
     });
     list = l;
     // print(l.length.toString() + 'lenth');
@@ -144,7 +144,7 @@ class VerRelatosBloc extends BlocBase {
 
     List<Relato> l = [];
     documents.forEach((data) {
-      l.add(Relato.fromMap(data.data,data.documentID));
+      l.add(Relato.fromMap(data.data, data.documentID));
     });
     list.addAll(l);
 
@@ -184,7 +184,7 @@ class VerRelatosBloc extends BlocBase {
     List<Relato> l = [];
     //print(documents.length);
     documents.forEach((data) {
-      l.add(Relato.fromMap(data.data,data.documentID));
+      l.add(Relato.fromMap(data.data, data.documentID));
     });
     list = l;
 
@@ -226,9 +226,9 @@ class VerRelatosBloc extends BlocBase {
   }
 
   void excluirRelato(Relato relato, Piramide piramide, Informacoes info) async {
+// se for o ultimo periodo tirar da piramide
+    _tirarDaPiramideSeDentroPeriodo(relato, piramide, info);
 
-    piramide.camadasDaPiramide[relato.numeroCamada].total =
-        piramide.camadasDaPiramide[relato.numeroCamada].total - 1;
     await db
         .collection('piramides')
         .document(piramide.piramideId)
@@ -240,11 +240,18 @@ class VerRelatosBloc extends BlocBase {
         .document(info.informacoesId)
         .updateData(info.toMap());
 
+    await db.collection('relatos').document(relato.relatoId).delete();
+  }
 
-         await db
-        .collection('relatos')
-        .document(relato.relatoId)
-        .delete();
+  void _tirarDaPiramideSeDentroPeriodo(
+      Relato relato, Piramide piramide, Informacoes infor) {
+    Periodo per= infor.periodos.firstWhere((inf) => inf.dataInicio!=null && inf.dataFim == null);
+    DateTime inicio = DateTime.parse(per.dataInicio);
+    DateTime criacao = DateTime.parse(relato.datacriacao);
+    if (inicio.isBefore(criacao)) {
+          piramide.camadasDaPiramide[relato.numeroCamada].total =
+        piramide.camadasDaPiramide[relato.numeroCamada].total - 1;
+    }
   }
 
   Informacoes _excluirRelatoDaInfo(Informacoes infor, Relato relato) {

@@ -48,13 +48,24 @@ class InformacoesBloc extends BlocBase {
   Observable<Informacoes> get informacoesFluxo => informacoesController.stream;
   Sink<Informacoes> get informacoesEvent => informacoesController.sink;
 
-  void salvar() async {
+  void salvar(Piramide piramide) async {
     await db
         .collection('informacoes')
         .document(informacoesController.value.informacoesId)
         .updateData(informacoesController.value.toMap());
+        //zerar Piramide
+   
+    await db
+        .collection('piramides')
+        .document(piramide.piramideId)
+        .updateData(piramide.toMap());
   }
 
+  void _zerarPiramide(Piramide piramide) {
+    for (var i = 0; i < piramide.camadasDaPiramide.length; i++) {
+      piramide.camadasDaPiramide[i].total=0;
+    }
+  }
   void calculaPoscentagemPiramide(Piramide piramide, Informacoes informacoes) {
     Periodo peri = informacoes.periodos.where((periodo) {
       if (periodo.geral = true) {
@@ -131,61 +142,8 @@ class InformacoesBloc extends BlocBase {
         informacoesController.value.nperiodos + 1;
     informacoesController.value.periodos.add(pe);
     informacoesEvent.add(informacoesController.value);
-  }
 
-  void novoRelato(Piramide piramideId, int numerocamada) async {
-    // final FirebaseUser user = await _auth.currentUser();
-    // final String uid = user.uid;
-
-    // Relato relato = Relato(
-    //   piramideId: piramideId.piramideId,
-    //   datacriacao: DateTime.now().toIso8601String(),
-    //   numeroCamada: numerocamada,
-    //   qtdPerguntas: informacoesController.value.length,
-    //   usuarioRelatouId: uid,
-    //   informacoes: [],
-    // );
-
-//     relato.informacoes.addAll(informacoesController.value);
-
-//     DocumentReference relatoDoc = await db.collection('relatos').document();
-
-//     await db
-//         .collection('relatos')
-//         .document(relatoDoc.documentID)
-//         .setData(relato.toMap());
-
-// piramideId.camadasDaPiramide[numerocamada].total=piramideId.camadasDaPiramide[numerocamada].total+1;
-//     await db
-//         .collection('piramides')
-//         .document(piramideId.piramideId)
-//         .updateData(piramideId.toMap());
-
-//   }
-
-//   void carregaPerguntas(String documentIDPiramide, int camadaIndex) async {
-//     final FirebaseUser user = await _auth.currentUser();
-//     final String uid = user.uid;
-//     final QuerySnapshot result = await db
-//         .collection('piramides')
-//         .document(documentIDPiramide)
-//         .collection('perguntasPiramide')
-//         .where('ncamada', isEqualTo: camadaIndex.toString())
-//         .getDocuments();
-//     final List<DocumentSnapshot> documents = result.documents;
-
-//     // List<Pergunta> l = [];
-//     List<PerguntaRelato> lpr = [];
-//     documents.forEach((data) {
-//       // l.add(Pergunta.fromMap(data.data, data.documentID));
-//       lpr.add(PerguntaRelato.fromMapDePergunta(data.data, data.documentID));
-//     });
-// //listPerg = l;
-//     lll = lpr;
-//     print(lll.length.toString() + 'tamanho lll  ll ');
-//     //  print(camadaIndex.toString() +' :  camadaindex');
-//     // perguntasEvent.add(listPerg);
-//     informacoesEvent.add(lll);
+     _zerarPiramide(piramide);
   }
 
   @override
@@ -211,11 +169,11 @@ class InformacoesBloc extends BlocBase {
     List<Relato> lpr = [];
     documents.forEach((data) {
       // l.add(Pergunta.fromMap(data.data, data.documentID));
-      lpr.add(Relato.fromMap(data.data,data.documentID));
+      lpr.add(Relato.fromMap(data.data, data.documentID));
     });
-    print(informacoesController.value.periodos[periIndex].dataInicio +
-        '  : inicio');
-    print(informacoesController.value.periodos[periIndex].dataFim + '  : fim');
+    // print(informacoesController.value.periodos[periIndex].dataInicio +
+    //     '  : inicio');
+    // print(informacoesController.value.periodos[periIndex].dataFim + '  : fim');
 
     _zerarDadosPerido(periIndex);
 

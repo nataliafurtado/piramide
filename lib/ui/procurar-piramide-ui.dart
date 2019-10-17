@@ -50,6 +50,7 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
     super.dispose();
   }
 
+  TextEditingController txNomecontroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,9 +80,15 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
                       color: Colors.blueGrey.shade50,
                       child: Center(
                         child: TextField(
+                          controller: txNomecontroller,
                           onChanged: (tx) {
+
+  if (txNomecontroller.text != tx.toUpperCase())
+                            txNomecontroller.value = txNomecontroller.value
+                                .copyWith(text: tx.toUpperCase());
+
                             if (tx.isNotEmpty && tx.length > 2) {
-                              blocProcPiramide.carregaPiramides(tx);
+                              blocProcPiramide.carregaPiramides(tx.toUpperCase());
                             } else {
                               blocProcPiramide.piramidesEvent.add([]);
                             }

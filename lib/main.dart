@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:comportamentocoletivo/bloc/abas-bloc.dart';
 import 'package:comportamentocoletivo/bloc/aceitar-usuario-bloc.dart';
+import 'package:comportamentocoletivo/bloc/configuracoes-piramide-bloc.dart';
 import 'package:comportamentocoletivo/bloc/informacoes-bloc.dart';
 
 import 'package:comportamentocoletivo/bloc/nova-piramide-bloc.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        fontFamily: 'OpenSans',
+          fontFamily: 'OpenSans',
           primarySwatch: Colors.blueGrey,
           accentColor: Colors.yellowAccent.shade700),
       home: Scaffold(
@@ -51,6 +52,7 @@ class MyApp extends StatelessWidget {
             Bloc((i) => InformacoesBloc()),
             Bloc((i) => VerRelatosBloc()),
             Bloc((i) => UsuariosBloc()),
+            Bloc((i) => ConfiguracoesPiramideBloc()),
           ],
           child: LoginScreen3(),
           //   child: AbaUi(),
