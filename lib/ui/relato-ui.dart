@@ -74,11 +74,11 @@ class _RelatoUiState extends State<RelatoUi> {
                       ],
                     );
                   });
-
+//iiiiiii
               // Navigator.of(context).pop();
             },
             child: Text(
-              'EXCLUIRs',
+              'EXCLUIR',
               style: TextStyle(color: Colors.white, fontSize: 15),
             ),
           ),
