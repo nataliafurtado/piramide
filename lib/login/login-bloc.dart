@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginBloc extends BlocBase {
   final BuildContext context;
@@ -54,7 +55,7 @@ class LoginBloc extends BlocBase {
       _currentUser = await _googleSignIn.signIn();
     } catch (error) {
       erro = error;
-      print(error);
+    //  print(error);
     }
 
     if (_currentUser != null) {
@@ -66,13 +67,13 @@ class LoginBloc extends BlocBase {
   Future<String> garantirEstarLogadoGoolgle() async {
     String erro = 'Um erro ocorreu. ';
     GoogleSignInAccount user = _googleSignIn.currentUser;
-    print(user?.email); // ummmmmmmmmmmmmm
+   // print(user?.email); // ummmmmmmmmmmmmm
     if (user == null) {
       //  user = await _googleSignIn.signInSilently();
-      print(user?.email); // doisiiiiiiiiiiiiiiiii
+//print(user?.email); // doisiiiiiiiiiiiiiiiii
       if (true) {
         user = await _googleSignIn.signIn();
-        print(user?.email); //tressssssssssssssssssssssssssss
+      //  print(user?.email); //tressssssssssssssssssssssssssss
         if (await _auth.currentUser() == null) {
           GoogleSignInAuthentication credentialGoogle =
               await _googleSignIn.currentUser.authentication;
@@ -84,7 +85,7 @@ class LoginBloc extends BlocBase {
 
           final FirebaseUser user =
               (await _auth.signInWithCredential(credential)).user;
-          print("signed in " + user.displayName);
+    //      print("signed in " + user.displayName);
         }
       }
     }
@@ -97,32 +98,41 @@ class LoginBloc extends BlocBase {
   }
 
   Future<String> verSeEstaLogado() async {
-    final FirebaseUser user = await _auth.currentUser();
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount account) {
+      _currentUser = account;
 
-    GoogleSignInAccount account = _googleSignIn.currentUser;
-    if (account == null) {
-      account = await _googleSignIn.signInSilently();
-      print(_currentUser.toString());
-      if (account != null) {
-        print('nao é nulll');
+      if (_currentUser != null) {
+        //0fazer o q tem q fazer se logado
         return null;
-      } else {
-        return 'Algo ocorreu';
       }
-    } else {
-      return 'Algo ocorreu';
-    }
+    });
+    _googleSignIn.signInSilently();
+
+    return 'Algo ocorreu';
+
+    // if (account == null) {
+    //   account = await _googleSignIn.signInSilently();
+    //   print(_currentUser.toString());
+    //   if (account != null) {
+    //     print('nao é nulll');
+    //     return null;
+    //   } else {
+    //     return 'Algo ocorreu';
+    //   }
+    // } else {
+    //   return 'Algo ocorreu';
+    // }
   }
 
   Future<String> logar() async {
     String aviso = '';
     String uid = '';
-    print(_emailController.value);
+    //print(_emailController.value);
 
     _emailController.value = 'qq@qq.com';
     _senhaCotroller.value = 'qqqqqq';
-  //  _emailController.value = 'ee@ee.com';
-  //   _senhaCotroller.value = 'eeeeee';
+    //  _emailController.value = 'ee@ee.com';
+    //   _senhaCotroller.value = 'eeeeee';
     //   _emailController.value='qqq@qqq.com';
     // _senhaCotroller.value='qqqqqq';
     _controllerLoading.add(!_controllerLoading.value);
@@ -136,7 +146,13 @@ class LoginBloc extends BlocBase {
     }
 
     _controllerLoading.add(!_controllerLoading.value);
+    _carregarSharedPerferenciasLogado(_emailController.value);
     return aviso == null ? null : _excecaoAviso(aviso);
+  }
+
+  _carregarSharedPerferenciasLogado(String email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setString('email', email);
   }
 
   Future<String> novoUsuario() async {
@@ -165,7 +181,7 @@ class LoginBloc extends BlocBase {
     } catch (e) {
       aviso = e.code;
     }
-    if (nomeCotroller.value==null ||  nomeCotroller.value.length<2) {
+    if (nomeCotroller.value == null || nomeCotroller.value.length < 2) {
       return 'Nome de ter pelo menos 3 caracteres';
     }
 
@@ -179,6 +195,7 @@ class LoginBloc extends BlocBase {
     }
 
     _controllerLoading.add(!_controllerLoading.value);
+     _carregarSharedPerferenciasLogado(_emailController.value);
     return aviso == null ? null : _excecaoAvisoNovoUsuario(aviso);
   }
 

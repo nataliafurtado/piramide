@@ -151,6 +151,12 @@ class VerRelatosBloc extends BlocBase {
     relatoEvent.add(list);
   }
 
+  String usuarioOnlineId;
+  void carregaUsuarioId() async {
+    final FirebaseUser user = await _auth.currentUser();
+    usuarioOnlineId = user.uid;
+  }
+
   void carregaRelatosVazio(
       String piramideId, int camada, Periodo periodo) async {
     List<DocumentSnapshot> documents;
@@ -245,12 +251,13 @@ class VerRelatosBloc extends BlocBase {
 
   void _tirarDaPiramideSeDentroPeriodo(
       Relato relato, Piramide piramide, Informacoes infor) {
-    Periodo per= infor.periodos.firstWhere((inf) => inf.dataInicio!=null && inf.dataFim == null);
+    Periodo per = infor.periodos
+        .firstWhere((inf) => inf.dataInicio != null && inf.dataFim == null);
     DateTime inicio = DateTime.parse(per.dataInicio);
     DateTime criacao = DateTime.parse(relato.datacriacao);
     if (inicio.isBefore(criacao)) {
-          piramide.camadasDaPiramide[relato.numeroCamada].total =
-        piramide.camadasDaPiramide[relato.numeroCamada].total - 1;
+      piramide.camadasDaPiramide[relato.numeroCamada].total =
+          piramide.camadasDaPiramide[relato.numeroCamada].total - 1;
     }
   }
 

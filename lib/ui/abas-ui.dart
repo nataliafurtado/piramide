@@ -1,4 +1,3 @@
-
 import 'package:comportamentocoletivo/main.dart';
 import 'package:comportamentocoletivo/ui/ajuda/ajuda-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-pode-relatar-ui.dart';
@@ -6,9 +5,11 @@ import 'package:comportamentocoletivo/ui/piramides-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-administro-ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum OrderOptions { comofunciona, logout }
 final FirebaseAuth _auth = FirebaseAuth.instance;
+
 class AbaUi extends StatefulWidget {
   final int aba;
   AbaUi({this.aba});
@@ -34,12 +35,14 @@ class _AbaUiState extends State<AbaUi> {
     return 'PIRAMIDES';
   }
 
-  void _orderList(OrderOptions result) {
+  void _orderList(OrderOptions result) async {
     switch (result) {
       case OrderOptions.comofunciona:
-          Navigator.pushNamed(context, AjudaUi.route);
+        Navigator.pushNamed(context, AjudaUi.route);
         break;
       case OrderOptions.logout:
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        prefs.remove('email');
         _auth.signOut().then((_) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => MyApp()));
@@ -63,7 +66,7 @@ class _AbaUiState extends State<AbaUi> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      initialIndex: widget.aba==null?0:widget.aba,
+      initialIndex: widget.aba == null ? 0 : widget.aba,
       length: 3,
       child: Scaffold(
         appBar: AppBar(

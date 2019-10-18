@@ -17,28 +17,30 @@ class RelatoUi extends StatefulWidget {
   final int camada;
   final Periodo periodo;
   final Informacoes informacoes;
+  final String usuarioLogadoId;
   RelatoUi(
       {this.relato,
       this.piramide,
       this.informacoes,
       this.camada,
-      this.periodo});
+      this.periodo,
+      this.usuarioLogadoId});
   @override
   _RelatoUiState createState() => _RelatoUiState();
 }
-bool usuarioADM =false;
+
 class _RelatoUiState extends State<RelatoUi> {
   @override
-  void initState() async{
-    usuarioADM= await _verSeEhUsuaarioAdm();
+  void initState() {
+
     super.initState();
   }
 
-  final FirebaseAuth _auth = FirebaseAuth.instance;
-  Future<bool> _verSeEhUsuaarioAdm() async {
-    final FirebaseUser user = await _auth.currentUser();
-    final String uid = user.uid;
-    if (widget.piramide.usuarioId == uid) {
+
+  bool _verSeEhUsuaarioAdm()  {
+
+print(widget.usuarioLogadoId);
+    if (widget.piramide.usuarioId == widget.usuarioLogadoId) {
       return true;
     }
     return false;
@@ -53,7 +55,7 @@ class _RelatoUiState extends State<RelatoUi> {
         title: Text('RELATO'),
         actions: <Widget>[
           Visibility(
-            visible: usuarioADM,
+            visible: _verSeEhUsuaarioAdm(),
             child: FlatButton(
               onPressed: () async {
                 await showDialog(

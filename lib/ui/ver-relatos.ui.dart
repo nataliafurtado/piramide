@@ -28,6 +28,7 @@ class _VerRelatosState extends State<VerRelatos> {
   void initState() {
     verRealatoBloc = VerRelatosBloc();
    // print(widget.periodo.geral);
+   verRealatoBloc.carregaUsuarioId();
     verRealatoBloc.carregaRelatosVazio(
         widget.piramide.piramideId, widget.camada, widget.periodo);
     super.initState();
@@ -204,6 +205,7 @@ class _VerRelatosState extends State<VerRelatos> {
                                                               camada: widget.camada,
                                                               periodo: widget.periodo,
                                                               informacoes: widget.informacoes,
+                                                              usuarioLogadoId: verRealatoBloc.usuarioOnlineId,
                                                             )));
                                               },
                                               child: Card(

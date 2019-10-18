@@ -30,6 +30,7 @@ dependencies:
   autocomplete_textfield: ^1.7.3
   google_sign_in: ^4.0.3
   intl: ^0.16.0
+  shared_preferences: ^0.5.3+5
   
 
   # The following adds the Cupertino Icons font to your application.
