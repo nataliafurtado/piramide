@@ -77,18 +77,18 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
 
                     Container(
                       height: 80,
-                      color: Colors.blueGrey.shade50,
+                      color: Colors.blue.shade50,
                       child: Center(
                         child: TextField(
                           controller: txNomecontroller,
                           onChanged: (tx) {
-
-  if (txNomecontroller.text != tx.toUpperCase())
-                            txNomecontroller.value = txNomecontroller.value
-                                .copyWith(text: tx.toUpperCase());
+                            if (txNomecontroller.text != tx.toUpperCase())
+                              txNomecontroller.value = txNomecontroller.value
+                                  .copyWith(text: tx.toUpperCase());
 
                             if (tx.isNotEmpty && tx.length > 2) {
-                              blocProcPiramide.carregaPiramides(tx.toUpperCase());
+                              blocProcPiramide
+                                  .carregaPiramides(tx.toUpperCase());
                             } else {
                               blocProcPiramide.piramidesEvent.add([]);
                             }
@@ -106,7 +106,7 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
                     ),
                     Container(
                       height: MediaQuery.of(context).size.height * 0.6,
-                      //color: Colors.blueGrey,
+                      //color: Colors.blue,
                       child: ListView.builder(
                         itemCount:
                             snapshot.data == null ? 0 : snapshot.data.length,
@@ -115,7 +115,8 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
                             splashColor: Colors.orange,
                             onTap: () {
                               if (snapshot.data[index].publica) {
-                                blocProcPiramide.aceitarUsuario(snapshot.data[index].piramideId);
+                                blocProcPiramide.aceitarUsuario(
+                                    snapshot.data[index].piramideId);
                                 showDialog(
                                     context: context,
                                     builder: (context) {
@@ -183,7 +184,7 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
                               }
                             },
                             child: Card(
-                              color: Colors.blueGrey.shade50,
+                              color: Colors.blue.shade50,
                               elevation: 5,
                               // height: 40,
                               child: Padding(
@@ -194,8 +195,10 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
                                   children: <Widget>[
                                     Text(snapshot.data[index].nome),
                                     snapshot.data[index].publica
-                                        ? Icon(Icons.lock_open)
-                                        : Icon(Icons.lock)
+                                        ? Icon(Icons.lock_open,
+                                            color: Colors.blueAccent)
+                                        : Icon(Icons.lock,
+                                            color: Colors.blueAccent)
                                   ],
                                 ),
                               ),

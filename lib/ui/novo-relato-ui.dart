@@ -48,7 +48,7 @@ class _NovoRelatoState extends State<NovoRelato> {
           return Card(
               // color: Colors.cyan,
               elevation: 3,
-              //   decoration:   BoxDecoration(border: Border.all(color: Colors.blueGrey)),
+              //   decoration:   BoxDecoration(border: Border.all(color: Colors.blue)),
               child: Padding(
                 padding: EdgeInsets.all(10),
                 child: Column(
@@ -87,7 +87,7 @@ class _NovoRelatoState extends State<NovoRelato> {
 
   Widget _perguntas(BuildContext context) {
     return Container(
-      color: Colors.blueGrey.shade50,
+      color: Colors.blue.shade50,
       child: Column(
         children: <Widget>[
           Container(

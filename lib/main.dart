@@ -37,7 +37,8 @@ class MyApp extends StatelessWidget {
       title: 'Flutter Demo',
       theme: ThemeData(
           fontFamily: 'OpenSans',
-          primarySwatch: Colors.blueGrey,
+          primarySwatch: Colors.blue,
+          buttonColor: Colors.blueAccent.shade50,
           accentColor: Colors.yellowAccent.shade700),
       home: Scaffold(
         body: Container(

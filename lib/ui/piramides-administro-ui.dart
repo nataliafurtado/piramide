@@ -86,7 +86,7 @@ double p = 0.4;
 
 Widget _piramideCard(int index, BuildContext context) {
   return Card(
-    color: Colors.blueGrey.shade50,
+    color: Colors.blue.shade50,
     child: Column(
       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[

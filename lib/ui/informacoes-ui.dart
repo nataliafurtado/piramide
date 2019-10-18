@@ -126,10 +126,10 @@ class _InformacoesUiState extends State<InformacoesUi> {
   Widget _piramideCardGeral(int periIndex) {
     return Card(
       elevation: 10,
-      color: Colors.blueGrey.shade50,
+      color: Colors.blue.shade50,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          side: BorderSide(color: Colors.blueGrey, width: 2)),
+          side: BorderSide(color: Colors.blue, width: 3)),
       child: Container(
         //height: 350,
         child: Column(
@@ -267,7 +267,10 @@ class _InformacoesUiState extends State<InformacoesUi> {
   Widget _piramideCard(int periIndex) {
     return Card(
       elevation: 3,
-      color: Colors.blueGrey.shade50,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(color: Colors.blue, width: 1)),
+      color: Colors.blue.shade50,
       child: Container(
         //height: 350,
         child: Column(

@@ -15,7 +15,7 @@ class Piramides extends StatelessWidget {
       child: Column(
         children: <Widget>[
           Container(
-            color: Colors.blueGrey.shade100,
+            color: Colors.blueAccent.shade50,
             height: 130,
             child: Center(
               child: SizedBox(
@@ -33,7 +33,7 @@ class Piramides extends StatelessWidget {
                       Icon(
                         Icons.search,
                         size: 40,
-                        color: Colors.redAccent.shade200,
+                        color: Colors.blueAccent.shade700,
                       ),
 
                       Container(
@@ -60,7 +60,7 @@ class Piramides extends StatelessWidget {
             ),
           ),
           Container(
-            color: Colors.blueGrey.shade100,
+           color: Colors.blueAccent.shade50,
             height: 130,
             child: Center(
               child: SizedBox(
@@ -84,7 +84,7 @@ class Piramides extends StatelessWidget {
                       Icon(
                         Icons.change_history,
                         size: 40,
-                        color: Colors.redAccent.shade200,
+                        color: Colors.blueAccent.shade700,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -103,7 +103,7 @@ class Piramides extends StatelessWidget {
           ),
           Divider(color: Colors.black, height: .5),
           Container(
-            color: Colors.blueGrey.shade50,
+          color: Colors.blueAccent.shade50,
             height: 60,
             child: Align(
               alignment: Alignment(-0.6, 1),
@@ -111,13 +111,14 @@ class Piramides extends StatelessWidget {
             ),
           ),
           Container(
-            color: Colors.blueGrey.shade50,
+            color: Colors.blueAccent.shade50,
             height: 130,
             child: Align(
               child: SizedBox(
                 height: 80,
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: RaisedButton(
+                  //color: Colors.blue.shade100,
                   elevation: 10,
                   padding: EdgeInsets.all(20),
                   onPressed: () {
@@ -152,7 +153,7 @@ class Piramides extends StatelessWidget {
             ),
           ),
           Container(
-            color: Colors.blueGrey.shade50,
+            color: Colors.blueAccent.shade50,
             height: 130,
             child: Center(
               child: SizedBox(
@@ -175,7 +176,7 @@ class Piramides extends StatelessWidget {
                       Icon(
                         Icons.looks,
                         size: 40,
-                        color: Colors.redAccent.shade200,
+                        color: Colors.blueAccent.shade700,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -194,14 +195,14 @@ class Piramides extends StatelessWidget {
           ),
           Divider(color: Colors.black, height: .5),
           Container(
-            color: Colors.blueGrey.shade100,
+            color: Colors.lightBlue.shade50,
             height: 100,
             child: Center(
               child: SizedBox(
                 height: 60,
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: RaisedButton(
-                  color: Colors.yellowAccent.shade400,
+                  color: Colors.blue.shade300,
                   elevation: 10,
                   padding: EdgeInsets.all(10),
                   onPressed: () {
@@ -213,7 +214,7 @@ class Piramides extends StatelessWidget {
                       Icon(
                         Icons.help_outline,
                         size: 35,
-                        color: Colors.blue.shade400,
+                        color: Colors.yellowAccent.shade200,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

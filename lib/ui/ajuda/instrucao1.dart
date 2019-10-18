@@ -7,12 +7,12 @@ class Instrucao1 extends StatelessWidget {
       child: Column(
         children: <Widget>[
           TabPageSelector(
-            color: Colors.blueGrey.shade100,
+            color: Colors.blue.shade100,
             selectedColor: Colors.grey,
             indicatorSize: 15,
           ),
           Container(
-            color: Colors.blueGrey.shade50,
+            color: Colors.blue.shade50,
             height: 1500,
             child: Column(
               children: <Widget>[
@@ -40,7 +40,7 @@ class Instrucao1 extends StatelessWidget {
                 ),
                 Padding(
                     padding: EdgeInsets.all(20),
-                    child: Divider(color: Colors.blueGrey.shade500, height: .4)),
+                    child: Divider(color: Colors.blue.shade500, height: .4)),
                 Container(
                   padding: EdgeInsets.all(15),
                   height: 90,
@@ -57,7 +57,7 @@ class Instrucao1 extends StatelessWidget {
                 ),
                 Padding(
                     padding: EdgeInsets.all(20),
-                    child: Divider(color: Colors.blueGrey.shade500, height: .4)),
+                    child: Divider(color: Colors.blue.shade500, height: .4)),
                 Container(
                   padding: EdgeInsets.all(15),
                   height: 60,
@@ -74,7 +74,7 @@ class Instrucao1 extends StatelessWidget {
                 ),
                 Padding(
                     padding: EdgeInsets.all(20),
-                    child: Divider(color: Colors.blueGrey.shade500, height: .4)),
+                    child: Divider(color: Colors.blue.shade500, height: .4)),
                 Container(
                   padding: EdgeInsets.all(15),
                   //color: Colors.lightBlue,

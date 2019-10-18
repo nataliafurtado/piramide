@@ -6,6 +6,7 @@ import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/model/relato.dart';
 import 'package:comportamentocoletivo/ui/aceitar-usuarios/aceitar-usuarios-ui.dart';
 import 'package:comportamentocoletivo/ui/ver-relatos.ui.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -25,11 +26,22 @@ class RelatoUi extends StatefulWidget {
   @override
   _RelatoUiState createState() => _RelatoUiState();
 }
-
+bool usuarioADM =false;
 class _RelatoUiState extends State<RelatoUi> {
   @override
-  void initState() {
+  void initState() async{
+    usuarioADM= await _verSeEhUsuaarioAdm();
     super.initState();
+  }
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  Future<bool> _verSeEhUsuaarioAdm() async {
+    final FirebaseUser user = await _auth.currentUser();
+    final String uid = user.uid;
+    if (widget.piramide.usuarioId == uid) {
+      return true;
+    }
+    return false;
   }
 
   bool mostrarCircularProgress = false;
@@ -40,68 +52,73 @@ class _RelatoUiState extends State<RelatoUi> {
       appBar: AppBar(
         title: Text('RELATO'),
         actions: <Widget>[
-          FlatButton(
-            onPressed: () async {
-              await showDialog(
-                  context: context,
-                  builder: (context) {
-                    return AlertDialog(
-                      title: Text('ATENÇÃO'),
-                      content:
-                          Text('Tem certeza que deseja excluir esse relato?'),
-                      actions: <Widget>[
-                        FlatButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: Text('CANCELAR'),
-                        ),
-                        FlatButton(
-                          onPressed: () async {
-                            print('ecluir dialog');
-                            excluir = true;
-                            setState(() {
-                              mostrarCircularProgress = true;
-                            });
-                            Navigator.of(context).pop();
+          Visibility(
+            visible: usuarioADM,
+            child: FlatButton(
+              onPressed: () async {
+                await showDialog(
+                    context: context,
+                    builder: (context) {
+                      return AlertDialog(
+                        title: Text('ATENÇÃO'),
+                        content:
+                            Text('Tem certeza que deseja excluir esse relato?'),
+                        actions: <Widget>[
+                          FlatButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: Text('CANCELAR'),
+                          ),
+                          FlatButton(
+                            onPressed: () async {
+                              print('ecluir dialog');
+                              excluir = true;
+                              setState(() {
+                                mostrarCircularProgress = true;
+                              });
+                              Navigator.of(context).pop();
 
-                            //    Future.delayed(Duration(seconds: 2));
-                            //  print(widget.informacoes.numeroCamadas.toString()+'  eee');
-                          },
-                          child: Text('EXCLUIR'),
-                        ),
-                      ],
-                    );
-                  });
-              print('comrcou aqui');
-              print(excluir);
-              if (excluir) {
-                await verRealatoBloc.excluirRelato(
-                    widget.relato, widget.piramide, widget.informacoes);
-              }
-              excluir = false;
-              //  Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              Navigator.of(context).pop();
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => VerRelatos(
-                            piramide: widget.piramide,
-                            camada: widget.camada,
-                            periodo: widget.periodo,
-                            informacoes: widget.informacoes,
-                          )));
-            },
-            child: Text(
-              'EXCLUIR',
-              style: TextStyle(color: Colors.white, fontSize: 15),
+                              //    Future.delayed(Duration(seconds: 2));
+                              //  print(widget.informacoes.numeroCamadas.toString()+'  eee');
+                            },
+                            child: Text('EXCLUIR'),
+                          ),
+                        ],
+                      );
+                    });
+                print('comrcou aqui');
+                print(excluir);
+                if (excluir) {
+                  await verRealatoBloc.excluirRelato(
+                      widget.relato, widget.piramide, widget.informacoes);
+                }
+                excluir = false;
+                //  Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => VerRelatos(
+                              piramide: widget.piramide,
+                              camada: widget.camada,
+                              periodo: widget.periodo,
+                              informacoes: widget.informacoes,
+                            )));
+              },
+              child: Text(
+                'EXCLUIR',
+                style: TextStyle(color: Colors.white, fontSize: 15),
+              ),
             ),
           ),
         ],
       ),
       body: mostrarCircularProgress
-          ? Center(child: CircularProgressIndicator(),)
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
           : SingleChildScrollView(
               child: Center(
                 child: Card(

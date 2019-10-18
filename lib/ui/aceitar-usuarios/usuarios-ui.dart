@@ -44,7 +44,7 @@ class _UsuariosUiState extends State<UsuariosUi> {
                   children: <Widget>[
                     Container(
                       height: 80,
-                      color: Colors.blueGrey.shade50,
+                      color: Colors.blue.shade50,
                       child: Center(
                         child: TextField(
                           controller: blocUsuarios.txController.value,
@@ -69,7 +69,7 @@ class _UsuariosUiState extends State<UsuariosUi> {
                     ),
                     Container(
                         height: MediaQuery.of(context).size.height * 0.6,
-                        // color: Colors.blueGrey.shade100,
+                        // color: Colors.blue.shade100,
                         child: ListView.builder(
                           itemCount: snapshotUsuarios.data == null
                               ? 0

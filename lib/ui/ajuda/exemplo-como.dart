@@ -7,12 +7,12 @@ class Exemplo extends StatelessWidget {
       child: Column(
         children: <Widget>[
           TabPageSelector(
-            color: Colors.blueGrey.shade100,
+            color: Colors.blue.shade100,
             selectedColor: Colors.grey,
             indicatorSize: 15,
           ),
           Container(
-            color: Colors.blueGrey.shade50,
+            color: Colors.blue.shade50,
             height: 900,
             child: Column(
               children: <Widget>[

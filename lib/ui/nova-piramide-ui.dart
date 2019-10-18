@@ -134,7 +134,7 @@ class _NovaPiramideState extends State<NovaPiramide> {
                 children: <Widget>[
                   Container(
                     height: 80,
-                    color: Colors.blueGrey.shade50,
+                    color: Colors.blue.shade50,
                     child: Center(
                       child: TextField(
                         controller: txNomecontroller,
@@ -206,7 +206,7 @@ class _NovaPiramideState extends State<NovaPiramide> {
                   Container(
                     height: 660,
                     padding: EdgeInsets.all(5),
-//decoration:   BoxDecoration(border: Border.(color: Colors.blueGrey)),
+//decoration:   BoxDecoration(border: Border.(color: Colors.blue)),
                     //color: Colors.yellowAccent,
                     child: StreamBuilder(
                       stream: bloc.camadaFluxo,
@@ -230,7 +230,7 @@ class _NovaPiramideState extends State<NovaPiramide> {
 
 Widget _editarCamadaPiramide(BuildContext context) {
   return Container(
-    color: Colors.blueGrey.shade50,
+    color: Colors.blue.shade50,
     child: Column(
       children: <Widget>[
         Container(
@@ -290,7 +290,7 @@ Widget _perguntaAberta(BuildContext context) {
             : Card(
                 // color: Colors.cyan,
                 elevation: 3,
-                //   decoration:   BoxDecoration(border: Border.all(color: Colors.blueGrey)),
+                //   decoration:   BoxDecoration(border: Border.all(color: Colors.blue)),
                 child: Column(
                   children: <Widget>[
                     Row(
@@ -357,7 +357,7 @@ String rrr() {
 
 Widget _piramideCard(BuildContext context) {
   return Container(
-    color: Colors.blueGrey.shade50,
+    color: Colors.blue.shade50,
     child: Column(
       //    mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
@@ -367,7 +367,7 @@ Widget _piramideCard(BuildContext context) {
           alignment: Alignment.center,
           child: Container(
             //    color: Colors.grey,
-            height: MediaQuery.of(context).size.width * 0.12 * 5,
+            height: MediaQuery.of(context).size.width * 0.12 * 5,    
             width: MediaQuery.of(context).size.width * 0.95,
             alignment: Alignment.center,
             child: ListView.builder(

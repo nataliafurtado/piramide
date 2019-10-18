@@ -65,7 +65,7 @@ class _VerRelatosState extends State<VerRelatos> {
 
                               Container(
                                 height: 80,
-                                color: Colors.blueGrey.shade50,
+                                color: Colors.blue.shade50,
                                 child: Center(
                                   child: TextField(
                                     controller:
@@ -103,7 +103,7 @@ class _VerRelatosState extends State<VerRelatos> {
                               // ),
                               //  Container(
                               //   height: 20,
-                              //  // color: Colors.blueGrey.shade200,
+                              //  // color: Colors.blue.shade200,
                               //   child: Align(
                               //   alignment: Alignment(-1,0),
                               //     child:snapshotRelatos.data==null ?Text(''):Text('ECONTRADO ${snapshotRelatos.data.length} RELATOS')),
@@ -115,7 +115,7 @@ class _VerRelatosState extends State<VerRelatos> {
                                       height:
                                           MediaQuery.of(context).size.height *
                                               0.6,
-                                      // color: Colors.blueGrey.shade100,
+                                      // color: Colors.blue.shade100,
                                       child: ListView.builder(
                                         itemCount: snapshotUsuarios.data == null
                                             ? 0
@@ -160,7 +160,7 @@ class _VerRelatosState extends State<VerRelatos> {
                                 child: Container(
                                   height:
                                       MediaQuery.of(context).size.height * 0.7,
-                                  //color: Colors.blueGrey,
+                                  //color: Colors.blue,
                                   child: ListView.builder(
                                     itemCount: snapshotRelatos.data == null
                                         ? 0
@@ -207,7 +207,7 @@ class _VerRelatosState extends State<VerRelatos> {
                                                             )));
                                               },
                                               child: Card(
-                                                color: Colors.blueGrey.shade50,
+                                                color: Colors.blue.shade50,
                                                 elevation: 5,
                                                 // height: 40,
                                                 child: Padding(
