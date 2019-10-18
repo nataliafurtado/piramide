@@ -72,6 +72,7 @@ class AbasBloc extends BlocBase {
   void carregaPiramide() async {
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
+    
     final QuerySnapshot result = await db
         // .collection('usuarios')
         // .document(uid)

@@ -8,9 +8,9 @@ ConfiguracoesPiramideBloc blocConfiguracoesPiramide =
 
 class ConfiguracoesPiramide extends StatefulWidget {
   final Piramide piramide;
-  final bool mostrarSalvar;
+  final bool salvarAutomatico;
 
-  ConfiguracoesPiramide({this.piramide, this.mostrarSalvar});
+  ConfiguracoesPiramide({this.piramide, this.salvarAutomatico});
   static const route = '/configuracoes-piramide';
 
   @override
@@ -37,28 +37,28 @@ class _ConfiguracoesPiramideState extends State<ConfiguracoesPiramide> {
       appBar: AppBar(
         title: Text('CONFIGURAÇÕES'),
         actions: <Widget>[
-          Visibility(
-            visible:
-                widget.mostrarSalvar == null ? false : widget.mostrarSalvar,
-            child: Builder(
-              builder: (ctx) {
-                return FlatButton(
-                  onPressed: () async {
-                    blocConfiguracoesPiramide.salvarPiramide(widget.piramide);
-                    Scaffold.of(ctx).showSnackBar(
-                                    SnackBar(
-                                      content: Text('SALVO'),
-                                    ),
-                                  );
-                  },
-                  child: Text(
-                    'Salvar',
-                    style: TextStyle(color: Colors.white),
-                  ),
-                );
-              },
-            ),
-          )
+          // Visibility(
+          //   visible:
+          //       widget.salvarAutomatico == null ? false : widget.salvarAutomatico,
+          //   child: Builder(
+          //     builder: (ctx) {
+          //       return FlatButton(
+          //         onPressed: () async {
+          //           blocConfiguracoesPiramide.salvarPiramide(widget.piramide);
+          //           Scaffold.of(ctx).showSnackBar(
+          //                           SnackBar(
+          //                             content: Text('SALVO'),
+          //                           ),
+          //                         );
+          //         },
+          //         child: Text(
+          //           'Salvar',
+          //           style: TextStyle(color: Colors.white),
+          //         ),
+          //       );
+          //     },
+          //   ),
+          // )
         ],
       ),
       body: SingleChildScrollView(
@@ -73,11 +73,15 @@ class _ConfiguracoesPiramideState extends State<ConfiguracoesPiramide> {
                 Text('PÚBLICA'),
                 Checkbox(
                   value: widget.piramide.publica,
-                  onChanged: (valor) {
-                    print(valor);
+                  onChanged: (valor) {                   
                     setState(() {
                       widget.piramide.publica = valor;
                     });
+                    if (widget.salvarAutomatico!=null && widget.salvarAutomatico==true) {
+                      print('salvo automatico');
+                        blocConfiguracoesPiramide.salvarPiramide(widget.piramide);
+                
+                    }
                   },
                 ),
               ],

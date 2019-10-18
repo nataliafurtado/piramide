@@ -217,7 +217,7 @@ Widget _piramideCard(int index, BuildContext context) {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ConfiguracoesPiramide(
-                        mostrarSalvar: true,
+                        salvarAutomatico: true,
                               piramide:
                                   abasBloc.piramidesController.value[index],
                             )));

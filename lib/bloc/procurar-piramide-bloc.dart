@@ -86,9 +86,10 @@ class ProcurarPiramideBloc extends BlocBase {
 
     Usuario user1 = Usuario.fromMap(result.data, result.documentID);
 
-    user1.piramidesPodeRelatarId.add(piramideId);
-
-    await db.collection('usuarios').document(uid).updateData(user1.toMap());
+    if (!user1.piramidesPodeRelatarId.contains(piramideId)) {
+      user1.piramidesPodeRelatarId.add(piramideId);
+      await db.collection('usuarios').document(uid).updateData(user1.toMap());
+    }
   }
 
   void novoPedido(String piramideId) async {

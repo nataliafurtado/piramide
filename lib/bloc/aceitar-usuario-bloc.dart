@@ -81,12 +81,14 @@ class AceitarUsuarioBloc extends BlocBase {
     Usuario user1 = Usuario.fromMap(result.data, result.documentID);
 //print(result.data['piramidesPodeRelatarId'].toString());
 // print(user1.piramidesPodeRelatarId.toString()+'length');
-    user1.piramidesPodeRelatarId.add(pedido.piramideId);
+if (!user1.piramidesPodeRelatarId.contains(pedido.piramideId)) {
+      user1.piramidesPodeRelatarId.add(pedido.piramideId);
 
     await db
         .collection('usuarios')
         .document(pedido.usuarioId)
         .updateData(user1.toMap());
+}
   }
 
   //  .where('piramideId', isEqualTo: piramideId)

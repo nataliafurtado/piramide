@@ -129,7 +129,7 @@ class _InformacoesUiState extends State<InformacoesUi> {
       color: Colors.blue.shade50,
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
-          side: BorderSide(color: Colors.blue, width: 3)),
+          side: BorderSide(color: Colors.blue, width: 2)),
       child: Container(
         //height: 350,
         child: Column(
@@ -143,7 +143,7 @@ class _InformacoesUiState extends State<InformacoesUi> {
                 alignment: Alignment(0, 0),
                 child: Text(
                   'TOTAL DE RELATOS ( ${infoBloc.informacoesController.value.periodos[0].totalTodasAsCamadas} ) ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,color: Colors.blue.shade900),
                 ),
               ),
             ),
@@ -284,7 +284,7 @@ class _InformacoesUiState extends State<InformacoesUi> {
                 alignment: Alignment(0, 0),
                 child: Text(
                   'PERÍODO ${periIndex} ( ${infoBloc.informacoesController.value.periodos[periIndex].totalTodasAsCamadas} ) ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blue.shade900),
                 ),
               ),
             ),

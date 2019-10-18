@@ -10,8 +10,9 @@ import 'package:comportamentocoletivo/bloc/procurar-piramide-bloc.dart';
 import 'package:comportamentocoletivo/bloc/usuarios-bloc.dart';
 import 'package:comportamentocoletivo/bloc/ver-relatos-bloc.dart';
 import 'package:comportamentocoletivo/login/login-bloc.dart';
-import 'package:comportamentocoletivo/login/login.dart';
-import 'package:comportamentocoletivo/model/relato.dart';
+import 'package:comportamentocoletivo/login/login-ui.dart';
+
+
 import 'package:comportamentocoletivo/ui/abas-ui.dart';
 import 'package:comportamentocoletivo/ui/aceitar-usuarios/aba-usuarios-ui.dart';
 import 'package:comportamentocoletivo/ui/aceitar-usuarios/aceitar-usuarios-ui.dart';

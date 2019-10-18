@@ -55,7 +55,7 @@ class LoginBloc extends BlocBase {
       _currentUser = await _googleSignIn.signIn();
     } catch (error) {
       erro = error;
-    //  print(error);
+      //  print(error);
     }
 
     if (_currentUser != null) {
@@ -67,25 +67,23 @@ class LoginBloc extends BlocBase {
   Future<String> garantirEstarLogadoGoolgle() async {
     String erro = 'Um erro ocorreu. ';
     GoogleSignInAccount user = _googleSignIn.currentUser;
-   // print(user?.email); // ummmmmmmmmmmmmm
+
     if (user == null) {
-      //  user = await _googleSignIn.signInSilently();
-//print(user?.email); // doisiiiiiiiiiiiiiiiii
       if (true) {
         user = await _googleSignIn.signIn();
-      //  print(user?.email); //tressssssssssssssssssssssssssss
-        if (await _auth.currentUser() == null) {
-          GoogleSignInAuthentication credentialGoogle =
-              await _googleSignIn.currentUser.authentication;
-          //   await _auth.signInWithCustomToken(token: credential.idToken);
-          final AuthCredential credential = GoogleAuthProvider.getCredential(
-            accessToken: credentialGoogle.accessToken,
-            idToken: credentialGoogle.idToken,
-          );
 
-          final FirebaseUser user =
-              (await _auth.signInWithCredential(credential)).user;
-    //      print("signed in " + user.displayName);
+        if (await _auth.currentUser() == null) {
+          // GoogleSignInAuthentication credentialGoogle =
+          //     await _googleSignIn.currentUser.authentication;
+
+          // final AuthCredential credential = GoogleAuthProvider.getCredential(
+          //   accessToken: credentialGoogle.accessToken,
+          //   idToken: credentialGoogle.idToken,
+          // );
+
+          // final FirebaseUser user1 =
+          //     (await _auth.signInWithCredential(credential)).user;
+          //      print("signed in " + user.displayName);
         }
       }
     }
@@ -128,6 +126,10 @@ class LoginBloc extends BlocBase {
     String aviso = '';
     String uid = '';
     //print(_emailController.value);
+// if (_senhaCotroller.value == null ||
+//         _emailController.value == null) {
+//       return 'Preencha todos os campos';
+//     }
 
     _emailController.value = 'qq@qq.com';
     _senhaCotroller.value = 'qqqqqq';
@@ -158,14 +160,14 @@ class LoginBloc extends BlocBase {
   Future<String> novoUsuario() async {
     String aviso = '';
     String uid = '';
-    // if (_senhaCotroller.value != _senha2Cotroller.value) {
-    //   return 'As senhas estão diferentes';
-    // } else if (_senhaCotroller.value == null ||
-    //     _senha2Cotroller.value == null ||
-    //     _emailController.value == null ||
-    //     nomeCotroller.value==null) {
-    //   return 'Preencha todos os campos';
-    // }
+    if (_senhaCotroller.value != _senha2Cotroller.value) {
+      return 'As senhas estão diferentes';
+    } else if (_senhaCotroller.value == null ||
+        _senha2Cotroller.value == null ||
+        _emailController.value == null ||
+        nomeCotroller.value == null) {
+      return 'Preencha todos os campos';
+    }
 
     //   _emailController.value='qq@qq.com';
     // _senhaCotroller.value='qqqqqq';
@@ -186,8 +188,8 @@ class LoginBloc extends BlocBase {
     }
 
     if (uid != null) {
-      DocumentReference piramideDoc =
-          await db.collection('usuarios').document(uid);
+      // DocumentReference piramideDoc =
+      //     await db.collection('usuarios').document(uid);
 
       db.collection('usuarios').document(uid).setData(
           Usuario(nome: nomeCotroller.value, piramidesPodeRelatarId: [])
@@ -195,7 +197,7 @@ class LoginBloc extends BlocBase {
     }
 
     _controllerLoading.add(!_controllerLoading.value);
-     _carregarSharedPerferenciasLogado(_emailController.value);
+    _carregarSharedPerferenciasLogado(_emailController.value);
     return aviso == null ? null : _excecaoAvisoNovoUsuario(aviso);
   }
 
@@ -230,6 +232,7 @@ class LoginBloc extends BlocBase {
     _controllerLoading.close();
     _emailController.close();
     _senhaCotroller.close();
+    _senha2Cotroller.close();
     nomeCotroller.close();
     super.dispose();
   }
