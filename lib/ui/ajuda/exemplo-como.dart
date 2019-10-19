@@ -41,7 +41,7 @@ class Exemplo extends StatelessWidget {
                 ),
                 Container(
                   padding: EdgeInsets.all(15),
-                  height: 90,
+                  height: 100,
                   child: Text(
                     'Nesse exemplo utilizaremos a Pirâmide de BIRT,' +
                         ' mas vocễ pode criar pirâmides personalizadas para qualquer problema multifatorial.',
@@ -61,7 +61,7 @@ class Exemplo extends StatelessWidget {
                 Container(
                   padding: EdgeInsets.all(15),
                   //color: Colors.lightBlue,
-                  height: 125,
+                  height: 160,
                   child: Text(
                     'Em 1931 Frank Bird analisou 1.752.498 acidentes em 297 empresas com 1.750.000 trabalhadores. ' +
                         ' Com essa pesquisa Bird entendeu que a proporção das camadas da pirâmide seguem uma distribuição ' +
@@ -73,7 +73,7 @@ class Exemplo extends StatelessWidget {
                    Container(
                   padding: EdgeInsets.all(15),
                   //color: Colors.lightBlue,
-                  height: 85,
+                  height: 100,
                   child: Text(
                     'Logo, com esses dados na mão é muito mais fácil atuar ' +
                         ' para prever e coibir oas acidentes graves do topo da pirâmide.',

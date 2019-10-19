@@ -5,6 +5,7 @@ import 'package:comportamentocoletivo/ui/piramides-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-administro-ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum OrderOptions { comofunciona, logout }
@@ -43,6 +44,8 @@ class _AbaUiState extends State<AbaUi> {
       case OrderOptions.logout:
         SharedPreferences prefs = await SharedPreferences.getInstance();
         prefs.remove('email');
+        GoogleSignIn _googleSignIn = GoogleSignIn();
+        await _googleSignIn.signOut();
         _auth.signOut().then((_) {
           Navigator.pushReplacement(
               context, MaterialPageRoute(builder: (context) => MyApp()));

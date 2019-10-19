@@ -2,11 +2,10 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 
 import 'package:comportamentocoletivo/aux/draw-tronco.dart';
 import 'package:comportamentocoletivo/bloc/abas-bloc.dart';
-import 'package:comportamentocoletivo/ui/aceitar-usuarios/aceitar-usuarios-ui.dart';
 
-import 'package:comportamentocoletivo/ui/configuracoes-piramide.dart';
 import 'package:comportamentocoletivo/ui/informacoes-ui.dart';
 import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
+import 'package:comportamentocoletivo/ui/procurar-piramide-ui.dart';
 import 'package:flutter/material.dart';
 
 AbasBloc abasBloc = BlocProvider.getBloc<AbasBloc>();
@@ -34,8 +33,55 @@ class _PiramidePodeRelatarState extends State<PiramidePodeRelatar> {
     return StreamBuilder(
       stream: abasBloc.piramidesPodeRelatarFluxo,
       builder: (ctx, snap) {
- if (abasBloc.piramidesPodeRelatarController.value ==null) {
-          return Center(child: Container(height: 120,width: 120, child: CircularProgressIndicator(),),);
+        if (abasBloc.piramidesPodeRelatarController.value == null) {
+          return Center(
+            child: Container(
+              height: 120,
+              width: 120,
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (abasBloc.piramidesPodeRelatarController.value.isEmpty) {
+          return Center(
+              child: Container(
+            height: 150,
+            padding: EdgeInsets.all(35),
+            child: RaisedButton(
+                  elevation: 10,
+                  padding: EdgeInsets.all(20),
+                  onPressed: () {
+                    Navigator.pushNamed(context, ProcurarPiramide.route);
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Icon(
+                        Icons.search,
+                        size: 50,
+                        color: Colors.blueAccent.shade700,
+                      ),
+
+                      Container(
+                        width: 200,
+                        child: Text(
+                          'PEDIR PERMISSÃO A UMA PIRÂMIDE JÁ EXISTENTE',
+                          style: TextStyle(fontSize: 15),
+                        ),
+                      )
+                      // Column(
+                      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      //   children: <Widget>[
+                      //     Text(
+                      //       'PEDIR PERMISSÃO PODER RELATAR EM UMA PIRÂMIDE JA EXISTENTE',
+                      //       style: TextStyle(fontSize: 15),
+                      //     ),
+
+                      //   ],
+                      // ),
+                    ],
+                  ),
+                ),
+          ));
         } else {
           return ListView.builder(
             itemCount: abasBloc.piramidesPodeRelatarController.value.length,
@@ -43,7 +89,7 @@ class _PiramidePodeRelatarState extends State<PiramidePodeRelatar> {
               return _piramideCard(index, context);
             },
           );
-        }    
+        }
       },
     );
   }
@@ -73,8 +119,8 @@ Widget _piramideCard(int index, BuildContext context) {
           // color: Colors.cyanAccent,
           height: MediaQuery.of(context).size.height *
               0.08 *
-              abasBloc
-                  .piramidesPodeRelatarController.value[index].camadasDaPiramide.length,
+              abasBloc.piramidesPodeRelatarController.value[index]
+                  .camadasDaPiramide.length,
           //width: 300,
           alignment: Alignment.center,
 
@@ -83,14 +129,14 @@ Widget _piramideCard(int index, BuildContext context) {
             //   color: Colors.grey,
             height: MediaQuery.of(context).size.width *
                 0.12 *
-                abasBloc
-                    .piramidesPodeRelatarController.value[index].camadasDaPiramide.length,
+                abasBloc.piramidesPodeRelatarController.value[index]
+                    .camadasDaPiramide.length,
             width: MediaQuery.of(context).size.width * 0.95,
             alignment: Alignment.center,
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
-              itemCount: abasBloc
-                  .piramidesPodeRelatarController.value[index].camadasDaPiramide.length,
+              itemCount: abasBloc.piramidesPodeRelatarController.value[index]
+                  .camadasDaPiramide.length,
               itemBuilder: (ctx, camadaIndex) {
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -121,8 +167,11 @@ Widget _piramideCard(int index, BuildContext context) {
                               //  color: Colors.amber,
                               alignment: Alignment(0, 0.5),
                               child: Text(
-                                abasBloc.piramidesPodeRelatarController.value[index]
-                                    .camadasDaPiramide[camadaIndex].total
+                                abasBloc
+                                    .piramidesPodeRelatarController
+                                    .value[index]
+                                    .camadasDaPiramide[camadaIndex]
+                                    .total
                                     .toString(),
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
@@ -140,8 +189,11 @@ Widget _piramideCard(int index, BuildContext context) {
                         child: Align(
                             alignment: Alignment.centerLeft,
                             child: Text(
-                              abasBloc.piramidesPodeRelatarController.value[index]
-                                  .camadasDaPiramide[camadaIndex].nome,
+                              abasBloc
+                                  .piramidesPodeRelatarController
+                                  .value[index]
+                                  .camadasDaPiramide[camadaIndex]
+                                  .nome,
                             )),
                       ),
                     ),
@@ -162,18 +214,16 @@ Widget _piramideCard(int index, BuildContext context) {
               color: Colors.blueAccent,
               icon: Icon(Icons.info),
               onPressed: () {
-                 Navigator.push(
+                Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => InformacoesUi(
-                              piramide:
-                                  abasBloc.piramidesPodeRelatarController.value[index],
-                                  usuarioAdm: false,
+                              piramide: abasBloc
+                                  .piramidesPodeRelatarController.value[index],
+                              usuarioAdm: false,
                             )));
               },
             ),
-         
-         
           ],
         ),
         Container(
@@ -208,4 +258,3 @@ class DrawTriangle extends CustomPainter {
     return false;
   }
 }
-

@@ -15,33 +15,34 @@ class _LoginScreen3State extends State<LoginScreen3>
   taLogadoEssaBosta() async {
     String gg = await bloc.verSeEstaLogado();
 
-
+    //_googleSignIn.signInSilently();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var emailLogado = prefs.getString('email');
-
-    print(emailLogado);
-    if (gg == null || emailLogado !=null) {
+    setState(() {
+      mostrarCircularProgress = false;
+    });
+    // print("emailLogado");
+    if (gg == null || emailLogado != null) {
+//print("emailLogadoeeeenntrou");
       _navagarParaInicio();
-    }else{
-      setState(() {
-        mostrarCircularProgress=false;
-      });
-    }
-
+    } else {}
   }
-@override
+
+  @override
   void dispose() {
-   bloc.dispose();
+    bloc.dispose();
     super.dispose();
   }
+
   @override
   void initState() {
     super.initState();
 //print('emailLogado');
+    bloc = LoginBloc(context);
     taLogadoEssaBosta();
   }
 
-   bool mostrarCircularProgress = true;
+  bool mostrarCircularProgress = true;
   Widget HomePage() {
     return new Container(
       height: MediaQuery.of(context).size.height,
@@ -57,8 +58,10 @@ class _LoginScreen3State extends State<LoginScreen3>
       child: new Column(
         children: <Widget>[
           Visibility(
-            visible: MediaQuery.of(context).orientation == Orientation.portrait ? true :false,
-                      child: Container(
+            visible: MediaQuery.of(context).orientation == Orientation.portrait
+                ? true
+                : false,
+            child: Container(
               padding: EdgeInsets.only(top: 250.0),
               child: Center(
                 child: Icon(
@@ -169,7 +172,7 @@ class _LoginScreen3State extends State<LoginScreen3>
 
   Widget LoginPage() {
     return SingleChildScrollView(
-          child: new Container(
+      child: new Container(
         //height: 700,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -324,8 +327,14 @@ class _LoginScreen3State extends State<LoginScreen3>
                       ),
                       color: Colors.pink,
                       onPressed: () async {
+                        setState(() {
+                          mostrarCircularProgress=true;
+                        });
                         String g = await bloc.logar();
                         if (g != null) {
+                          setState(() {
+                          mostrarCircularProgress=false;
+                        });
                           _mostrarDialog(g);
                         } else {
                           _navagarParaInicio();
@@ -365,7 +374,8 @@ class _LoginScreen3State extends State<LoginScreen3>
                   new Expanded(
                     child: new Container(
                       margin: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(border: Border.all(width: 0.25)),
+                      decoration:
+                          BoxDecoration(border: Border.all(width: 0.25)),
                     ),
                   ),
                   Text(
@@ -378,7 +388,8 @@ class _LoginScreen3State extends State<LoginScreen3>
                   new Expanded(
                     child: new Container(
                       margin: EdgeInsets.all(8.0),
-                      decoration: BoxDecoration(border: Border.all(width: 0.25)),
+                      decoration:
+                          BoxDecoration(border: Border.all(width: 0.25)),
                     ),
                   ),
                 ],
@@ -409,10 +420,16 @@ class _LoginScreen3State extends State<LoginScreen3>
                                     new Expanded(
                                       child: new FlatButton(
                                         onPressed: () async {
+                                          setState(() {
+                                            mostrarCircularProgress = true;
+                                          });
                                           String g = await bloc
                                               .garantirEstarLogadoGoolgle();
-                                              print('112121121'+g);
+                                          print('112121121');                                         
                                           if (g != null) {
+                                             setState(() {
+                                            mostrarCircularProgress = false;
+                                          });
                                             _mostrarDialog(g);
                                           } else {
                                             _navagarParaInicio();
@@ -456,8 +473,8 @@ class _LoginScreen3State extends State<LoginScreen3>
   }
 
   Widget SignupPage() {
-    return  SingleChildScrollView(
-          child: Container(
+    return SingleChildScrollView(
+      child: Container(
         //height: MediaQuery.of(context).size.height,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -818,23 +835,20 @@ class _LoginScreen3State extends State<LoginScreen3>
   LoginBloc bloc = BlocProvider.getBloc<LoginBloc>();
   @override
   Widget build(BuildContext context) {
-    return
-        mostrarCircularProgress
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            :
-        SingleChildScrollView(
-      child: Container(
-          height: MediaQuery.of(context).size.height,
-        
-          child: PageView(
-            controller: _controller,
-            physics: new AlwaysScrollableScrollPhysics(),
-            children: <Widget>[LoginPage(), HomePage(), SignupPage()],
-            scrollDirection: Axis.horizontal,
-          )),
-    );
+    return mostrarCircularProgress
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
+            child: Container(
+                height: MediaQuery.of(context).size.height,
+                child: PageView(
+                  controller: _controller,
+                  physics: new AlwaysScrollableScrollPhysics(),
+                  children: <Widget>[LoginPage(), HomePage(), SignupPage()],
+                  scrollDirection: Axis.horizontal,
+                )),
+          );
   }
 
   void _navagarParaInicio() async {

@@ -43,7 +43,7 @@ class Instrucao1 extends StatelessWidget {
                     child: Divider(color: Colors.blue.shade500, height: .4)),
                 Container(
                   padding: EdgeInsets.all(15),
-                  height: 90,
+                  height: 100,
                   child: Text(
                     'Se a pirâmide for criada privada é preciso que os novos usuários peçam permissão' +
                         'para poderem utiliza-la criando novos relatos',

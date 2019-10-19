@@ -2,12 +2,16 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comportamentocoletivo/aux/draw-tronco.dart';
 import 'package:comportamentocoletivo/bloc/abas-bloc.dart';
+import 'package:comportamentocoletivo/bloc/nova-piramide-bloc.dart';
+import 'package:comportamentocoletivo/model/enums.dart';
 import 'package:comportamentocoletivo/ui/aceitar-usuarios/aba-usuarios-ui.dart';
 import 'package:comportamentocoletivo/ui/aceitar-usuarios/aceitar-usuarios-ui.dart';
 
 import 'package:comportamentocoletivo/ui/configuracoes-piramide.dart';
 import 'package:comportamentocoletivo/ui/informacoes-ui.dart';
+import 'package:comportamentocoletivo/ui/nova-piramide-ui.dart';
 import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
+import 'package:comportamentocoletivo/ui/piramides-ui.dart';
 import 'package:flutter/material.dart';
 
 AbasBloc abasBloc = BlocProvider.getBloc<AbasBloc>();
@@ -22,6 +26,7 @@ class _PiramideAdministroState extends State<PiramideAdministro> {
   void initState() {
     abasBloc = AbasBloc();
     abasBloc.carregaPiramide();
+    //  print(abasBloc.piramidesController.value.length);
     super.initState();
   }
 
@@ -38,13 +43,61 @@ class _PiramideAdministroState extends State<PiramideAdministro> {
         // print('tese');
         // print(abasBloc.piramidesController.value);
         // print(abasBloc.piramidesController.value.length);
-        if (abasBloc.piramidesController.value ==null) {
-          return Center(child: Container(height: 120,width: 120, child: CircularProgressIndicator(),),);
+        if (abasBloc.piramidesController.value == null) {
+          return Center(
+            child: Container(
+              height: 120,
+              width: 120,
+              child: CircularProgressIndicator(),
+            ),
+          );
+        } else if (abasBloc.piramidesController.value.isEmpty) {
+          return Center(
+              child: Container(
+                height: 150,
+            padding: EdgeInsets.all(40),
+            child: RaisedButton(
+              elevation: 10,
+              padding: EdgeInsets.all(20),
+              onPressed: () {
+                bloc = NovaPiramideBLoc();
+
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => NovaPiramide(
+                            modelo: piramidesModeloEnum.generica)));
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(
+                    Icons.change_history,
+                    size: 40,
+                    color: Colors.blueAccent.shade700,
+                  ),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: <Widget>[
+                      Text(
+                        ' CRIAR NOVA PIRÂMIDE ',
+                        style: TextStyle(fontSize: 15),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ));
         } else {
           return ListView.builder(
             itemCount: abasBloc.piramidesController.value.length,
             itemBuilder: (ctx, index) {
-              return _piramideCard(index, context);
+              return abasBloc.piramidesController.value.length == 0
+                  ? Center(
+                      child: Text('data'),
+                    )
+                  : _piramideCard(index, context);
             },
           );
         }
@@ -154,7 +207,7 @@ Widget _piramideCard(int index, BuildContext context) {
                               //  color: Colors.amber,
                               alignment: Alignment(0, 0.5),
                               child: Text(
-                             //   camadaIndex ==0?'1': camadaIndex ==1?'30': camadaIndex ==2?'300':camadaIndex ==3?'3000':camadaIndex ==4?'30000':'22',
+                                //   camadaIndex ==0?'1': camadaIndex ==1?'30': camadaIndex ==2?'300':camadaIndex ==3?'3000':camadaIndex ==4?'30000':'22',
                                 abasBloc.piramidesController.value[index]
                                     .camadasDaPiramide[camadaIndex].total
                                     .toString(),
@@ -202,9 +255,9 @@ Widget _piramideCard(int index, BuildContext context) {
                         builder: (context) => InformacoesUi(
                               piramide:
                                   abasBloc.piramidesController.value[index],
-                                  usuarioAdm: true,
+                              usuarioAdm: true,
                             )));
-              //  Navigator.pushNamed(context, Informacoes.route);
+                //  Navigator.pushNamed(context, Informacoes.route);
               },
             ),
             IconButton(
@@ -217,7 +270,7 @@ Widget _piramideCard(int index, BuildContext context) {
                     context,
                     MaterialPageRoute(
                         builder: (context) => ConfiguracoesPiramide(
-                        salvarAutomatico: true,
+                              salvarAutomatico: true,
                               piramide:
                                   abasBloc.piramidesController.value[index],
                             )));
@@ -229,7 +282,6 @@ Widget _piramideCard(int index, BuildContext context) {
               color: Colors.blueAccent,
               icon: Icon(Icons.directions_run),
               onPressed: () {
-              
                 Navigator.push(
                     context,
                     MaterialPageRoute(

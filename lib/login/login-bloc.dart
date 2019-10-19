@@ -49,48 +49,63 @@ class LoginBloc extends BlocBase {
   var _controllerLoading = BehaviorSubject<bool>.seeded(false);
   Stream<bool> get outLoading => _controllerLoading.stream;
 
-  Future<String> onClickGoogle() async {
-    String erro = '';
-    try {
-      _currentUser = await _googleSignIn.signIn();
-    } catch (error) {
-      erro = error;
-      //  print(error);
-    }
+  // Future<String> onClickGoogle() async {
+  //   String erro = '';
+  //   try {
+  //     _currentUser = await _googleSignIn.signIn();
+  //   } catch (error) {
+  //     erro = error;
+  //     //  print(error);
+  //   }
 
-    if (_currentUser != null) {
-      erro = null;
-    }
-    return erro;
-  }
+  //   if (_currentUser != null) {
+  //     erro = null;
+  //   }
+  //   return erro;
+  // }
 
   Future<String> garantirEstarLogadoGoolgle() async {
     String erro = 'Um erro ocorreu. ';
     GoogleSignInAccount user = _googleSignIn.currentUser;
+   FirebaseUser user1;
+    // if (user == null) {
+    user = await _googleSignIn.signIn();
+    print('logou google');
 
-    if (user == null) {
-      if (true) {
-        user = await _googleSignIn.signIn();
+    //  }
 
-        if (await _auth.currentUser() == null) {
-          // GoogleSignInAuthentication credentialGoogle =
-          //     await _googleSignIn.currentUser.authentication;
+    // if (await _auth.currentUser() == null) {
+    GoogleSignInAuthentication credentialGoogle =
+        await _googleSignIn.currentUser.authentication;
 
-          // final AuthCredential credential = GoogleAuthProvider.getCredential(
-          //   accessToken: credentialGoogle.accessToken,
-          //   idToken: credentialGoogle.idToken,
-          // );
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: credentialGoogle.accessToken,
+      idToken: credentialGoogle.idToken,
+    );
 
-          // final FirebaseUser user1 =
-          //     (await _auth.signInWithCredential(credential)).user;
-          //      print("signed in " + user.displayName);
-        }
-      }
-    }
+     user1 =
+        (await _auth.signInWithCredential(credential)).user;
+    // hyhy
+    // }
     _currentUser = user;
 
     if (user != null) {
       erro = null;
+      _senha2Cotroller.value = "aaaaaa";
+      _senhaCotroller.value = "aaaaaa";
+      _emailController.value = user.email;
+      nomeCotroller.value = user.displayName;
+      await novoUsuarioPeloGoogle(user1.uid);
+
+      // try {
+      //   await _autenticacao.loginUser(
+      //       _emailController.value, _senhaCotroller.value);
+      // } catch (e) {
+      //   erro = e.code;
+      //   return erro;
+      // }
+
+      _carregarSharedPerferenciasLogado(_emailController.value);
     }
     return erro;
   }
@@ -104,7 +119,7 @@ class LoginBloc extends BlocBase {
         return null;
       }
     });
-    _googleSignIn.signInSilently();
+   
 
     return 'Algo ocorreu';
 
@@ -168,7 +183,9 @@ class LoginBloc extends BlocBase {
         nomeCotroller.value == null) {
       return 'Preencha todos os campos';
     }
-
+    if (nomeCotroller.value == null || nomeCotroller.value.length < 2) {
+      return 'Nome de ter pelo menos 3 caracteres';
+    }
     //   _emailController.value='qq@qq.com';
     // _senhaCotroller.value='qqqqqq';
 
@@ -176,29 +193,45 @@ class LoginBloc extends BlocBase {
     // // _senhaCotroller.value='pppppp';
 
     _controllerLoading.add(!_controllerLoading.value);
+    print(_emailController.value + '_emailController.value');
     try {
       uid = await _autenticacao.signUp(
           _emailController.value.trim(), _senhaCotroller.value.trim());
       aviso = null;
     } catch (e) {
       aviso = e.code;
-    }
-    if (nomeCotroller.value == null || nomeCotroller.value.length < 2) {
-      return 'Nome de ter pelo menos 3 caracteres';
+      //  print('ggggghhhhhhhhh');
+      return aviso;
     }
 
     if (uid != null) {
-      // DocumentReference piramideDoc =
-      //     await db.collection('usuarios').document(uid);
+      DocumentReference usuDoc = await db.collection('usuarios').document(uid);
 
-      db.collection('usuarios').document(uid).setData(
-          Usuario(nome: nomeCotroller.value, piramidesPodeRelatarId: [])
-              .toMap());
+      db.collection('usuarios').document(usuDoc.documentID).setData(Usuario(
+          nome: nomeCotroller.value,
+          npiramides: 0,
+          piramidesPodeRelatarId: []).toMap());
     }
 
     _controllerLoading.add(!_controllerLoading.value);
     _carregarSharedPerferenciasLogado(_emailController.value);
     return aviso == null ? null : _excecaoAvisoNovoUsuario(aviso);
+  }
+
+  void novoUsuarioPeloGoogle(String uid) async {
+    print('uuuiiiiddddd');
+    print(uid);
+    DocumentSnapshot snap = await db.collection('usuarios').document(uid).get();
+    print('sanppppppppppppp');
+    print(snap.exists);
+    if (snap == null || !snap.exists) {
+      print('exxxxiisssttsss');
+      DocumentReference usuDoc = await db.collection('usuarios').document(uid);
+      db.collection('usuarios').document(usuDoc.documentID).setData(Usuario(
+          nome: nomeCotroller.value,
+          npiramides: 0,
+          piramidesPodeRelatarId: []).toMap());
+    }
   }
 
   String _excecaoAviso(String aviso) {
@@ -239,7 +272,9 @@ class LoginBloc extends BlocBase {
 
   Future<int> verOndeDirecionar() async {
     final FirebaseUser user = await _auth.currentUser();
+    // print(user);
     final String uid = user.uid;
+    print('zzxxxzzxxzzxxzzxx' + uid);
     QuerySnapshot rrr = await db
         .collection('piramides')
         .where('usuarioId', isEqualTo: uid)
@@ -250,6 +285,7 @@ class LoginBloc extends BlocBase {
     if (documents.isEmpty) {
       DocumentSnapshot result =
           await db.collection('usuarios').document(uid).get();
+      print(result.data.toString());
       Usuario user1 = Usuario.fromMap(result.data, result.documentID);
       if (user1.piramidesPodeRelatarId != null &&
           user1.piramidesPodeRelatarId.isNotEmpty) {

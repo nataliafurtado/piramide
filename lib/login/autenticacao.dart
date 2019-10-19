@@ -37,12 +37,13 @@ class Atenticacao {
 
   Future<String> loginUser(String email, String password) async {
     try {
+      //print(password);print(password);
       AuthResult result = await _auth
           .signInWithEmailAndPassword(email: email, password: password);
 
       print('pppppppppppppppp  :  ooooooo    : ' +
           result.additionalUserInfo.toString());
-      print(result.user.uid);
+   //   print(result.user.uid);
 
       return result.user.uid;
     } catch (e) {
