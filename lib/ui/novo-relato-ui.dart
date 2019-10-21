@@ -32,10 +32,11 @@ class _NovoRelatoState extends State<NovoRelato> {
     blocnovoRelat = NovoRelatoBloc();
     blocnovoRelat.carregaPerguntas(
         widget.piramide.piramideId, widget.camadaIndex);
+    // mostrarCircularProgress = false;
     super.initState();
   }
 
-  Widget _perguntaAberta(BuildContext context) {
+  Widget _perguntaAberta(BuildContext context, AsyncSnapshot<dynamic> snap) {
     return Container(
       // color: Colors.brown.shade100,
       height: MediaQuery.of(context).size.height * 0.70,
@@ -120,8 +121,20 @@ class _NovoRelatoState extends State<NovoRelato> {
           ),
           StreamBuilder(
               stream: blocnovoRelat.perguntasRelatoFluxo,
+              // initialData:[] ,
               builder: (context, snapshot) {
-                return _perguntaAberta(context);
+                return
+                 snapshot.data == null 
+                    ? Container(
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: Container(
+                          height: 50,
+                          child: Center(
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                      )
+                    : _perguntaAberta(context, snapshot);
               }),
         ],
       ),
@@ -176,6 +189,7 @@ class _NovoRelatoState extends State<NovoRelato> {
           title: Text(widget.piramide.nome),
         ),
         body: mostrarCircularProgress
+            //|| blocnovoRelat.perguntasRelatoController.value==null
             ? Center(
                 child: CircularProgressIndicator(),
               )
@@ -223,7 +237,8 @@ class _NovoRelatoState extends State<NovoRelato> {
             blocnovoRelat.perguntasRelatoController.value[indexPergunta]
                 .resposta = blocnovoRelat
                     .perguntasRelatoController.value[indexPergunta].resposta
-                    .substring(0, 10) +' : '+
+                    .substring(0, 10) +
+                ' : ' +
                 picked.hour.toString() +
                 ':' +
                 picked.minute.toString();

@@ -207,10 +207,10 @@ Widget _piramideCard(int index, BuildContext context) {
                               //  color: Colors.amber,
                               alignment: Alignment(0, 0.5),
                               child: Text(
-                                   camadaIndex ==0?'1': camadaIndex ==1?'30': camadaIndex ==2?'300':camadaIndex ==3?'3000':camadaIndex ==4?'30000':'22',
-                                // abasBloc.piramidesController.value[index]
-                                //     .camadasDaPiramide[camadaIndex].total
-                                //     .toString(),
+                              //     camadaIndex ==0?'1': camadaIndex ==1?'30': camadaIndex ==2?'300':camadaIndex ==3?'3000':camadaIndex ==4?'30000':'22',
+                                abasBloc.piramidesController.value[index]
+                                    .camadasDaPiramide[camadaIndex].total
+                                    .toString(),
                                 style: TextStyle(fontWeight: FontWeight.bold),
                               ),
                             ),

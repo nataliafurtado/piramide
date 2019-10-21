@@ -45,7 +45,7 @@ class NovoRelatoBloc extends BlocBase {
   // Sink<List<Pergunta>> get perguntasEvent => perguntasController.sink;
 
   var perguntasRelatoController =
-      BehaviorSubject<List<PerguntaRelato>>.seeded(lll);
+      BehaviorSubject<List<PerguntaRelato>>();
   Observable<List<PerguntaRelato>> get perguntasRelatoFluxo =>
       perguntasRelatoController.stream;
   Sink<List<PerguntaRelato>> get perguntasRelatoEvent =>

@@ -8,18 +8,18 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:738573227577:android:93196a36da3e739e47dfe8",
+        "mobilesdk_app_id": "1:738573227577:android:624668322697096747dfe8",
         "android_client_info": {
           "package_name": "com.comportamentocoletivo.piramide"
         }
       },
       "oauth_client": [
         {
-          "client_id": "738573227577-1rv3f7uhn014hjj5pf30qamo7574qr7r.apps.googleusercontent.com",
+          "client_id": "738573227577-705m944tiibdftcv9m82l3sag71rkh2p.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.comportamentocoletivo.piramide",
-            "certificate_hash": "ed1b62f3e4d5a1e3b203452291ab06a4ee0bb9f5"
+            "certificate_hash": "326734e6d639226399fdacfa947e79920be89c00"
           }
         },
         {

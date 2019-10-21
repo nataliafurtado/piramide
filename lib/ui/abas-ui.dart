@@ -94,7 +94,7 @@ class _AbaUiState extends State<AbaUi> {
           bottom: TabBar(
             onTap: (indexx) {
               setState(() {
-                titulo = '_tituloApp(indexx)';
+                titulo = _tituloApp(indexx);
               });
             },
             tabs: <Widget>[
