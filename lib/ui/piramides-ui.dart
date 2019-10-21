@@ -195,14 +195,15 @@ class Piramides extends StatelessWidget {
           ),
           Divider(color: Colors.black, height: .5),
           Container(
-            color: Colors.lightBlue.shade50,
+            color: Colors.grey.shade300,
             height: 100,
             child: Center(
               child: SizedBox(
                 height: 60,
                 width: MediaQuery.of(context).size.width * 0.75,
                 child: RaisedButton(
-                  color: Colors.blue.shade300,
+                  color: Colors.blue.shade200,
+                  //color: Colors.yellowAccent.shade400,
                   elevation: 10,
                   padding: EdgeInsets.all(10),
                   onPressed: () {
@@ -214,7 +215,8 @@ class Piramides extends StatelessWidget {
                       Icon(
                         Icons.help_outline,
                         size: 35,
-                        color: Colors.yellowAccent.shade200,
+                        color: Colors.blue.shade900,
+                       // color: Colors.grey.shade700,
                       ),
                       Column(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,

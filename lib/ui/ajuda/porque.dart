@@ -31,7 +31,7 @@ class Porque extends StatelessWidget {
                   padding: EdgeInsets.all(20),
                   height: 100,
                   child: Text(
-                    'Para gerenciar comportamentos que que ocorrem numa proporção de pirâmide  .',
+                    'Para gerênciar comportamentos que que ocorrem numa proporção de pirâmide  .',
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
                   ),

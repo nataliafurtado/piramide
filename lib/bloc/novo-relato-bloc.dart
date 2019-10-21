@@ -51,17 +51,21 @@ class NovoRelatoBloc extends BlocBase {
   Sink<List<PerguntaRelato>> get perguntasRelatoEvent =>
       perguntasRelatoController.sink;
 
+  var usuariosController = BehaviorSubject<List<Usuario>>.seeded([]);
+  Observable<List<Usuario>> get usuariosFluxo => usuariosController.stream;
+  Sink<List<Usuario>> get usuariosEvent => usuariosController.sink;
+
   Future<String> novoRelato(Piramide piramideId, int numerocamada) async {
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
 
-    for (var i = 0; i < perguntasRelatoController.value.length; i++) {
-      if (perguntasRelatoController.value[i].obrigatoria &&
-          (perguntasRelatoController.value[i].resposta==null ||
-              perguntasRelatoController.value[i].resposta.isEmpty)) {
-        return 'Todas a perguntas obrigatórias devem ser respondidas';
-      }
-    }
+    // for (var i = 0; i < perguntasRelatoController.value.length; i++) {
+    //   if (perguntasRelatoController.value[i].obrigatoria &&
+    //       (perguntasRelatoController.value[i].resposta == null ||
+    //           perguntasRelatoController.value[i].resposta.isEmpty)) {
+    //     return 'Todas a perguntas obrigatórias devem ser respondidas';
+    //   }
+    // }
 //pega usuario
     DocumentSnapshot result =
         await db.collection('usuarios').document(uid).get();
@@ -123,6 +127,79 @@ class NovoRelatoBloc extends BlocBase {
     return null;
   }
 
+  void carregaUsuarios(String autocomplete, String piramideId) async {
+    print(piramideId + 'piramideIdpiramideIdpiramideId');
+    // autocomplete = 'Natá';
+    final QuerySnapshot result = await db
+        .collection('usuarios')
+        .where('nome', isGreaterThan: autocomplete)
+        .where('nome', isLessThan: autocomplete + 'z')
+        .where('piramidesPodeRelatarId', arrayContains: piramideId)
+        .orderBy('nome')
+        .limit(10)
+        .getDocuments();
+    List<DocumentSnapshot> documents = result.documents;
+
+    print(' sssssss   : ' +
+        documents.length.toString() +
+        piramideId +
+        autocomplete);
+
+    List<Usuario> l = [];
+    documents.forEach((data) {
+      l.add(Usuario.fromMap(data.data, data.documentID));
+    });
+
+    // denovo inteiro
+
+    final QuerySnapshot result0 = await db
+        .collection('usuarios')
+        .where('nome', isEqualTo: autocomplete)
+        .where('piramidesPodeRelatarId', arrayContains: piramideId)        
+        .limit(10)
+        .getDocuments();
+    List<DocumentSnapshot> documents0 = result0.documents;
+
+    documents0.forEach((data) {
+      l.add(Usuario.fromMap(data.data, data.documentID));
+    });
+
+    final QuerySnapshot result1 = await db
+        .collection('usuarios')
+        .where('nome', isGreaterThan: autocomplete)
+        .where('nome', isLessThan: autocomplete + 'z')
+        .where('piramidesAdmnistra', arrayContains: piramideId)
+        .orderBy('nome')
+        .limit(10)
+        .getDocuments();
+    List<DocumentSnapshot> documents1 = result1.documents;
+
+    // print(' ffffff   : ' +
+    //     documents1.length.toString() +
+    //     piramideId +
+    //     autocomplete);
+
+    documents1.forEach((data) {
+      l.add(Usuario.fromMap(data.data, data.documentID));
+    });
+
+    // denovo inteor
+
+    final QuerySnapshot result3 = await db
+        .collection('usuarios')
+        .where('nome', isEqualTo: autocomplete)
+        .where('piramidesAdmnistra', arrayContains: piramideId)
+        .limit(10)
+        .getDocuments();
+    List<DocumentSnapshot> documents3 = result3.documents;
+
+    documents3.forEach((data) {
+      l.add(Usuario.fromMap(data.data, data.documentID));
+    });
+
+    usuariosEvent.add(l);
+  }
+
   void carregaPerguntas(String documentIDPiramide, int camadaIndex) async {
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
@@ -151,6 +228,7 @@ class NovoRelatoBloc extends BlocBase {
   @override
   void dispose() {
     perguntasRelatoController.close();
+    usuariosController.close();
     // camadasController.close();
     // camadaSelecinadaController.close();
     // piramideController.close();
@@ -190,5 +268,11 @@ class NovoRelatoBloc extends BlocBase {
       }
     }
     return infor;
+  }
+
+  void colocaNomeUsuarioNaResposta(int indexUsuarios, int indexPergunta) {
+    perguntasRelatoController.value[indexPergunta].resposta =
+        usuariosController.value[indexUsuarios].nome;
+    //  perguntasRelatoEvent.add(perguntasRelatoController.value);
   }
 }

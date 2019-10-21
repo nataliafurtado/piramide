@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:comportamentocoletivo/bloc/configuracoes-piramide-bloc.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
+import 'package:comportamentocoletivo/ui/abas-ui.dart';
 import 'package:flutter/material.dart';
 
 ConfiguracoesPiramideBloc blocConfiguracoesPiramide =
@@ -37,28 +38,80 @@ class _ConfiguracoesPiramideState extends State<ConfiguracoesPiramide> {
       appBar: AppBar(
         title: Text('CONFIGURAÇÕES'),
         actions: <Widget>[
-          // Visibility(
-          //   visible:
-          //       widget.salvarAutomatico == null ? false : widget.salvarAutomatico,
-          //   child: Builder(
-          //     builder: (ctx) {
-          //       return FlatButton(
-          //         onPressed: () async {
-          //           blocConfiguracoesPiramide.salvarPiramide(widget.piramide);
-          //           Scaffold.of(ctx).showSnackBar(
-          //                           SnackBar(
-          //                             content: Text('SALVO'),
-          //                           ),
-          //                         );
-          //         },
-          //         child: Text(
-          //           'Salvar',
-          //           style: TextStyle(color: Colors.white),
-          //         ),
-          //       );
-          //     },
-          //   ),
-          // )
+          Visibility(
+            visible: widget.salvarAutomatico == null
+                ? false
+                : widget.salvarAutomatico,
+            child: Builder(
+              builder: (ctx) {
+                return FlatButton(
+                  onPressed: () async {
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('ATENÇÃO'),
+                            content: Text(
+                                'Tem certeza que deseja excluir permanentemente essa piramides e todos os seus relatos?'),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () async {
+
+ showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('ATENÇÃO'),
+                            content: Text(
+                                'Depois de excluída não poderá mais ser recuperada?'),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () async {
+                                  await blocConfiguracoesPiramide
+                                      .excluirPiramide(
+                                          widget.piramide.piramideId);
+                                  Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      AbaUi.route,
+                                      ModalRoute.withName(AbaUi.route));
+                                  // Navigator.of(context).pop();
+                                  //  Navigator.of(context).pop();
+                                },
+                                child: Text('EXCLUIR'),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                   Navigator.of(context).pop();
+                                },
+                                child: Text('CANCELAR'),
+                              ),
+                            ],
+                          );
+                        });
+
+
+                                },
+                                child: Text('EXCLUIR'),
+                              ),
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('CANCELAR'),
+                              ),
+                            ],
+                          );
+                        });
+                  },
+                  child: Text(
+                    'EXCLUIR',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                );
+              },
+            ),
+          )
         ],
       ),
       body: SingleChildScrollView(
@@ -73,14 +126,14 @@ class _ConfiguracoesPiramideState extends State<ConfiguracoesPiramide> {
                 Text('PÚBLICA'),
                 Checkbox(
                   value: widget.piramide.publica,
-                  onChanged: (valor) {                   
+                  onChanged: (valor) {
                     setState(() {
                       widget.piramide.publica = valor;
                     });
-                    if (widget.salvarAutomatico!=null && widget.salvarAutomatico==true) {
+                    if (widget.salvarAutomatico != null &&
+                        widget.salvarAutomatico == true) {
                       print('salvo automatico');
-                        blocConfiguracoesPiramide.salvarPiramide(widget.piramide);
-                
+                      blocConfiguracoesPiramide.salvarPiramide(widget.piramide);
                     }
                   },
                 ),

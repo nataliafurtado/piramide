@@ -208,7 +208,7 @@ print(widget.usuarioLogadoId);
                                     widget.relato.perguntasRelato[index]
                                                 .resposta ==
                                             null
-                                        ? widget.relato.datacriacao
+                                        ? ''
                                         : widget.relato.perguntasRelato[index]
                                             .resposta,
                                   ),

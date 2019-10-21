@@ -1,4 +1,4 @@
-package com.comportamentocoletivo.trava
+package com.comportamentocoletivo.piramide
 
 import android.os.Bundle
 

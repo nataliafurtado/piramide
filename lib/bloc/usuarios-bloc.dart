@@ -168,6 +168,7 @@ class UsuariosBloc extends BlocBase {
   }
 
   void carregaUsuarios(String autocomplete, String piramideId) async {
+   // autocomplete = 'Natá';
     final QuerySnapshot result = await db
         .collection('usuarios')
         .where('nome', isGreaterThan: autocomplete)
@@ -178,7 +179,7 @@ class UsuariosBloc extends BlocBase {
         .getDocuments();
     List<DocumentSnapshot> documents = result.documents;
 
-    //  print(documents.length);
+      print(' sssssss   : '+documents.length.toString()+piramideId+autocomplete);
 
     List<Usuario> l = [];
     documents.forEach((data) {

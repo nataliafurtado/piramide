@@ -7,6 +7,7 @@ import 'package:comportamentocoletivo/model/informacoes.dart';
 import 'package:comportamentocoletivo/model/pergunta.dart';
 import 'package:comportamentocoletivo/model/periodo.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
+import 'package:comportamentocoletivo/model/usuario.dart';
 import 'package:comportamentocoletivo/ui/informacoes-ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -110,7 +111,7 @@ class NovaPiramideBLoc extends BlocBase {
           Pergunta(perguntaEnum: perguntasEnum.como),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
-        Camada(nome: 'Marginalização , Desumanização , Humiliação', perguntaDaCamada: [
+        Camada(nome: 'Marginalização , Humiliação', perguntaDaCamada: [
           Pergunta(perguntaEnum: perguntasEnum.como),
           Pergunta(perguntaEnum: perguntasEnum.como),
           Pergunta(perguntaEnum: perguntasEnum.como),
@@ -173,7 +174,7 @@ class NovaPiramideBLoc extends BlocBase {
       return 'É obrigatório informar um nome';
     }
 
-    if (piramideController.value.nome.length < 2) {
+    if (piramideController.value.nome.length < 3) {
       return 'Nome não pode ser menor de três digitos';
     }
 
@@ -205,6 +206,8 @@ class NovaPiramideBLoc extends BlocBase {
         .collection('piramides')
         .document();
 
+         
+
     for (var indexCamada = 0;
         indexCamada < camadasController.value.length;
         indexCamada++) {
@@ -233,6 +236,8 @@ class NovaPiramideBLoc extends BlocBase {
                 .toMap(indexCamada));
       }
     }
+
+    
 
     await db
         // .collection('usuarios')
@@ -277,6 +282,17 @@ class NovaPiramideBLoc extends BlocBase {
         .collection('informacoes')
         .document(infoDoc.documentID)
         .setData(info.toMap());
+print(uid);
+          DocumentSnapshot snap = await db.collection('usuarios').document(uid).get();
+
+         Usuario adm = Usuario.fromMap(snap.data, uid);
+         adm.npiramides=adm.npiramides+1;
+         print(adm.nome);
+         adm.piramidesAdmnistra.add(piramideDoc.documentID);
+            await db
+        .collection('usuarios')
+        .document(uid)
+        .setData(adm.toMap());
 
     //camadasController = BehaviorSubject<List<Camada>>.seeded(list2);
     //list.clear();

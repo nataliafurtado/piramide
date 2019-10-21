@@ -7,12 +7,17 @@ class Usuario {
   String usuarioId;
   //esse usuario pode relatar nessa piramides
   List<String> piramidesPodeRelatarId;
+  List<String> piramidesAdmnistra;
 
   //List<Pergunta> perguntaDaUsuario;
   // Key key;
 
   // Usuario({this.nome, this.perguntaDaUsuario});
-  Usuario({this.nome, this.npiramides, this.piramidesPodeRelatarId});
+  Usuario(
+      {this.nome,
+      this.npiramides,
+      this.piramidesPodeRelatarId,
+      this.piramidesAdmnistra});
 
   Map toMap() {
 // print(piramidesPodeRelatarId.toString());
@@ -20,12 +25,17 @@ class Usuario {
     if (piramidesPodeRelatarId == null) {
       piramidesPodeRelatarId = [];
     }
+    if (piramidesAdmnistra == null) {
+      piramidesAdmnistra = [];
+    }
     var array = piramidesPodeRelatarId.map((t) => t).toList();
+    var array1 = piramidesAdmnistra.map((t) => t).toList();
 
     Map<String, dynamic> map = {
       'nome': nome,
       'npiramides': npiramides,
       'piramidesPodeRelatarId': array,
+      'piramidesAdmnistra': array1,
       // 'publica': publica,
       // 'dataInicio': dataInicio,
     };
@@ -52,9 +62,16 @@ class Usuario {
     if (piramidesPodeRelatarId == null) {
       piramidesPodeRelatarId = [];
     }
+      if (piramidesAdmnistra == null) {
+      piramidesAdmnistra = [];
+    }
 
     for (var item in map['piramidesPodeRelatarId']) {
       piramidesPodeRelatarId.add(item);
+    }
+
+    for (var item1 in map['piramidesAdmnistra']) {
+      piramidesAdmnistra.add(item1);
     }
   }
 }

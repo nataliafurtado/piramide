@@ -1,6 +1,9 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:comportamentocoletivo/model/informacoes.dart';
+import 'package:comportamentocoletivo/model/pedido.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
+import 'package:comportamentocoletivo/model/relato.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -13,10 +16,6 @@ class ConfiguracoesPiramideBloc extends BlocBase {
 
   final db = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-
-
-
 
   // var piramidesPodeRelatarController =
   //     BehaviorSubject<List<Piramide>>();
@@ -41,17 +40,17 @@ class ConfiguracoesPiramideBloc extends BlocBase {
   //     l.add(Piramide.fromMap(result1.data, result1.documentID));
   //   }
 
-    // final QuerySnapshot result = await db
-    //     // .collection('usuarios')
-    //     // .document(uid)
-    //     .collection('piramides')
-    //     .where('usuarioId', isEqualTo: uid)
-    //     .getDocuments();
-    // final List<DocumentSnapshot> documents = result.documents;
-    // List<Piramide> l = [];
-    // documents.forEach((data) {
-    //   l.add(Piramide.fromMap(data.data, data.documentID));
-    // });
+  // final QuerySnapshot result = await db
+  //     // .collection('usuarios')
+  //     // .document(uid)
+  //     .collection('piramides')
+  //     .where('usuarioId', isEqualTo: uid)
+  //     .getDocuments();
+  // final List<DocumentSnapshot> documents = result.documents;
+  // List<Piramide> l = [];
+  // documents.forEach((data) {
+  //   l.add(Piramide.fromMap(data.data, data.documentID));
+  // });
 
   //    piramidesPodeRelatarEvent.add(l);
   // }
@@ -93,12 +92,58 @@ class ConfiguracoesPiramideBloc extends BlocBase {
     super.dispose();
   }
 
-  void salvarPiramide(Piramide piramide)async {
- await db
+  void salvarPiramide(Piramide piramide) async {
+    await db
         .collection('piramides')
         .document(piramide.piramideId)
         .updateData(piramide.toMap());
-     print(piramide.piramideId);
+    print(piramide.piramideId);
   }
 
+  void excluirPiramide(String piramideId) async {
+    final QuerySnapshot result = await db
+        .collection('relatos')
+        .where('piramideId', isEqualTo: piramideId)
+        .getDocuments();
+
+    List<DocumentSnapshot> documents = result.documents;
+
+    List<Relato> l = [];
+    documents.forEach((data) {
+      l.add(Relato.fromMap(data.data, data.documentID));
+    });
+
+    for (var i = 0; i < l.length; i++) {
+      await db.collection('relatos').document(l[i].relatoId).delete();
+    }
+
+    final QuerySnapshot result1 = await db
+        .collection('informacoes')
+        .where('piramideId', isEqualTo: piramideId)
+        .getDocuments();
+    List<DocumentSnapshot> documents1 = result1.documents;
+    List<Informacoes> ll = [];
+    documents1.forEach((data) {
+      ll.add(Informacoes.fromMap(data.data, data.documentID));
+    });
+    for (var i = 0; i < ll.length; i++) {
+         await db.collection('informacoes').document(ll[i].informacoesId).delete();
+    }
+
+
+    final QuerySnapshot result2 = await db
+        .collection('informacoes')
+        .where('piramideId', isEqualTo: piramideId)
+        .getDocuments();
+    List<DocumentSnapshot> documents2 = result2.documents;
+    List<Pedido> lll = [];
+    documents2.forEach((data) {
+      lll.add(Pedido.fromMap(data.data, data.documentID));
+    });
+    for (var i = 0; i < lll.length; i++) {
+         await db.collection('pedidos').document(lll[i].pedidoId).delete();
+    }
+
+    await db.collection('piramides').document(piramideId).delete();
+  }
 }

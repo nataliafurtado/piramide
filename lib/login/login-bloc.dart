@@ -91,8 +91,8 @@ class LoginBloc extends BlocBase {
 
     if (user != null) {
       erro = null;
-      _senha2Cotroller.value = "aaaaaa";
-      _senhaCotroller.value = "aaaaaa";
+      // _senha2Cotroller.value = "aaaaaa";
+      // _senhaCotroller.value = "aaaaaa";
       _emailController.value = user.email;
       nomeCotroller.value = user.displayName;
       await novoUsuarioPeloGoogle(user1.uid);
@@ -219,13 +219,11 @@ class LoginBloc extends BlocBase {
   }
 
   void novoUsuarioPeloGoogle(String uid) async {
-    print('uuuiiiiddddd');
+  
     print(uid);
-    DocumentSnapshot snap = await db.collection('usuarios').document(uid).get();
-    print('sanppppppppppppp');
+    DocumentSnapshot snap = await db.collection('usuarios').document(uid).get(); 
     print(snap.exists);
-    if (snap == null || !snap.exists) {
-      print('exxxxiisssttsss');
+    if (snap == null || !snap.exists) {   
       DocumentReference usuDoc = await db.collection('usuarios').document(uid);
       db.collection('usuarios').document(usuDoc.documentID).setData(Usuario(
           nome: nomeCotroller.value,
