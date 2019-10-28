@@ -18,14 +18,16 @@ class _LoginScreen3State extends State<LoginScreen3>
     //_googleSignIn.signInSilently();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var emailLogado = prefs.getString('email');
-    setState(() {
-      mostrarCircularProgress = false;
-    });
+ 
     // print("emailLogado");
     if (gg == null || emailLogado != null) {
 //print("emailLogadoeeeenntrou");
       _navagarParaInicio();
-    } else {}
+    } else {
+         setState(() {
+      mostrarCircularProgress = false;
+    });
+    }
   }
 
   @override

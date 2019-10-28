@@ -141,13 +141,13 @@ class LoginBloc extends BlocBase {
     String aviso = '';
     String uid = '';
     //print(_emailController.value);
-// if (_senhaCotroller.value == null ||
-//         _emailController.value == null) {
-//       return 'Preencha todos os campos';
-//     }
+if (_senhaCotroller.value == null ||
+        _emailController.value == null) {
+      return 'Preencha todos os campos';
+    }
 
-    _emailController.value = 'qq@qq.com';
-    _senhaCotroller.value = 'qqqqqq';
+    // _emailController.value = 'qq@qq.com';
+    // _senhaCotroller.value = 'qqqqqq';
     //  _emailController.value = 'ee@ee.com';
     //   _senhaCotroller.value = 'eeeeee';
     //   _emailController.value='qqq@qqq.com';
@@ -155,7 +155,7 @@ class LoginBloc extends BlocBase {
     _controllerLoading.add(!_controllerLoading.value);
     try {
       uid = await _autenticacao.loginUser(
-          _emailController.value, _senhaCotroller.value);
+          _emailController.value.trim(), _senhaCotroller.value.trim());
       // _emailController.value, _senhaCotroller.value);
       aviso = null;
     } catch (e) {

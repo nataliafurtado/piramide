@@ -22,10 +22,17 @@ class NovaPiramide extends StatefulWidget {
   _NovaPiramideState createState() => _NovaPiramideState();
 }
 
+List<TextEditingController> _controllers = new List();
+
 class _NovaPiramideState extends State<NovaPiramide> {
   @override
   void initState() {
-    bloc.carregaModelo(widget.modelo);
+    List<Camada> lc = bloc.carregaModelo(widget.modelo);
+    for (var i = 0; i < lc.length; i++) {
+      _controllers.add(new TextEditingController(
+          text: bloc.camadasController.value[i].nome));
+    }
+
     super.initState();
   }
 
@@ -355,6 +362,9 @@ String rrr() {
   return random.nextInt(1000000000).toString();
 }
 
+// final formKey = GlobalKey<FormState>();
+
+List<GlobalKey> formKeyList = List();
 Widget _piramideCard(BuildContext context) {
   return Container(
     color: Colors.blue.shade50,
@@ -367,17 +377,28 @@ Widget _piramideCard(BuildContext context) {
           alignment: Alignment.center,
           child: Container(
             //    color: Colors.grey,
-            height: MediaQuery.of(context).size.width * 0.12 * 5,    
+            height: MediaQuery.of(context).size.width * 0.12 * 5,
             width: MediaQuery.of(context).size.width * 0.95,
             alignment: Alignment.center,
             child: ListView.builder(
               physics: NeverScrollableScrollPhysics(),
               key: Key(UniqueKey().toString()),
-
               itemCount: bloc.camadasController.value.length <= 4
                   ? bloc.camadasController.value.length + 1
                   : bloc.camadasController.value.length,
               itemBuilder: (ctx, ii) {
+                // print(ii);
+                // if (bloc.camadasController.value.length <= 4 &&
+                //     bloc.camadasController.value.length != ii) {
+                // _controllers.add(new TextEditingController(
+                //     text: bloc.camadasController.value[ii].nome));
+                // }
+
+                // TextEditingController controller = TextEditingController();
+                //   controller.text = bloc.camadasController.value[ii].nome;
+                //var formKey = GlobalKey<FormState>();
+                formKeyList.add(GlobalKey<FormState>());
+                //   final formKey = GlobalKey<FormState>();
                 return ii == (bloc.camadasController.value.length) &&
                         bloc.camadasController.value.length <= 4
                     ? Row(
@@ -508,23 +529,27 @@ Widget _piramideCard(BuildContext context) {
                               //alignment: Alignment.centerLeft,
                               height: MediaQuery.of(context).size.width * 0.12,
                               width: MediaQuery.of(context).size.width * (0.35),
-                              child: InkWell(
-                                splashColor: Colors.deepOrange,
-                                onTap: () {
-                                  // print(
-                                  //     bloc.camadasController.value.toString());
-                                },
-                                child: Align(
-                                    alignment: Alignment.centerLeft,
-                                    child: TextFormField(
-                                      initialValue:
-                                          bloc.camadasController.value[ii].nome,
-                                      onChanged: (text) {
-                                        bloc.camadasController.value[ii].nome =
-                                            text;
-                                      },
-                                    )),
+                              child:
+                                  //  InkWell(
+                                  //   splashColor: Colors.deepOrange,
+                                  //   onTap: () {
+                                  //      print('1111111');
+                                  //     // print(
+                                  //     //     bloc.camadasController.value.toString());
+                                  //   },
+                                  //   child:
+                                  Align(
+                                alignment: Alignment.centerLeft,
+                                child: TextField(
+                                  key: formKeyList[ii],
+                                  controller: _controllers[ii],
+                                  onChanged: (text) {
+                                    bloc.camadasController.value[ii].nome =
+                                        text;
+                                  },
+                                ),
                               ),
+                              // ),
                             ),
                           ),
                         ],

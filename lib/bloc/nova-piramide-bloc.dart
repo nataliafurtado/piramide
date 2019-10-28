@@ -63,7 +63,7 @@ class NovaPiramideBLoc extends BlocBase {
     // ]),
   ];
 
-  void carregaModelo(piramidesModeloEnum modelo) {
+  List<Camada> carregaModelo(piramidesModeloEnum modelo) {
     print(modelo.toString());
 
     if (modelo == piramidesModeloEnum.birt) {
@@ -162,6 +162,7 @@ class NovaPiramideBLoc extends BlocBase {
       ];
     }
     camadaEvent.add(list);
+    return list;
   }
 
   var camadasController = BehaviorSubject<List<Camada>>.seeded(list);
