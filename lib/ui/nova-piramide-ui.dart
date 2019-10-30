@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:comportamentocoletivo/aux/draw-tronco.dart';
+import 'package:comportamentocoletivo/bloc/nova-piramide-bloc.dart';
 //import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:comportamentocoletivo/model/camada.dart';
 import 'package:comportamentocoletivo/model/enums.dart';
@@ -27,6 +28,7 @@ List<TextEditingController> _controllers = new List();
 class _NovaPiramideState extends State<NovaPiramide> {
   @override
   void initState() {
+  
     List<Camada> lc = bloc.carregaModelo(widget.modelo);
     for (var i = 0; i < lc.length; i++) {
       _controllers.add(new TextEditingController(
@@ -36,6 +38,13 @@ class _NovaPiramideState extends State<NovaPiramide> {
     super.initState();
   }
 
+@override
+  void dispose() {
+  bloc.dispose();
+  _controllers.clear();
+ // print('fechouuuuuuuuuuuuuuuuuuuuuu');
+    super.dispose();
+  }
   void _orderList(OrderOptions result) {
     switch (result) {
       case OrderOptions.comofunciona:
@@ -171,7 +180,7 @@ class _NovaPiramideState extends State<NovaPiramide> {
                       child: RaisedButton.icon(
                         icon: Icon(Icons.settings),
                         label: Text('    Configurações    '),
-                        onPressed: () {
+                        onPressed: () {              
                           Navigator.push(
                               context,
                               MaterialPageRoute(

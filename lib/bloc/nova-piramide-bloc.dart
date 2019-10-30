@@ -64,7 +64,7 @@ class NovaPiramideBLoc extends BlocBase {
   ];
 
   List<Camada> carregaModelo(piramidesModeloEnum modelo) {
-    print(modelo.toString());
+ //   print(modelo.toString());
 
     if (modelo == piramidesModeloEnum.birt) {
       list = [

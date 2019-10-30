@@ -18,15 +18,15 @@ class _LoginScreen3State extends State<LoginScreen3>
     //_googleSignIn.signInSilently();
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var emailLogado = prefs.getString('email');
- 
+
     // print("emailLogado");
     if (gg == null || emailLogado != null) {
 //print("emailLogadoeeeenntrou");
       _navagarParaInicio();
     } else {
-         setState(() {
-      mostrarCircularProgress = false;
-    });
+      setState(() {
+        mostrarCircularProgress = false;
+      });
     }
   }
 
@@ -311,7 +311,14 @@ class _LoginScreen3State extends State<LoginScreen3>
                       ),
                       textAlign: TextAlign.end,
                     ),
-                    onPressed: () => {},
+                    onPressed: () async {
+                      String aviso = await bloc.resetPassword();
+                      if (aviso == null) {
+                        _mostrarDialog('E-mail de recuperação enviado ao seu e-mail!');
+                      } else {
+                        _mostrarDialog(aviso);
+                      }
+                    },
                   ),
                 ),
               ],
@@ -330,13 +337,13 @@ class _LoginScreen3State extends State<LoginScreen3>
                       color: Colors.pink,
                       onPressed: () async {
                         setState(() {
-                          mostrarCircularProgress=true;
+                          mostrarCircularProgress = true;
                         });
                         String g = await bloc.logar();
                         if (g != null) {
                           setState(() {
-                          mostrarCircularProgress=false;
-                        });
+                            mostrarCircularProgress = false;
+                          });
                           _mostrarDialog(g);
                         } else {
                           _navagarParaInicio();
@@ -427,11 +434,11 @@ class _LoginScreen3State extends State<LoginScreen3>
                                           });
                                           String g = await bloc
                                               .garantirEstarLogadoGoolgle();
-                                          print('112121121');                                         
+                                          print('112121121');
                                           if (g != null) {
-                                             setState(() {
-                                            mostrarCircularProgress = false;
-                                          });
+                                            setState(() {
+                                              mostrarCircularProgress = false;
+                                            });
                                             _mostrarDialog(g);
                                           } else {
                                             _navagarParaInicio();
@@ -760,6 +767,7 @@ class _LoginScreen3State extends State<LoginScreen3>
       onPressed: () async {
         String g = await bloc.novoUsuario();
         if (g != null) {
+          bloc.controllerLoading.add(!bloc.controllerLoading.value);
           _mostrarDialog(g);
         } else {
           Navigator.pushReplacement(

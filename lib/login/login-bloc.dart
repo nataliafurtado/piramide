@@ -46,8 +46,8 @@ class LoginBloc extends BlocBase {
   Observable<String> get emailFluxo => _emailController.stream;
   Sink<String> get emailEvent => _emailController.sink;
 
-  var _controllerLoading = BehaviorSubject<bool>.seeded(false);
-  Stream<bool> get outLoading => _controllerLoading.stream;
+  var controllerLoading = BehaviorSubject<bool>.seeded(false);
+  Stream<bool> get outLoading => controllerLoading.stream;
 
   // Future<String> onClickGoogle() async {
   //   String erro = '';
@@ -67,7 +67,7 @@ class LoginBloc extends BlocBase {
   Future<String> garantirEstarLogadoGoolgle() async {
     String erro = 'Um erro ocorreu. ';
     GoogleSignInAccount user = _googleSignIn.currentUser;
-   FirebaseUser user1;
+    FirebaseUser user1;
     // if (user == null) {
     user = await _googleSignIn.signIn();
     print('logou google');
@@ -83,8 +83,7 @@ class LoginBloc extends BlocBase {
       idToken: credentialGoogle.idToken,
     );
 
-     user1 =
-        (await _auth.signInWithCredential(credential)).user;
+    user1 = (await _auth.signInWithCredential(credential)).user;
     // hyhy
     // }
     _currentUser = user;
@@ -119,7 +118,6 @@ class LoginBloc extends BlocBase {
         return null;
       }
     });
-   
 
     return 'Algo ocorreu';
 
@@ -141,8 +139,7 @@ class LoginBloc extends BlocBase {
     String aviso = '';
     String uid = '';
     //print(_emailController.value);
-if (_senhaCotroller.value == null ||
-        _emailController.value == null) {
+    if (_senhaCotroller.value == null || _emailController.value == null) {
       return 'Preencha todos os campos';
     }
 
@@ -152,7 +149,7 @@ if (_senhaCotroller.value == null ||
     //   _senhaCotroller.value = 'eeeeee';
     //   _emailController.value='qqq@qqq.com';
     // _senhaCotroller.value='qqqqqq';
-    _controllerLoading.add(!_controllerLoading.value);
+    controllerLoading.add(!controllerLoading.value);
     try {
       uid = await _autenticacao.loginUser(
           _emailController.value.trim(), _senhaCotroller.value.trim());
@@ -162,7 +159,7 @@ if (_senhaCotroller.value == null ||
       aviso = e.code;
     }
 
-    _controllerLoading.add(!_controllerLoading.value);
+    controllerLoading.add(!controllerLoading.value);
     _carregarSharedPerferenciasLogado(_emailController.value);
     return aviso == null ? null : _excecaoAviso(aviso);
   }
@@ -192,7 +189,7 @@ if (_senhaCotroller.value == null ||
     // //   _emailController.value='pp@pp.com';
     // // _senhaCotroller.value='pppppp';
 
-    _controllerLoading.add(!_controllerLoading.value);
+    controllerLoading.add(!controllerLoading.value);
     print(_emailController.value + '_emailController.value');
     try {
       uid = await _autenticacao.signUp(
@@ -213,17 +210,20 @@ if (_senhaCotroller.value == null ||
           piramidesPodeRelatarId: []).toMap());
     }
 
-    _controllerLoading.add(!_controllerLoading.value);
+ 
     _carregarSharedPerferenciasLogado(_emailController.value);
-    return aviso == null ? null : _excecaoAvisoNovoUsuario(aviso);
+    if (aviso == null) {
+      return null;
+    } else {
+      return _excecaoAvisoNovoUsuario(aviso);
+    }
   }
 
   void novoUsuarioPeloGoogle(String uid) async {
-  
     print(uid);
-    DocumentSnapshot snap = await db.collection('usuarios').document(uid).get(); 
+    DocumentSnapshot snap = await db.collection('usuarios').document(uid).get();
     print(snap.exists);
-    if (snap == null || !snap.exists) {   
+    if (snap == null || !snap.exists) {
       DocumentReference usuDoc = await db.collection('usuarios').document(uid);
       db.collection('usuarios').document(usuDoc.documentID).setData(Usuario(
           nome: nomeCotroller.value,
@@ -256,11 +256,18 @@ if (_senhaCotroller.value == null ||
     }
   }
 
-  onClickFacebook() {}
+  String _excecaoRecuperacaoEmail(String aviso) {
+    if (aviso.contains('ERROR_INVALID_EMAIL')) {
+      return 'Email inválido!';
+    } else if (aviso.contains('ERROR_USER_NOT_FOUND')) {
+      return 'Usuário não encontrado!';
+    }
+    return 'Email não encontrado!';
+  }
 
   @override
   void dispose() {
-    _controllerLoading.close();
+    controllerLoading.close();
     _emailController.close();
     _senhaCotroller.close();
     _senha2Cotroller.close();
@@ -294,5 +301,21 @@ if (_senhaCotroller.value == null ||
     } else {
       return 0;
     }
+  }
+
+  @override
+  Future<String> resetPassword() async {
+    String aviso;
+    if (_emailController.value == null || _emailController.value.isEmpty) {
+      return 'Digite um email válido!';
+    }
+    try {
+      await _auth.sendPasswordResetEmail(email: _emailController.value);
+      aviso = null;
+    } catch (e) {
+      // print(e.code);
+      aviso = _excecaoRecuperacaoEmail(e.code);
+    }
+    return aviso;
   }
 }
