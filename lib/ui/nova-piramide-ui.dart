@@ -265,8 +265,11 @@ Widget _editarCamadaPiramide(BuildContext context) {
               ),
             ),
           ),
-          Text(bloc.camadasController
-              .value[bloc.camadaSelecinadaController.value].nome)
+          Container(
+            width: MediaQuery.of(context).size.width *0.5,
+            child: Text(bloc.camadasController
+                .value[bloc.camadaSelecinadaController.value].nome),
+          )
         ]),
         Container(
           height: 30,

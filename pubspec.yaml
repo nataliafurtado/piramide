@@ -11,7 +11,7 @@ description: A new Flutter project.
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+08
+version: 1.0.0+10
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -32,6 +32,7 @@ dependencies:
   intl: ^0.16.0
   shared_preferences: ^0.5.3+5
   flutter_launcher_icons: ^0.7.3
+  flare_flutter: ^1.6.4
   
 
   # The following adds the Cupertino Icons font to your application.
@@ -65,7 +66,12 @@ flutter:
   - assets/lgbt.png 
   - assets/participar.png 
   - assets/per.png
-  - assets/aceitar.png 
+  - assets/aceitar.png
+  - assets/smile.flr
+  - assets/piramide.flr
+  - assets/piramide2.flr
+  - assets/piramide3.flr
+  - assets/login1.flr 
   #  - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

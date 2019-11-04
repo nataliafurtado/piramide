@@ -208,9 +208,16 @@ class LoginBloc extends BlocBase {
           nome: nomeCotroller.value,
           npiramides: 0,
           piramidesPodeRelatarId: []).toMap());
+
+      DocumentSnapshot snapNovo =
+          await db.collection('usuarios').document(usuDoc.documentID).get();
+      Usuario user1 = Usuario.fromMap(snapNovo.data, snapNovo.documentID);
+
+      user1.piramidesPodeRelatarId.add('Fl6Qod4bU0BrmPRUIx5y');
+      user1.piramidesPodeRelatarId.add('Ay9fVHcq2nhDxJJXqPiA');
+      await db.collection('usuarios').document(uid).updateData(user1.toMap());
     }
 
- 
     _carregarSharedPerferenciasLogado(_emailController.value);
     if (aviso == null) {
       return null;
@@ -223,13 +230,24 @@ class LoginBloc extends BlocBase {
     print(uid);
     DocumentSnapshot snap = await db.collection('usuarios').document(uid).get();
     print(snap.exists);
+    Usuario user1;
     if (snap == null || !snap.exists) {
       DocumentReference usuDoc = await db.collection('usuarios').document(uid);
       db.collection('usuarios').document(usuDoc.documentID).setData(Usuario(
           nome: nomeCotroller.value,
           npiramides: 0,
           piramidesPodeRelatarId: []).toMap());
+
+      DocumentSnapshot snapNovo =
+          await db.collection('usuarios').document(usuDoc.documentID).get();
+      user1 = Usuario.fromMap(snapNovo.data, snapNovo.documentID);
+    } else {
+      user1 = Usuario.fromMap(snap.data, snap.documentID);
     }
+
+    user1.piramidesPodeRelatarId.add('Fl6Qod4bU0BrmPRUIx5y');
+    user1.piramidesPodeRelatarId.add('Ay9fVHcq2nhDxJJXqPiA');
+    await db.collection('usuarios').document(uid).updateData(user1.toMap());
   }
 
   String _excecaoAviso(String aviso) {

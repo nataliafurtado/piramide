@@ -2,8 +2,10 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:comportamentocoletivo/aux/draw-tronco.dart';
 import 'package:comportamentocoletivo/bloc/informacoes-bloc.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
+import 'package:comportamentocoletivo/ui/abas-ui.dart';
 import 'package:comportamentocoletivo/ui/ver-relatos.ui.dart';
 import 'package:date_format/date_format.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -12,7 +14,8 @@ InformacoesBloc infoBloc = BlocProvider.getBloc<InformacoesBloc>();
 class InformacoesUi extends StatefulWidget {
   final Piramide piramide;
   final bool usuarioAdm;
-  InformacoesUi({this.piramide, this.usuarioAdm});
+  final bool podeDeixarSeguir;
+  InformacoesUi({this.piramide, this.usuarioAdm, this.podeDeixarSeguir});
   static const route = '/informacoes';
   @override
   _InformacoesUiState createState() => _InformacoesUiState();
@@ -21,6 +24,7 @@ class InformacoesUi extends StatefulWidget {
 class _InformacoesUiState extends State<InformacoesUi> {
   /// bool pronta = false;
   bool podeSalvar = false;
+
   bool mostrarCircularProgress = false;
   @override
   void initState() {
@@ -30,6 +34,7 @@ class _InformacoesUiState extends State<InformacoesUi> {
     // TODO: implement initState
     super.initState();
   }
+
   // @override
   // void didChangeDependencies() {
   // setState(() {
@@ -37,7 +42,7 @@ class _InformacoesUiState extends State<InformacoesUi> {
   //   });
   //   super.didChangeDependencies();
   // }
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +61,27 @@ class _InformacoesUiState extends State<InformacoesUi> {
               },
               child: Text(
                 'Salvar',
+                style: TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+          Visibility(
+            visible: widget.podeDeixarSeguir,
+            child: FlatButton(
+              onPressed: () async {
+                setState(() {
+                  mostrarCircularProgress = true;
+                });
+                await infoBloc.deixarDeSeguirPiramide(widget.piramide);
+              //  Future.delayed(Duration(seconds: 2));
+               // Navigator.of(context).pop();
+                   Navigator.pushNamedAndRemoveUntil(
+                                      context,
+                                      AbaUi.route,
+                                      ModalRoute.withName(AbaUi.route));
+              },
+              child: Text(
+                'Deixar de Seguir',
                 style: TextStyle(color: Colors.white),
               ),
             ),
@@ -143,7 +169,10 @@ class _InformacoesUiState extends State<InformacoesUi> {
                 alignment: Alignment(0, 0),
                 child: Text(
                   'TOTAL DE RELATOS ( ${infoBloc.informacoesController.value.periodos[0].totalTodasAsCamadas} ) ',
-                  style: TextStyle(fontWeight: FontWeight.bold,fontSize: 18,color: Colors.blue.shade900),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                      color: Colors.blue.shade900),
                 ),
               ),
             ),
@@ -231,8 +260,8 @@ class _InformacoesUiState extends State<InformacoesUi> {
                             height: MediaQuery.of(context).size.width * 0.12,
                             width: MediaQuery.of(context).size.width * (0.35),
                             child: Text(
-                              widget.piramide.camadasDaPiramide[camadaIndex]
-                                      .nome +
+                              _cortaStringGande(widget.piramide
+                                      .camadasDaPiramide[camadaIndex].nome) +
                                   '  (' +
                                   widget.piramide.camadasDaPiramide[camadaIndex]
                                       .porcentagem
@@ -267,7 +296,7 @@ class _InformacoesUiState extends State<InformacoesUi> {
   Widget _piramideCard(int periIndex) {
     return Card(
       elevation: 3,
-        shape: RoundedRectangleBorder(
+      shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
           side: BorderSide(color: Colors.blue, width: 1)),
       color: Colors.blue.shade50,
@@ -284,7 +313,8 @@ class _InformacoesUiState extends State<InformacoesUi> {
                 alignment: Alignment(0, 0),
                 child: Text(
                   'PERÍODO ${periIndex} ( ${infoBloc.informacoesController.value.periodos[periIndex].totalTodasAsCamadas} ) ',
-                  style: TextStyle(fontWeight: FontWeight.bold,color: Colors.blue.shade900),
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold, color: Colors.blue.shade900),
                 ),
               ),
             ),
@@ -374,8 +404,8 @@ class _InformacoesUiState extends State<InformacoesUi> {
                             height: MediaQuery.of(context).size.width * 0.12,
                             width: MediaQuery.of(context).size.width * (0.35),
                             child: Text(
-                              widget.piramide.camadasDaPiramide[camadaIndex]
-                                      .nome +
+                              _cortaStringGande(widget.piramide
+                                      .camadasDaPiramide[camadaIndex].nome) +
                                   '  (' +
                                   infoBloc
                                       .informacoesController
@@ -463,6 +493,28 @@ class _InformacoesUiState extends State<InformacoesUi> {
                       ],
                     ),
                   )
+                  ,
+
+                   Visibility(
+                    visible: infoBloc.informacoesController.value
+                            .periodos[periIndex].dataFim ==
+                        null,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text('Data Fim'),
+                        Container(
+                          width: 27,
+                        ),
+                       Text(_formataData(infoBloc.informacoesController
+                                .value.periodos[periIndex].dataFim))
+                           ,
+
+                        // Text(_formataData(infoBloc.informacoesController.value
+                        //     .periodos[periIndex].dataInicio)),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),
@@ -473,6 +525,14 @@ class _InformacoesUiState extends State<InformacoesUi> {
         ),
       ),
     );
+  }
+
+  String _cortaStringGande(String string) {
+    if (string.length > 30) {
+      return string = string.substring(0, 30);
+    } else {
+      return string;
+    }
   }
 
 //  String _value = 'ggg';

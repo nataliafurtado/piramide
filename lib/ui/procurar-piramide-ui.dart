@@ -40,7 +40,7 @@ class _ProcurarPiramideState extends State<ProcurarPiramide> {
   @override
   void initState() {
     blocProcPiramide = ProcurarPiramideBloc();
-
+blocProcPiramide.carragaPublicos();
     super.initState();
   }
 

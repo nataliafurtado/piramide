@@ -39,7 +39,7 @@ class Piramides extends StatelessWidget {
                       Container(
                         width: 200,
                         child: Text(
-                          'PEDIR PERMISSÃO A UMA PIRÂMIDE JÁ EXISTENTE',
+                          'PEDIR PARA PARTICIPAR DE UMA PIRÂMIDE',
                           style: TextStyle(fontSize: 15),
                         ),
                       )
@@ -90,7 +90,7 @@ class Piramides extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Text(
-                            ' CRIAR NOVA PIRÂMIDE ',
+                            'CRIAR NOVA PIRÂMIDE ',
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -130,7 +130,7 @@ class Piramides extends StatelessWidget {
                                 modelo: piramidesModeloEnum.birt)));
                   },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Icon(
                         Icons.local_hospital,
@@ -141,7 +141,7 @@ class Piramides extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Text(
-                            '             PIRÂMIDE DE BIRD ',
+                            'PIRÂMIDE DE BIRD ',
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -171,7 +171,7 @@ class Piramides extends StatelessWidget {
                                 modelo: piramidesModeloEnum.lgbtfobia)));
                   },
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       Icon(
                         Icons.looks,
@@ -182,7 +182,7 @@ class Piramides extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Text(
-                            '            PIRÂMIDE DE LGBTFOBIA ',
+                            'PIRÂMIDE DE LGBTFOBIA ',
                             style: TextStyle(fontSize: 15),
                           ),
                         ],
@@ -222,7 +222,7 @@ class Piramides extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: <Widget>[
                           Text(
-                            '  COMO FUNCIONA? ',
+                            'COMO FUNCIONA? ',
                             style: TextStyle(fontSize: 15),
                           ),
                         ],

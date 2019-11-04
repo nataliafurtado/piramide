@@ -1,6 +1,8 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:comportamentocoletivo/login/login-bloc.dart';
 import 'package:comportamentocoletivo/ui/abas-ui.dart';
+import 'package:flare_flutter/flare_actor.dart';
+import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -41,7 +43,22 @@ class _LoginScreen3State extends State<LoginScreen3>
     super.initState();
 //print('emailLogado');
     bloc = LoginBloc(context);
+    Future.delayed(Duration(seconds: 2)).then((g){
+      controlLogin.play('go');
+    });
     taLogadoEssaBosta();
+  }
+  final FlareControls controlLogin = FlareControls();
+    Widget iconePiramideFazParte() {
+    // print(pirAdmAnime.toString());
+    return FlareActor(
+      'assets/login1.flr',
+      alignment: Alignment.center,
+      fit: BoxFit.contain,
+      animation: 'idle',
+      controller: controlLogin,
+     // color: Colors.white70,
+    );
   }
 
   bool mostrarCircularProgress = true;
@@ -64,13 +81,15 @@ class _LoginScreen3State extends State<LoginScreen3>
                 ? true
                 : false,
             child: Container(
-              padding: EdgeInsets.only(top: 250.0),
+              padding: EdgeInsets.only(top: 100.0),
+             height: MediaQuery.of(context).size.height*0.3,
               child: Center(
-                child: Icon(
-                  Icons.change_history,
-                  color: Colors.white,
-                  size: 40.0,
-                ),
+                child:iconePiramideFazParte()
+                //  Icon(
+                //   Icons.change_history,
+                //   color: Colors.white,
+                //   size: 40.0,
+                // ),
               ),
             ),
           ),

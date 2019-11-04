@@ -25,8 +25,10 @@ class NovaPiramideBLoc extends BlocBase {
   final db = Firestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  final piramideController = BehaviorSubject<Piramide>.seeded(Piramide(publica: false,
-      camadasDaPiramide: [], dataInicio: DateTime.now().toIso8601String()));
+  final piramideController = BehaviorSubject<Piramide>.seeded(Piramide(
+      publica: false,
+      camadasDaPiramide: [],
+      dataInicio: DateTime.now().toIso8601String()));
   Observable<Piramide> get piramideFluxo => piramideController.stream;
   Sink<Piramide> get piramideEvent => piramideController.sink;
 
@@ -64,101 +66,96 @@ class NovaPiramideBLoc extends BlocBase {
   ];
 
   List<Camada> carregaModelo(piramidesModeloEnum modelo) {
- //   print(modelo.toString());
+    //   print(modelo.toString());
 
     if (modelo == piramidesModeloEnum.birt) {
       list = [
         Camada(nome: 'Fatalidades (Morte) ', perguntaDaCamada: [
-          Pergunta(
-            perguntaEnum: perguntasEnum.como,
-           
-          ),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
+          Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
         Camada(nome: 'Acidentes com afastamento', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
         Camada(nome: 'Acidente sem afastamento', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(perguntaEnum: perguntasEnum.como),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
         Camada(nome: 'Incidentes (quase acidentes)', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(perguntaEnum: perguntasEnum.como),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
         Camada(nome: 'Condição ou ato inseguro', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(perguntaEnum: perguntasEnum.como),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
       ];
     } else if (modelo == piramidesModeloEnum.lgbtfobia) {
       list = [
         Camada(nome: 'Mortes', perguntaDaCamada: [
-          Pergunta(
-            perguntaEnum: perguntasEnum.como,
-            perguntaTitulo: 'perg tituolde',
-          ),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
+          Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
         Camada(nome: 'Violência Grave,Estupro', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
         Camada(nome: 'Ameaça,Agressão Verbal', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(perguntaEnum: perguntasEnum.como),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
         Camada(nome: 'Marginalização , Humiliação', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(perguntaEnum: perguntasEnum.como),
-        ]),
-        Camada(nome: 'Objetificação, Piadas, Termos Pejorativos', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(perguntaEnum: perguntasEnum.como),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
+        Camada(
+            nome: 'Objetificação, Piadas, Termos Pejorativos',
+            perguntaDaCamada: [
+              Pergunta(perguntaEnum: perguntasEnum.quando),
+              Pergunta(perguntaEnum: perguntasEnum.onde),
+              Pergunta(perguntaEnum: perguntasEnum.como),
+            ]),
       ];
     } else if (modelo == piramidesModeloEnum.generica) {
       list = [
         Camada(nome: 'Camada 1 ', perguntaDaCamada: [
-          Pergunta(
-            perguntaEnum: perguntasEnum.como,
-          ),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
+          Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
         Camada(nome: 'Camada 2', perguntaDaCamada: [
-          Pergunta(
-            perguntaEnum: perguntasEnum.como,
-          ),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
+          Pergunta(perguntaEnum: perguntasEnum.como),
           Pergunta(
             perguntaEnum: perguntasEnum.como,
           ),
         ]),
         Camada(nome: 'Camada 3', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(
-            perguntaEnum: perguntasEnum.como,
-          ),
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
-          Camada(nome: 'Camada 4', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(
-            perguntaEnum: perguntasEnum.como,
-          ),
+        Camada(nome: 'Camada 4', perguntaDaCamada: [
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
-          Camada(nome: 'Camada 5', perguntaDaCamada: [
-          Pergunta(perguntaEnum: perguntasEnum.como),
-          Pergunta(
-            perguntaEnum: perguntasEnum.como,
-          ),
+        Camada(nome: 'Camada 5', perguntaDaCamada: [
+          Pergunta(perguntaEnum: perguntasEnum.quando),
+          Pergunta(perguntaEnum: perguntasEnum.onde),
           Pergunta(perguntaEnum: perguntasEnum.como),
         ]),
-    
       ];
     }
     camadaEvent.add(list);
@@ -207,8 +204,6 @@ class NovaPiramideBLoc extends BlocBase {
         .collection('piramides')
         .document();
 
-         
-
     for (var indexCamada = 0;
         indexCamada < camadasController.value.length;
         indexCamada++) {
@@ -237,8 +232,6 @@ class NovaPiramideBLoc extends BlocBase {
                 .toMap(indexCamada));
       }
     }
-
-    
 
     await db
         // .collection('usuarios')
@@ -283,17 +276,14 @@ class NovaPiramideBLoc extends BlocBase {
         .collection('informacoes')
         .document(infoDoc.documentID)
         .setData(info.toMap());
-print(uid);
-          DocumentSnapshot snap = await db.collection('usuarios').document(uid).get();
+    print(uid);
+    DocumentSnapshot snap = await db.collection('usuarios').document(uid).get();
 
-         Usuario adm = Usuario.fromMap(snap.data, uid);
-         adm.npiramides=adm.npiramides+1;
-         print(adm.nome);
-         adm.piramidesAdmnistra.add(piramideDoc.documentID);
-            await db
-        .collection('usuarios')
-        .document(uid)
-        .setData(adm.toMap());
+    Usuario adm = Usuario.fromMap(snap.data, uid);
+    adm.npiramides = adm.npiramides + 1;
+    print(adm.nome);
+    adm.piramidesAdmnistra.add(piramideDoc.documentID);
+    await db.collection('usuarios').document(uid).setData(adm.toMap());
 
     //camadasController = BehaviorSubject<List<Camada>>.seeded(list2);
     //list.clear();

@@ -12,6 +12,7 @@ import 'package:comportamentocoletivo/ui/informacoes-ui.dart';
 import 'package:comportamentocoletivo/ui/nova-piramide-ui.dart';
 import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-ui.dart';
+import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
 
 AbasBloc abasBloc = BlocProvider.getBloc<AbasBloc>();
@@ -22,6 +23,8 @@ class PiramideAdministro extends StatefulWidget {
 }
 
 class _PiramideAdministroState extends State<PiramideAdministro> {
+
+  String mudarEstado='';
   @override
   void initState() {
     abasBloc = AbasBloc();
@@ -40,6 +43,41 @@ class _PiramideAdministroState extends State<PiramideAdministro> {
     return StreamBuilder(
       stream: abasBloc.piramidesFluxo,
       builder: (ctx, snap) {
+//         return Center(
+//                   child: Container(
+//             height: 500,
+//             width: 500,
+//             child: 
+//             Column(
+//              // mainAxisAlignment: MainAxisAlignment.center,
+// mainAxisSize: MainAxisSize.min,
+//               children: <Widget>[
+//                 RaisedButton(
+//                   onPressed: (){
+                  
+//                     setState(() {
+                  
+//                       mudarEstado='go';
+                     
+//                     });
+//                   },
+//                   child: Text('data'),
+//                 ),
+//                 Container(
+//                   color: Colors.blue,
+//                   height: 300,
+//                   child: FlareActor(
+//                     'assets/piramide.flr',
+//                     alignment: Alignment.center,
+//                     fit: BoxFit.contain,
+//                     animation: mudarEstado,
+//                     color: Colors.red,
+//                   ),
+//                 )
+//               ],
+//             ),
+//           ),
+//         );
         // print('tese');
         // print(abasBloc.piramidesController.value);
         // print(abasBloc.piramidesController.value.length);
@@ -101,35 +139,6 @@ class _PiramideAdministroState extends State<PiramideAdministro> {
             },
           );
         }
-
-        // switch (snap.connectionState) {
-        //   case ConnectionState.none:
-        //     return Text('Press button to start.');
-        //   case ConnectionState.active:
-        // //  return Text('Press button to ggggggggggg.');
-        //   case ConnectionState.waiting:
-        //     return ListView.builder(
-        //       itemCount: blocHome.piramidesController.value.length,
-        //       itemBuilder: (ctx, index) {
-        //         return _piramideCard(index, context);
-        //       },
-        //     );
-        //   case ConnectionState.done:
-        //     if (snap.hasError) return Text('Error: ${snap.error}');
-        //     return Text('Result: ${snap.data}');
-        // }
-        // return null; // unreachable
-
-        // if (snap.connectionState == ConnectionState.done) {
-        //   return ListView.builder(
-        //     itemCount: blocHome.piramidesController.value.length,
-        //     itemBuilder: (ctx, index) {
-        //       return _piramideCard(index, context);
-        //     },
-        //   );
-        // } else {
-        //   return CircularProgressIndicator();
-        // }
       },
     );
   }
@@ -144,7 +153,7 @@ Widget _piramideCard(int index, BuildContext context) {
       // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: <Widget>[
         Container(
-            // color: Colors.grey,
+          // color: Colors.grey,
           height: 40,
           child: Align(
             alignment: Alignment(0, 0),
@@ -207,7 +216,7 @@ Widget _piramideCard(int index, BuildContext context) {
                               //  color: Colors.amber,
                               alignment: Alignment(0, 0.5),
                               child: Text(
-                              //     camadaIndex ==0?'1': camadaIndex ==1?'30': camadaIndex ==2?'300':camadaIndex ==3?'3000':camadaIndex ==4?'30000':'22',
+                                //     camadaIndex ==0?'1': camadaIndex ==1?'30': camadaIndex ==2?'300':camadaIndex ==3?'3000':camadaIndex ==4?'30000':'22',
                                 abasBloc.piramidesController.value[index]
                                     .camadasDaPiramide[camadaIndex].total
                                     .toString(),
@@ -256,6 +265,7 @@ Widget _piramideCard(int index, BuildContext context) {
                               piramide:
                                   abasBloc.piramidesController.value[index],
                               usuarioAdm: true,
+                              podeDeixarSeguir: false,
                             )));
                 //  Navigator.pushNamed(context, Informacoes.route);
               },

@@ -23,10 +23,10 @@ class _PiramidePodeRelatarState extends State<PiramidePodeRelatar> {
     super.initState();
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
+  // @override
+  // void didChangeDependencies() {
+  //   super.didChangeDependencies();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -221,6 +221,7 @@ Widget _piramideCard(int index, BuildContext context) {
                               piramide: abasBloc
                                   .piramidesPodeRelatarController.value[index],
                               usuarioAdm: false,
+                              podeDeixarSeguir: true,
                             )));
               },
             ),

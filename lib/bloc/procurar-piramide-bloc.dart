@@ -123,4 +123,24 @@ class ProcurarPiramideBloc extends BlocBase {
     // cpiController.close();
     super.dispose();
   }
+
+  void carragaPublicos() async {
+        final QuerySnapshot result = await db
+        .collection('piramides')
+        .where('publica', isEqualTo: true)
+        .where('inicial', isEqualTo: true)     
+        .getDocuments();
+    List<DocumentSnapshot> documents = result.documents;
+    //  print(documents.length.toString() + 'tamanho');
+
+    List<Piramide> l = [];
+    documents.forEach((data) {
+      //  print(data.data['dataInicio'] + 'NNNOOOOMMMEEE');
+      l.add(Piramide.fromMap(data.data, data.documentID));
+    });
+    listPiram = l;
+    // print(l.length.toString() + 'lenth');
+
+    piramidesEvent.add(listPiram);
+  }
 }

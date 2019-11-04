@@ -4,6 +4,8 @@ import 'package:comportamentocoletivo/ui/piramides-pode-relatar-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-administro-ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flare_flutter/flare_actor.dart';
+import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,6 +38,29 @@ class _AbaUiState extends State<AbaUi> {
     return 'PIRAMIDES';
   }
 
+  @override
+  void initState() {
+    // Future.delayed(Duration(seconds: 1)).then((d) {
+
+    // });
+    print('init');
+    moverAnimeIcons(widget.aba);
+    super.initState();
+  }
+
+  void moverAnimeIcons(int index) {
+print(index);
+    if (index == 0) {
+      controllPirAdmAnime.play('go');
+     
+    } else if (index == 1) {
+       controllPirFazParteAnime.play('go');  
+    } else {
+      controllPiramidesAnime.play('go');
+    }
+  
+  }
+
   void _orderList(OrderOptions result) async {
     switch (result) {
       case OrderOptions.comofunciona:
@@ -66,6 +91,10 @@ class _AbaUiState extends State<AbaUi> {
     }
   }
 
+
+  final FlareControls controllPirAdmAnime = FlareControls();
+  final FlareControls controllPirFazParteAnime = FlareControls();
+  final FlareControls controllPiramidesAnime = FlareControls();
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -95,12 +124,18 @@ class _AbaUiState extends State<AbaUi> {
             onTap: (indexx) {
               setState(() {
                 titulo = _tituloApp(indexx);
+                moverAnimeIcons(indexx);
               });
+              print(indexx.toString() + 'indez');
             },
             tabs: <Widget>[
-              Tab(icon: Icon(Icons.change_history)),
-              Tab(icon: Icon(Icons.details)),
-              Tab(icon: Icon(Icons.filter_hdr)),
+              Tab(
+                child: iconePiramideAdm(),
+              ),
+              Tab(
+                child: iconePiramideFazParte(),
+              ),
+              Tab(child: iconePiramides(),),
             ],
           ),
         ),
@@ -112,6 +147,41 @@ class _AbaUiState extends State<AbaUi> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget iconePiramideAdm() {
+    // print(pirAdmAnime.toString());
+    return FlareActor(
+      'assets/piramide.flr',
+      alignment: Alignment.center,
+      fit: BoxFit.contain,
+      animation: 'idle',
+      controller: controllPirAdmAnime,
+      color: Colors.white70,
+    );
+  }
+
+  Widget iconePiramideFazParte() {
+    // print(pirAdmAnime.toString());
+    return FlareActor(
+      'assets/piramide2.flr',
+      alignment: Alignment.center,
+      fit: BoxFit.contain,
+      animation: 'idle',
+      controller: controllPirFazParteAnime,
+      color: Colors.white70,
+    );
+  }
+    Widget iconePiramides() {
+    // print(pirAdmAnime.toString());
+    return FlareActor(
+      'assets/piramide3.flr',
+      alignment: Alignment.center,
+      fit: BoxFit.contain,
+      animation: 'idle',
+      controller: controllPiramidesAnime,
+      color: Colors.white70,
     );
   }
 }

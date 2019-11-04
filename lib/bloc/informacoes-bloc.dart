@@ -7,6 +7,7 @@ import 'package:comportamentocoletivo/model/pergunta.dart';
 import 'package:comportamentocoletivo/model/periodo.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/model/relato.dart';
+import 'package:comportamentocoletivo/model/usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:rxdart/rxdart.dart';
@@ -211,5 +212,21 @@ class InformacoesBloc extends BlocBase {
           .value.periodos[periIndex].camadasInfo[i].totalCamada = 0;
     }
     // informacoesEvent.add(informacoesController.value);
+  }
+
+  deixarDeSeguirPiramide(Piramide piramide) async{
+        final FirebaseUser user = await _auth.currentUser();
+    final String uid = user.uid;
+DocumentSnapshot snapNovo =
+          await db.collection('usuarios').document(uid).get();
+     Usuario user1 = Usuario.fromMap(snapNovo.data, snapNovo.documentID);
+   
+
+    user1.piramidesPodeRelatarId.removeWhere((tt){
+      return tt==piramide.piramideId;
+    });
+   
+    await db.collection('usuarios').document(uid).updateData(user1.toMap());
+
   }
 }
