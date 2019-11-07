@@ -31,7 +31,7 @@ class _NovoRelatoState extends State<NovoRelato> {
   void initState() {
     blocnovoRelat = NovoRelatoBloc();
     blocnovoRelat.carregaPerguntas(
-        widget.piramide.piramideId, widget.camadaIndex);
+        widget.piramide, widget.camadaIndex);
     // mostrarCircularProgress = false;
     super.initState();
   }
@@ -123,8 +123,7 @@ class _NovoRelatoState extends State<NovoRelato> {
               stream: blocnovoRelat.perguntasRelatoFluxo,
               // initialData:[] ,
               builder: (context, snapshot) {
-                return
-                 snapshot.data == null 
+                return snapshot.data == null
                     ? Container(
                         height: MediaQuery.of(context).size.height * 0.5,
                         child: Container(
@@ -188,12 +187,26 @@ class _NovoRelatoState extends State<NovoRelato> {
           ],
           title: Text(widget.piramide.nome),
         ),
-        body: mostrarCircularProgress
-            //|| blocnovoRelat.perguntasRelatoController.value==null
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : SingleChildScrollView(child: _perguntas(context)));
+        body: StreamBuilder(
+          stream: blocnovoRelat.semSaldoFluxo,
+          builder: (ctx, snap3) {
+            return Center(
+              child: blocnovoRelat.semSaldoController.value
+                  ? Container(
+                      height: 200,
+                      width: 200,
+                      child: Text(
+                          'Sem saldo: Entre em contato com administrador(a) da Pirâmide'),
+                    )
+                  : mostrarCircularProgress
+                      //|| blocnovoRelat.perguntasRelatoController.value==null
+                      ? Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : SingleChildScrollView(child: _perguntas(context)),
+            );
+          },
+        ));
   }
 
   List<Usuario> lisUser = [Usuario(nome: 'dddd'), Usuario(nome: 'ummm')];

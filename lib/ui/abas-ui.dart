@@ -1,5 +1,6 @@
 import 'package:comportamentocoletivo/main.dart';
 import 'package:comportamentocoletivo/ui/ajuda/ajuda-ui.dart';
+import 'package:comportamentocoletivo/ui/comprar-credito-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-pode-relatar-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-administro-ui.dart';
@@ -10,12 +11,13 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-enum OrderOptions { comofunciona, logout }
+enum OrderOptions { comofunciona, logout, comprar }
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class AbaUi extends StatefulWidget {
   final int aba;
-  AbaUi({this.aba});
+  final bool novoUsuario;
+  AbaUi({this.aba, this.novoUsuario});
   static const route = '/home-ui';
 
   @override
@@ -49,16 +51,14 @@ class _AbaUiState extends State<AbaUi> {
   }
 
   void moverAnimeIcons(int index) {
-print(index);
+    print(index);
     if (index == 0) {
       controllPirAdmAnime.play('go');
-     
     } else if (index == 1) {
-       controllPirFazParteAnime.play('go');  
+      controllPirFazParteAnime.play('go');
     } else {
       controllPiramidesAnime.play('go');
     }
-  
   }
 
   void _orderList(OrderOptions result) async {
@@ -88,9 +88,13 @@ print(index);
         // );
 
         break;
+      case OrderOptions.comprar:
+   Navigator.pushNamed(context, ComprarCreditoUi.route);
+
+
+        break;
     }
   }
-
 
   final FlareControls controllPirAdmAnime = FlareControls();
   final FlareControls controllPirFazParteAnime = FlareControls();
@@ -110,6 +114,10 @@ print(index);
                   value: OrderOptions.comofunciona,
                 ),
                 const PopupMenuItem<OrderOptions>(
+                  child: Text("Comprar Créditos"),
+                  value: OrderOptions.comprar,
+                ),
+                  const PopupMenuItem<OrderOptions>(
                   child: Text("Sair"),
                   value: OrderOptions.logout,
                 ),
@@ -135,14 +143,18 @@ print(index);
               Tab(
                 child: iconePiramideFazParte(),
               ),
-              Tab(child: iconePiramides(),),
+              Tab(
+                child: iconePiramides(),
+              ),
             ],
           ),
         ),
         body: TabBarView(
           children: [
             PiramideAdministro(),
-            PiramidePodeRelatar(),
+            PiramidePodeRelatar(
+              novoUsuario: widget.novoUsuario,
+            ),
             Piramides(),
           ],
         ),
@@ -173,7 +185,8 @@ print(index);
       color: Colors.white70,
     );
   }
-    Widget iconePiramides() {
+
+  Widget iconePiramides() {
     // print(pirAdmAnime.toString());
     return FlareActor(
       'assets/piramide3.flr',

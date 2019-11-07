@@ -28,7 +28,6 @@ List<TextEditingController> _controllers = new List();
 class _NovaPiramideState extends State<NovaPiramide> {
   @override
   void initState() {
-  
     List<Camada> lc = bloc.carregaModelo(widget.modelo);
     for (var i = 0; i < lc.length; i++) {
       _controllers.add(new TextEditingController(
@@ -38,13 +37,14 @@ class _NovaPiramideState extends State<NovaPiramide> {
     super.initState();
   }
 
-@override
+  @override
   void dispose() {
-  bloc.dispose();
-  _controllers.clear();
- // print('fechouuuuuuuuuuuuuuuuuuuuuu');
+    bloc.dispose();
+    _controllers.clear();
+    // print('fechouuuuuuuuuuuuuuuuuuuuuu');
     super.dispose();
   }
+
   void _orderList(OrderOptions result) {
     switch (result) {
       case OrderOptions.comofunciona:
@@ -172,26 +172,113 @@ class _NovaPiramideState extends State<NovaPiramide> {
                   //       Divider(color: Colors.black, height: .1),
 
                   Container(
-                    height: 85,
-                    alignment: Alignment.center,
-                    // color: Colors.limeAccent,
-                    child: SizedBox(
-                      height: 45,
-                      child: RaisedButton.icon(
-                        icon: Icon(Icons.settings),
-                        label: Text('    Configurações    '),
-                        onPressed: () {              
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ConfiguracoesPiramide(
-                                        piramide: bloc.piramideController.value,
-                                      )));
-                          // ConfiguracoesPiramide(bloc.piramideController.value)
-                        },
+                      height: 85,
+                      alignment: Alignment.center,
+                      // color: Colors.limeAccent,
+                      child:
+                          //  SizedBox(
+                          //   height: 45,
+                          //   child:
+                          // Text('data')
+
+                          StreamBuilder(
+                              stream: bloc.piramideFluxo,
+                              builder: (context, snapPiramide) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                        bloc.piramideController.value.publica =
+                                            !bloc.piramideController.value
+                                                .publica;
+                                        bloc.piramideEvent
+                                            .add(bloc.piramideController.value);
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 75,
+                                        decoration: BoxDecoration(
+                                          color: bloc.piramideController.value
+                                                  .publica ??false
+                                              ? Colors.blue.shade400
+                                              : Colors.grey.shade200,
+                                          //border: Border.all(width: 1.0),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  3.0) //         <--- border radius here
+                                              ),
+                                        ),
+                                        child: Center(
+                                          child: Text('PÚBLICA'),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: bloc
+                                          .piramideController.value.publica!=null ?
+                                          !bloc
+                                          .piramideController.value.publica
+                                          : false,
+                                      onChanged: (value) {
+                                        bloc.piramideController.value.publica =
+                                            !bloc.piramideController.value
+                                                .publica;
+                                        bloc.piramideEvent
+                                            .add(bloc.piramideController.value);
+                                      },
+                                      activeTrackColor: Colors.orange.shade200,
+                                      activeColor: Colors.orange,
+                                      inactiveThumbColor: Colors.blue,
+                                      inactiveTrackColor: Colors.blue.shade100,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                        bloc.piramideController.value.publica =
+                                            !bloc.piramideController.value
+                                                .publica;
+                                        bloc.piramideEvent
+                                            .add(bloc.piramideController.value);
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 75,
+                                        decoration: BoxDecoration(
+                                          color: bloc.piramideController.value
+                                                  .publica ??false
+                                              ? Colors.grey.shade200
+                                              : Colors.orangeAccent,
+                                          //border: Border.all(width: 1.0),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  3.0) //         <--- border radius here
+                                              ),
+                                        ),
+                                        child: Center(
+                                          child: Text('PRIVADA'),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              })
+
+                      //  RaisedButton.icon(
+                      //   icon: Icon(Icons.settings),
+                      //   label: Text('    Configurações    '),
+                      //   onPressed: () {
+                      //     Navigator.push(
+                      //         context,
+                      //         MaterialPageRoute(
+                      //             builder: (context) => ConfiguracoesPiramide(
+                      //                   piramide: bloc.piramideController.value,
+                      //                 )));
+                      //     // ConfiguracoesPiramide(bloc.piramideController.value)
+                      //   },
+                      // ),
+
+                      // ),
                       ),
-                    ),
-                  ),
                   Container(
                     height: 30,
                     //color: Colors.yellowAccent,
@@ -266,7 +353,7 @@ Widget _editarCamadaPiramide(BuildContext context) {
             ),
           ),
           Container(
-            width: MediaQuery.of(context).size.width *0.5,
+            width: MediaQuery.of(context).size.width * 0.5,
             child: Text(bloc.camadasController
                 .value[bloc.camadaSelecinadaController.value].nome),
           )

@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comportamentocoletivo/login/autenticacao.dart';
+import 'package:comportamentocoletivo/model/carteira.dart';
 import 'package:comportamentocoletivo/model/usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -216,6 +217,22 @@ class LoginBloc extends BlocBase {
       user1.piramidesPodeRelatarId.add('Fl6Qod4bU0BrmPRUIx5y');
       user1.piramidesPodeRelatarId.add('Ay9fVHcq2nhDxJJXqPiA');
       await db.collection('usuarios').document(uid).updateData(user1.toMap());
+
+
+      DocumentReference carteiraDoc =
+          await db.collection('carteiras').document();
+      db
+          .collection('carteiras')
+          .document(carteiraDoc.documentID)
+          .setData(Carteira(saldo: 1.0, usuarioId: usuDoc.documentID).toMap());
+
+
+      //      DocumentReference fff =
+      //     await db.collection('carteiras').document();
+      // db
+      //     .collection('carteiras')
+      //     .document(fff.documentID)
+      //     .setData(Carteira(saldo: 0.0, usuarioId: 'Kfhc7oTuEMXRfmzC2crhZ2lmJfV2').toMap());
     }
 
     _carregarSharedPerferenciasLogado(_emailController.value);
@@ -248,6 +265,12 @@ class LoginBloc extends BlocBase {
     user1.piramidesPodeRelatarId.add('Fl6Qod4bU0BrmPRUIx5y');
     user1.piramidesPodeRelatarId.add('Ay9fVHcq2nhDxJJXqPiA');
     await db.collection('usuarios').document(uid).updateData(user1.toMap());
+      DocumentReference carteiraDoc =
+          await db.collection('carteiras').document();
+      db
+          .collection('carteiras')
+          .document(carteiraDoc.documentID)
+          .setData(Carteira(saldo: 1.0, usuarioId: uid).toMap());
   }
 
   String _excecaoAviso(String aviso) {

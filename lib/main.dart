@@ -1,6 +1,7 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:comportamentocoletivo/bloc/abas-bloc.dart';
 import 'package:comportamentocoletivo/bloc/aceitar-usuario-bloc.dart';
+import 'package:comportamentocoletivo/bloc/comprar-credito-bloc.dart';
 import 'package:comportamentocoletivo/bloc/configuracoes-piramide-bloc.dart';
 import 'package:comportamentocoletivo/bloc/informacoes-bloc.dart';
 
@@ -12,16 +13,17 @@ import 'package:comportamentocoletivo/bloc/ver-relatos-bloc.dart';
 import 'package:comportamentocoletivo/login/login-bloc.dart';
 import 'package:comportamentocoletivo/login/login-ui.dart';
 
-
 import 'package:comportamentocoletivo/ui/abas-ui.dart';
 import 'package:comportamentocoletivo/ui/aceitar-usuarios/aba-usuarios-ui.dart';
 import 'package:comportamentocoletivo/ui/aceitar-usuarios/aceitar-usuarios-ui.dart';
 import 'package:comportamentocoletivo/ui/ajuda/ajuda-ui.dart';
+import 'package:comportamentocoletivo/ui/comprar-credito-ui.dart';
 
 import 'package:comportamentocoletivo/ui/configuracoes-piramide.dart';
 import 'package:comportamentocoletivo/ui/informacoes-ui.dart';
 import 'package:comportamentocoletivo/ui/nova-piramide-ui.dart';
 import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
+import 'package:comportamentocoletivo/ui/precos-ui.dart';
 import 'package:comportamentocoletivo/ui/procurar-piramide-ui.dart';
 import 'package:comportamentocoletivo/ui/relato-ui.dart';
 import 'package:comportamentocoletivo/ui/ver-relatos.ui.dart';
@@ -55,6 +57,7 @@ class MyApp extends StatelessWidget {
             Bloc((i) => VerRelatosBloc()),
             Bloc((i) => UsuariosBloc()),
             Bloc((i) => ConfiguracoesPiramideBloc()),
+            Bloc((i) => ComprarCreditoBloc()),
           ],
           child: LoginScreen3(),
           //   child: AbaUi(),
@@ -75,6 +78,8 @@ class MyApp extends StatelessWidget {
         AjudaUi.route: (context) => AjudaUi(),
         AbaUsuariosUI.route: (context) => AbaUsuariosUI(),
         AbaUsuariosUI.route: (context) => AbaUsuariosUI(),
+        ComprarCreditoUi.route: (context) => ComprarCreditoUi(),
+        PrecosUi.route: (context) => PrecosUi(),
       },
     );
   }

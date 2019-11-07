@@ -2,6 +2,7 @@ import 'package:bloc_pattern/bloc_pattern.dart';
 
 import 'package:comportamentocoletivo/aux/draw-tronco.dart';
 import 'package:comportamentocoletivo/bloc/abas-bloc.dart';
+import 'package:comportamentocoletivo/ui/abas-ui.dart';
 
 import 'package:comportamentocoletivo/ui/informacoes-ui.dart';
 import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
@@ -11,15 +12,22 @@ import 'package:flutter/material.dart';
 AbasBloc abasBloc = BlocProvider.getBloc<AbasBloc>();
 
 class PiramidePodeRelatar extends StatefulWidget {
+  final bool novoUsuario;
+
+  PiramidePodeRelatar({this.novoUsuario});
   @override
   _PiramidePodeRelatarState createState() => _PiramidePodeRelatarState();
 }
 
 class _PiramidePodeRelatarState extends State<PiramidePodeRelatar> {
+  double tamanho = 0.0;
+
+
   @override
   void initState() {
     abasBloc = AbasBloc();
     abasBloc.carregaPiramidePodeRelatar();
+
     super.initState();
   }
 
@@ -47,47 +55,116 @@ class _PiramidePodeRelatarState extends State<PiramidePodeRelatar> {
             height: 150,
             padding: EdgeInsets.all(35),
             child: RaisedButton(
-                  elevation: 10,
-                  padding: EdgeInsets.all(20),
-                  onPressed: () {
-                    Navigator.pushNamed(context, ProcurarPiramide.route);
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: <Widget>[
-                      Icon(
-                        Icons.search,
-                        size: 50,
-                        color: Colors.blueAccent.shade700,
-                      ),
-
-                      Container(
-                        width: 200,
-                        child: Text(
-                          'PEDIR PERMISSÃO A UMA PIRÂMIDE JÁ EXISTENTE',
-                          style: TextStyle(fontSize: 15),
-                        ),
-                      )
-                      // Column(
-                      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      //   children: <Widget>[
-                      //     Text(
-                      //       'PEDIR PERMISSÃO PODER RELATAR EM UMA PIRÂMIDE JA EXISTENTE',
-                      //       style: TextStyle(fontSize: 15),
-                      //     ),
-
-                      //   ],
-                      // ),
-                    ],
+              elevation: 10,
+              padding: EdgeInsets.all(20),
+              onPressed: () {
+                Navigator.pushNamed(context, ProcurarPiramide.route);
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: <Widget>[
+                  Icon(
+                    Icons.search,
+                    size: 50,
+                    color: Colors.blueAccent.shade700,
                   ),
-                ),
+
+                  Container(
+                    width: 200,
+                    child: Text(
+                      'PEDIR PERMISSÃO A UMA PIRÂMIDE JÁ EXISTENTE',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  )
+                  // Column(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  //   children: <Widget>[
+                  //     Text(
+                  //       'PEDIR PERMISSÃO PODER RELATAR EM UMA PIRÂMIDE JA EXISTENTE',
+                  //       style: TextStyle(fontSize: 15),
+                  //     ),
+
+                  //   ],
+                  // ),
+                ],
+              ),
+            ),
           ));
         } else {
-          return ListView.builder(
-            itemCount: abasBloc.piramidesPodeRelatarController.value.length,
-            itemBuilder: (ctx, index) {
-              return _piramideCard(index, context);
-            },
+          if (
+            widget.novoUsuario != null && widget.novoUsuario ==
+             true) {
+            Future.delayed(Duration(seconds: 2), () {
+              if (mounted) {
+                setState(() {
+                  tamanho = 45.0;
+                });
+              }
+            });
+          }
+          return Column(
+            children: <Widget>[
+              Visibility(
+                visible: widget.novoUsuario != null
+                    ? widget.novoUsuario
+                    : false,
+                child: Padding(
+                  padding: EdgeInsets.all(4),
+                  child: Align(
+                    alignment: Alignment(-1, 0),
+                                      child: AnimatedContainer(
+                      duration: Duration(seconds: 1),
+                      decoration: BoxDecoration(
+                           color: Colors.blue.shade50,
+                          border: Border.all(width: 1, color: Colors.blue),
+                          borderRadius:
+                          // BorderRadius.all(Radius.circular(10))
+                           BorderRadius.only(
+            topRight: Radius.circular(20.0),
+            bottomLeft: Radius.circular(20.0),
+            bottomRight: Radius.circular(20.0),
+          )
+                           ),
+                      // curve: Curves.bounceIn,
+                      height: tamanho,
+                      // color: Colors.white,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Text('  APERTE NA PIRÂMIDE PARA CRIAR RELATOS'),
+                          IconButton(
+                            icon: Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
+                           
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          AbaUi(aba: 1, novoUsuario: false)));
+                             
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+              Expanded(
+                // height: 700,
+                child: ListView.builder(
+                  itemCount:
+                      abasBloc.piramidesPodeRelatarController.value.length,
+                  itemBuilder: (ctx, index) {
+                    return _piramideCard(index, context);
+                  },
+                ),
+              )
+            ],
           );
         }
       },

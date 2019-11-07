@@ -26,7 +26,7 @@ class NovaPiramideBLoc extends BlocBase {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   final piramideController = BehaviorSubject<Piramide>.seeded(Piramide(
-      publica: false,
+      publica: true,
       camadasDaPiramide: [],
       dataInicio: DateTime.now().toIso8601String()));
   Observable<Piramide> get piramideFluxo => piramideController.stream;

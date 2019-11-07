@@ -794,6 +794,7 @@ class _LoginScreen3State extends State<LoginScreen3>
               MaterialPageRoute(
                   builder: (context) => AbaUi(
                         aba: 2,
+                        novoUsuario:true
                       )));
         }
       },

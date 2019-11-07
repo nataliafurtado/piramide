@@ -1,6 +1,8 @@
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comportamentocoletivo/model/camada.dart';
+import 'package:comportamentocoletivo/model/carteira.dart';
+import 'package:comportamentocoletivo/model/debitos.dart';
 import 'package:comportamentocoletivo/model/informacoes.dart';
 import 'package:comportamentocoletivo/model/pedido.dart';
 import 'package:comportamentocoletivo/model/pergunta-relato.dart';
@@ -12,6 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 
 class NovoRelatoBloc extends BlocBase {
+  Carteira c;
   NovoRelatoBloc();
 
   // final cpiController = BehaviorSubject<bool>.seeded(false);
@@ -44,8 +47,7 @@ class NovoRelatoBloc extends BlocBase {
   // Observable<List<Pergunta>> get perguntasFluxo => perguntasController.stream;
   // Sink<List<Pergunta>> get perguntasEvent => perguntasController.sink;
 
-  var perguntasRelatoController =
-      BehaviorSubject<List<PerguntaRelato>>();
+  var perguntasRelatoController = BehaviorSubject<List<PerguntaRelato>>();
   Observable<List<PerguntaRelato>> get perguntasRelatoFluxo =>
       perguntasRelatoController.stream;
   Sink<List<PerguntaRelato>> get perguntasRelatoEvent =>
@@ -55,22 +57,18 @@ class NovoRelatoBloc extends BlocBase {
   Observable<List<Usuario>> get usuariosFluxo => usuariosController.stream;
   Sink<List<Usuario>> get usuariosEvent => usuariosController.sink;
 
+  var semSaldoController = BehaviorSubject<bool>.seeded(false);
+  Observable<bool> get semSaldoFluxo => semSaldoController.stream;
+  Sink<bool> get semSaldoEvent => semSaldoController.sink;
+
   Future<String> novoRelato(Piramide piramideId, int numerocamada) async {
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
 
-    // for (var i = 0; i < perguntasRelatoController.value.length; i++) {
-    //   if (perguntasRelatoController.value[i].obrigatoria &&
-    //       (perguntasRelatoController.value[i].resposta == null ||
-    //           perguntasRelatoController.value[i].resposta.isEmpty)) {
-    //     return 'Todas a perguntas obrigatórias devem ser respondidas';
-    //   }
-    // }
-//pega usuario
     DocumentSnapshot result =
         await db.collection('usuarios').document(uid).get();
     Usuario user1 = Usuario.fromMap(result.data, result.documentID);
-//carrega relato
+
     Relato relato = Relato(
       piramideId: piramideId.piramideId,
       datacriacao: DateTime.now().toIso8601String(),
@@ -124,6 +122,20 @@ class NovoRelatoBloc extends BlocBase {
         .document(documents[0].documentID)
         .updateData(infor.toMap());
 
+    DocumentReference tranDoc = await db.collection('debitos').document();
+    db.collection('debitos').document(tranDoc.documentID).setData(Debito(
+            usuarioId: uid,
+            data: DateTime.now().toIso8601String(),
+            relatoId: relatoDoc.documentID,
+            valor: 0.1)
+        .toMap());
+
+    c.saldo = c.saldo - 0.1;
+    await db
+        .collection('carteiras')
+        .document(c.carteiraId)
+        .updateData(c.toMap());
+
     return null;
   }
 
@@ -155,7 +167,7 @@ class NovoRelatoBloc extends BlocBase {
     final QuerySnapshot result0 = await db
         .collection('usuarios')
         .where('nome', isEqualTo: autocomplete)
-        .where('piramidesPodeRelatarId', arrayContains: piramideId)        
+        .where('piramidesPodeRelatarId', arrayContains: piramideId)
         .limit(10)
         .getDocuments();
     List<DocumentSnapshot> documents0 = result0.documents;
@@ -200,36 +212,44 @@ class NovoRelatoBloc extends BlocBase {
     usuariosEvent.add(l);
   }
 
-  void carregaPerguntas(String documentIDPiramide, int camadaIndex) async {
+  void carregaPerguntas(Piramide pi, int camadaIndex) async {
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
     final QuerySnapshot result = await db
         .collection('piramides')
-        .document(documentIDPiramide)
+        .document(pi.piramideId)
         .collection('perguntasPiramide')
         .where('ncamada', isEqualTo: camadaIndex.toString())
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
 
-    // List<Pergunta> l = [];
     List<PerguntaRelato> lpr = [];
     documents.forEach((data) {
-      // l.add(Pergunta.fromMap(data.data, data.documentID));
       lpr.add(PerguntaRelato.fromMapDePergunta(data.data, data.documentID));
     });
-//listPerg = l;
+
     lll = lpr;
-    //  print(lll.length.toString() + 'tamanho lll  ll ');
-    //  print(camadaIndex.toString() +' :  camadaindex');
-    // perguntasEvent.add(listPerg);
     perguntasRelatoEvent.add(lll);
+
+    final QuerySnapshot result1 = await db
+        .collection('carteiras')
+        .where('usuarioId', isEqualTo: uid)
+        .getDocuments();
+
+    c = Carteira.fromMap(
+        result1.documents[0].data, result1.documents[0].documentID);
+    if (c.saldo <= 0.0 && !pi.publica) {
+      semSaldoEvent.add(true);
+    } else {
+      semSaldoEvent.add(false);
+    }
   }
 
   @override
   void dispose() {
     perguntasRelatoController.close();
     usuariosController.close();
-    // camadasController.close();
+    semSaldoController.close();
     // camadaSelecinadaController.close();
     // piramideController.close();
     // cpiController.close();

@@ -7,6 +7,7 @@ import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/model/usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class AbasBloc extends BlocBase {
   AbasBloc();
@@ -27,31 +28,32 @@ class AbasBloc extends BlocBase {
   ];
 
   var piramidesController = BehaviorSubject<List<Piramide>>();
- //   var piramidesController = BehaviorSubject<List<Piramide>>.seeded(list);
+  //   var piramidesController = BehaviorSubject<List<Piramide>>.seeded(list);
   Observable<List<Piramide>> get piramidesFluxo => piramidesController.stream;
   Sink<List<Piramide>> get piramidesEvent => piramidesController.sink;
 
-  var piramidesPodeRelatarController =
-      BehaviorSubject<List<Piramide>>();
+  var piramidesPodeRelatarController = BehaviorSubject<List<Piramide>>();
   Observable<List<Piramide>> get piramidesPodeRelatarFluxo =>
       piramidesPodeRelatarController.stream;
   Sink<List<Piramide>> get piramidesPodeRelatarEvent =>
       piramidesPodeRelatarController.sink;
 
-  void carregaPiramidePodeRelatar() async {
+  Future<bool> carregaPiramidePodeRelatar() async {
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
 
     DocumentSnapshot result =
         await db.collection('usuarios').document(uid).get();
-    Usuario user1 = Usuario.fromMap(result.data,result.documentID);
+    Usuario user1 = Usuario.fromMap(result.data, result.documentID);
     List<Piramide> l = [];
     for (var i = 0; i < user1.piramidesPodeRelatarId.length; i++) {
       DocumentSnapshot result1 = await db
           .collection('piramides')
           .document(user1.piramidesPodeRelatarId[i])
           .get();
-      l.add(Piramide.fromMap(result1.data, result1.documentID));
+      if (result1.exists) {
+        l.add(Piramide.fromMap(result1.data, result1.documentID));
+      }
     }
 
     // final QuerySnapshot result = await db
@@ -66,13 +68,17 @@ class AbasBloc extends BlocBase {
     //   l.add(Piramide.fromMap(data.data, data.documentID));
     // });
 
-     piramidesPodeRelatarEvent.add(l);
+    piramidesPodeRelatarEvent.add(l);
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var emailLogado = prefs.getString('novoUsuario');
+    return true;
   }
 
   void carregaPiramide() async {
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
-    
+
     final QuerySnapshot result = await db
         // .collection('usuarios')
         // .document(uid)
