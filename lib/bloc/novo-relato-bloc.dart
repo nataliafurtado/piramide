@@ -14,7 +14,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:rxdart/rxdart.dart';
 
 class NovoRelatoBloc extends BlocBase {
-  Carteira c;
+  Carteira carteira;
   NovoRelatoBloc();
 
   // final cpiController = BehaviorSubject<bool>.seeded(false);
@@ -130,11 +130,11 @@ class NovoRelatoBloc extends BlocBase {
             valor: 0.1)
         .toMap());
 
-    c.saldo = c.saldo - 0.1;
+    carteira.saldo = carteira.saldo - 0.1;
     await db
         .collection('carteiras')
-        .document(c.carteiraId)
-        .updateData(c.toMap());
+        .document(carteira.carteiraId)
+        .updateData(carteira.toMap());
 
     return null;
   }
@@ -236,9 +236,9 @@ class NovoRelatoBloc extends BlocBase {
         .where('usuarioId', isEqualTo: uid)
         .getDocuments();
 
-    c = Carteira.fromMap(
+    carteira = Carteira.fromMap(
         result1.documents[0].data, result1.documents[0].documentID);
-    if (c.saldo <= 0.0 && !pi.publica) {
+    if (carteira.saldo <= 0.0 && !pi.publica) {
       semSaldoEvent.add(true);
     } else {
       semSaldoEvent.add(false);

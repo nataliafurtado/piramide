@@ -1,10 +1,10 @@
-import 'package:comportamentocoletivo/model/pergunta.dart';
-import 'package:flutter/widgets.dart';
+
 
 class Usuario {
   String nome;
   int npiramides;
   String usuarioId;
+  bool publicidade;
   //esse usuario pode relatar nessa piramides
   List<String> piramidesPodeRelatarId;
   List<String> piramidesAdmnistra;
@@ -17,7 +17,8 @@ class Usuario {
       {this.nome,
       this.npiramides,
       this.piramidesPodeRelatarId,
-      this.piramidesAdmnistra});
+      this.piramidesAdmnistra,
+      this.publicidade});
 
   Map toMap() {
 // print(piramidesPodeRelatarId.toString());
@@ -36,6 +37,7 @@ class Usuario {
       'npiramides': npiramides,
       'piramidesPodeRelatarId': array,
       'piramidesAdmnistra': array1,
+      'publicidade': publicidade,
       // 'publica': publica,
       // 'dataInicio': dataInicio,
     };
@@ -57,12 +59,13 @@ class Usuario {
   Usuario.fromMap(Map map, String usuarioPassadoId) {
     nome = map['nome'];
     npiramides = map['npiramides'];
+    publicidade = map['publicidade'];
     usuarioId = usuarioPassadoId;
 
     if (piramidesPodeRelatarId == null) {
       piramidesPodeRelatarId = [];
     }
-      if (piramidesAdmnistra == null) {
+    if (piramidesAdmnistra == null) {
       piramidesAdmnistra = [];
     }
 

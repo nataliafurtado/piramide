@@ -1,10 +1,8 @@
-
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comportamentocoletivo/model/carteira.dart';
 import 'package:comportamentocoletivo/model/creditos.dart';
-
-
+import 'package:comportamentocoletivo/model/usuario.dart';
 
 //import 'package:flutter_inapp_purchase/flutter_inapp_purchase.dart';
 
@@ -100,26 +98,49 @@ class ComprarCreditoBloc extends BlocBase {
 
   void comprar(int index) async {
     //   final ProductDetails productDetails = ... // Saved earlier from queryPastPurchases().
-    final PurchaseParam purchaseParam =
-        PurchaseParam(productDetails: listController.value[index]);
-    bool deucerto = await InAppPurchaseConnection.instance
-        .buyConsumable(purchaseParam: purchaseParam);
+    final FirebaseUser user = await _auth.currentUser();
+    final String uid = user.uid;
+    // final PurchaseParam purchaseParam =
+    //     PurchaseParam(productDetails: listController.value[index]);
+    // bool deucerto = await InAppPurchaseConnection.instance
+    //     .buyConsumable(purchaseParam: purchaseParam);
+
     // InAppPurchaseConnection.instance.buyNonConsumable(purchaseParam: purchaseParam);
     // print(deucerto.toString() +
     //     '  deucerto  deucertodeucerto deucertodeucerto deucertodeucerto');
 
     Carteira c = carteiraController.value;
 
-    DocumentReference tranDoc =
-        await db.collection('creditos').document();
-    db.collection('creditos').document(tranDoc.documentID).setData(
-        Credito(
-                usuarioId: c.usuarioId,
-                data: DateTime.now().toIso8601String(),
-                idLoja: listController.value[index].id,
-                sku:listController.value[index].skuDetail.sku,
-                valor: valor(listController.value[index].id))
-            .toMap());
+    DocumentReference tranDoc = await db.collection('creditos').document();
+    db.collection('creditos').document(tranDoc.documentID).setData(Credito(
+            usuarioId: c.usuarioId,
+            data: DateTime.now().toIso8601String(),
+            idLoja: listController.value[index].id,
+            sku: listController.value[index].skuDetail.sku,
+            valor: valor(listController.value[index].id))
+        .toMap());
+//comeca atualza usuarios publicidae
+    DocumentSnapshot result =
+        await db.collection('usuarios').document(uid).get();
+    Usuario user1 = Usuario.fromMap(result.data, result.documentID);
+    List<Usuario> l = [];
+    for (var i = 0; i < user1.piramidesAdmnistra.length; i++) {
+      final QuerySnapshot result = await db
+          .collection('usuarios')
+          .where('piramidesPodeRelatarId',
+              arrayContains: user1.piramidesAdmnistra[i])
+          .getDocuments();
+      List<DocumentSnapshot> documents = result.documents;
+      documents.forEach((data) {
+        l.add(Usuario.fromMap(data.data, data.documentID));
+      });
+    }
+    var batch = db.batch();
+    for (var i = 0; i < l.length; i++) {
+      batch.updateData(db.collection('usuarios').document(l[i].usuarioId),
+          {'publicidade': false});
+    }
+    batch.commit();
 
     c.saldo = c.saldo + valor(listController.value[index].id);
     await db
@@ -128,6 +149,7 @@ class ComprarCreditoBloc extends BlocBase {
         .updateData(c.toMap());
 
     carteiraEvent.add(c);
+    print('checou finalo ');
     // DocumentSnapshot snapNovo =
     //       await db.collection('carteiras').where(field).get();
     //  Usuario user1 = Usuario.fromMap(snapNovo.data, snapNovo.documentID);

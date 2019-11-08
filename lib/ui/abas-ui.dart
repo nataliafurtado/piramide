@@ -4,6 +4,7 @@ import 'package:comportamentocoletivo/ui/comprar-credito-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-pode-relatar-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-ui.dart';
 import 'package:comportamentocoletivo/ui/piramides-administro-ui.dart';
+import 'package:firebase_admob/firebase_admob.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controls.dart';
@@ -47,7 +48,19 @@ class _AbaUiState extends State<AbaUi> {
     // });
     print('init');
     moverAnimeIcons(widget.aba);
+
+      FirebaseAdMob.instance
+        .initialize(appId: "ca-app-pub-4315692542852907~8105772849");
+
+    startBanner();
+    displayBanner();
     super.initState();
+  }
+ @override
+  void dispose() {
+    myBanner?.dispose();
+    //myInterstitial?.dispose();
+    super.dispose();
   }
 
   void moverAnimeIcons(int index) {
@@ -95,7 +108,48 @@ class _AbaUiState extends State<AbaUi> {
         break;
     }
   }
+void displayBanner() {
+    myBanner
+      ..load()
+      ..show(
+        anchorOffset: 0.0,
+        anchorType: AnchorType.bottom,
+      );
+  }
+void startBanner() {
+    myBanner = BannerAd(
+      //
+      //4315692542852907/4611033356
+      adUnitId:
+      // BannerAd.testAdUnitId,
+      'ca-app-pub-4315692542852907/4611033356',
+      size: AdSize.smartBanner,
+      targetingInfo: targetingInfo,
+      listener: (MobileAdEvent event) {
+        if (event == MobileAdEvent.failedToLoad) {
+         setState(() {
+            bannerAjuste=0;
+         });
+          // MobileAdEvent.opened
+          // MobileAdEvent.clicked
+          // MobileAdEvent.closed
+          // MobileAdEvent.failedToLoad
+          // MobileAdEvent.impression
+          // MobileAdEvent.leftApplication
+        }
+        print("BannerAd event is $event");
+      },
+    );
+  }
+MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+  //  keywords: <String>['industry', 'safety'],
+  //  contentUrl: 'https://flutter.io',
+    childDirected: false,
+    testDevices: <String>[],
+);
 
+BannerAd myBanner;
+double bannerAjuste=50;
   final FlareControls controllPirAdmAnime = FlareControls();
   final FlareControls controllPirFazParteAnime = FlareControls();
   final FlareControls controllPiramidesAnime = FlareControls();
@@ -104,59 +158,62 @@ class _AbaUiState extends State<AbaUi> {
     return DefaultTabController(
       initialIndex: widget.aba == null ? 0 : widget.aba,
       length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            PopupMenuButton<OrderOptions>(
-              itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
-                const PopupMenuItem<OrderOptions>(
-                  child: Text("Como funciona ?"),
-                  value: OrderOptions.comofunciona,
-                ),
-                const PopupMenuItem<OrderOptions>(
-                  child: Text("Comprar Créditos"),
-                  value: OrderOptions.comprar,
-                ),
+      child: Padding(
+        padding: EdgeInsets.only(bottom: bannerAjuste),
+              child: Scaffold(
+          appBar: AppBar(
+            actions: <Widget>[
+              PopupMenuButton<OrderOptions>(
+                itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
                   const PopupMenuItem<OrderOptions>(
-                  child: Text("Sair"),
-                  value: OrderOptions.logout,
-                ),
-              ],
-              onSelected: _orderList,
-            ),
-          ],
-          title: Center(
-            child: Text(titulo),
-          ),
-          bottom: TabBar(
-            onTap: (indexx) {
-              setState(() {
-                titulo = _tituloApp(indexx);
-                moverAnimeIcons(indexx);
-              });
-              print(indexx.toString() + 'indez');
-            },
-            tabs: <Widget>[
-              Tab(
-                child: iconePiramideAdm(),
-              ),
-              Tab(
-                child: iconePiramideFazParte(),
-              ),
-              Tab(
-                child: iconePiramides(),
+                    child: Text("Como funciona ?"),
+                    value: OrderOptions.comofunciona,
+                  ),
+                  const PopupMenuItem<OrderOptions>(
+                    child: Text("Comprar Créditos"),
+                    value: OrderOptions.comprar,
+                  ),
+                    const PopupMenuItem<OrderOptions>(
+                    child: Text("Sair"),
+                    value: OrderOptions.logout,
+                  ),
+                ],
+                onSelected: _orderList,
               ),
             ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            PiramideAdministro(),
-            PiramidePodeRelatar(
-              novoUsuario: widget.novoUsuario,
+            title: Center(
+              child: Text(titulo),
             ),
-            Piramides(),
-          ],
+            bottom: TabBar(
+              onTap: (indexx) {
+                setState(() {
+                  titulo = _tituloApp(indexx);
+                  moverAnimeIcons(indexx);
+                });
+                print(indexx.toString() + 'indez');
+              },
+              tabs: <Widget>[
+                Tab(
+                  child: iconePiramideAdm(),
+                ),
+                Tab(
+                  child: iconePiramideFazParte(),
+                ),
+                Tab(
+                  child: iconePiramides(),
+                ),
+              ],
+            ),
+          ),
+          body: TabBarView(
+            children: [
+              PiramideAdministro(),
+              PiramidePodeRelatar(
+                novoUsuario: widget.novoUsuario,
+              ),
+              Piramides(),
+            ],
+          ),
         ),
       ),
     );

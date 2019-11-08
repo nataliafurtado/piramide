@@ -23,6 +23,15 @@ class LoginBloc extends BlocBase {
       'https://www.googleapis.com/auth/userinfo.profile',
     ],
   );
+//ca-app-pub-4315692542852907~8105772849
+//PIRÂMIDE COLETIVAca-app-pub-4315692542852907~8105772849
+//bannerca-app-pub-4315692542852907/4611033356
+
+//PIRÂMIDE COLETIVAca-app-pub-4315692542852907~8105772849
+//intersticialca-app-pub-4315692542852907/8181794467
+
+
+
 
   GoogleSignInAccount _currentUser;
 
@@ -206,6 +215,7 @@ class LoginBloc extends BlocBase {
       DocumentReference usuDoc = await db.collection('usuarios').document(uid);
 
       db.collection('usuarios').document(usuDoc.documentID).setData(Usuario(
+        publicidade: true,
           nome: nomeCotroller.value,
           npiramides: 0,
           piramidesPodeRelatarId: []).toMap());
@@ -251,6 +261,7 @@ class LoginBloc extends BlocBase {
     if (snap == null || !snap.exists) {
       DocumentReference usuDoc = await db.collection('usuarios').document(uid);
       db.collection('usuarios').document(usuDoc.documentID).setData(Usuario(
+        publicidade: true,
           nome: nomeCotroller.value,
           npiramides: 0,
           piramidesPodeRelatarId: []).toMap());
