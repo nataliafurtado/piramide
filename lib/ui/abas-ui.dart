@@ -13,12 +13,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 enum OrderOptions { comofunciona, logout, comprar }
+
 final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class AbaUi extends StatefulWidget {
   final int aba;
   final bool novoUsuario;
-  AbaUi({this.aba, this.novoUsuario});
+  bool mostraPiramideAdm;
+  AbaUi({this.aba, this.novoUsuario, this.mostraPiramideAdm});
   static const route = '/home-ui';
 
   @override
@@ -27,15 +29,25 @@ class AbaUi extends StatefulWidget {
 
 class _AbaUiState extends State<AbaUi> {
   int _index1 = 0;
+  List<Tab> listTab = new List();
+  List<Widget> listWidgets = new List();
 
-  String titulo = 'PIRAMIDES ADMINISTRO';
+  String titulo = '';
   String _tituloApp(int pag) {
-    if (pag == 0) {
-      return 'PIRAMIDES ADMINISTRO';
-    } else if (pag == 1) {
-      return 'PIRAMIDES FAÇO PARTE ';
-    } else if (pag == 2) {
-      return 'PIRAMIDES';
+    if (widget.mostraPiramideAdm) {
+      if (pag == 0) {
+        return 'PIRAMIDES ADMINISTRO';
+      } else if (pag == 1) {
+        return 'PIRAMIDES FAÇO PARTE ';
+      } else if (pag == 2) {
+        return 'PIRAMIDES';
+      }
+    } else {
+      if (pag == 0) {
+        return 'PIRAMIDES FAÇO PARTE ';
+      } else if (pag == 1) {
+        return 'PIRAMIDES';
+      }
     }
 
     return 'PIRAMIDES';
@@ -46,17 +58,34 @@ class _AbaUiState extends State<AbaUi> {
     // Future.delayed(Duration(seconds: 1)).then((d) {
 
     // });
-    print('init');
+    titulo = _tituloApp(widget.aba);
     moverAnimeIcons(widget.aba);
-
-      FirebaseAdMob.instance
+    carregaTabs();
+    FirebaseAdMob.instance
         .initialize(appId: "ca-app-pub-4315692542852907~8105772849");
 
     startBanner();
     displayBanner();
     super.initState();
   }
- @override
+
+  void carregaTabs() {
+    if (widget.mostraPiramideAdm) {
+      listTab.add(Tab(child: iconePiramideAdm()));
+    }
+    listTab.add(Tab(child: iconePiramideFazParte()));
+    listTab.add(Tab(child: iconePiramides()));
+    if (widget.mostraPiramideAdm) {
+      listWidgets.add(PiramideAdministro());
+    }
+
+    listWidgets.add(PiramidePodeRelatar(
+      novoUsuario: widget.novoUsuario,
+    ));
+    listWidgets.add(Piramides());
+  }
+
+  @override
   void dispose() {
     myBanner?.dispose();
     //myInterstitial?.dispose();
@@ -65,12 +94,20 @@ class _AbaUiState extends State<AbaUi> {
 
   void moverAnimeIcons(int index) {
     print(index);
-    if (index == 0) {
-      controllPirAdmAnime.play('go');
-    } else if (index == 1) {
-      controllPirFazParteAnime.play('go');
+    if (widget.mostraPiramideAdm) {
+      if (index == 0) {
+        controllPirAdmAnime.play('go');
+      } else if (index == 1) {
+        controllPirFazParteAnime.play('go');
+      } else {
+        controllPiramidesAnime.play('go');
+      }
     } else {
-      controllPiramidesAnime.play('go');
+      if (index == 0) {
+        controllPirFazParteAnime.play('go');
+      } else if (index == 1) {
+        controllPiramidesAnime.play('go');
+      }
     }
   }
 
@@ -102,13 +139,13 @@ class _AbaUiState extends State<AbaUi> {
 
         break;
       case OrderOptions.comprar:
-   Navigator.pushNamed(context, ComprarCreditoUi.route);
-
+        Navigator.pushNamed(context, ComprarCreditoUi.route);
 
         break;
     }
   }
-void displayBanner() {
+
+  void displayBanner() {
     myBanner
       ..load()
       ..show(
@@ -116,20 +153,22 @@ void displayBanner() {
         anchorType: AnchorType.bottom,
       );
   }
-void startBanner() {
+
+  void startBanner() {
     myBanner = BannerAd(
       //
       //4315692542852907/4611033356
       adUnitId:
-      // BannerAd.testAdUnitId,
-      'ca-app-pub-4315692542852907/4611033356',
+          // BannerAd.testAdUnitId,
+          'ca-app-pub-4315692542852907/4611033356',
       size: AdSize.smartBanner,
+
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
         if (event == MobileAdEvent.failedToLoad) {
-         setState(() {
-            bannerAjuste=0;
-         });
+          setState(() {
+            bannerAjuste = 0;
+          });
           // MobileAdEvent.opened
           // MobileAdEvent.clicked
           // MobileAdEvent.closed
@@ -141,15 +180,16 @@ void startBanner() {
       },
     );
   }
-MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
-  //  keywords: <String>['industry', 'safety'],
-  //  contentUrl: 'https://flutter.io',
+
+  MobileAdTargetingInfo targetingInfo = MobileAdTargetingInfo(
+    keywords: <String>['industry', 'safety'],
+    contentUrl: 'https://flutter.io',
     childDirected: false,
     testDevices: <String>[],
-);
+  );
 
-BannerAd myBanner;
-double bannerAjuste=50;
+  BannerAd myBanner;
+  double bannerAjuste = 50;
   final FlareControls controllPirAdmAnime = FlareControls();
   final FlareControls controllPirFazParteAnime = FlareControls();
   final FlareControls controllPiramidesAnime = FlareControls();
@@ -157,10 +197,10 @@ double bannerAjuste=50;
   Widget build(BuildContext context) {
     return DefaultTabController(
       initialIndex: widget.aba == null ? 0 : widget.aba,
-      length: 3,
+      length: widget.mostraPiramideAdm ? 3 : 2,
       child: Padding(
         padding: EdgeInsets.only(bottom: bannerAjuste),
-              child: Scaffold(
+        child: Scaffold(
           appBar: AppBar(
             actions: <Widget>[
               PopupMenuButton<OrderOptions>(
@@ -173,7 +213,7 @@ double bannerAjuste=50;
                     child: Text("Comprar Créditos"),
                     value: OrderOptions.comprar,
                   ),
-                    const PopupMenuItem<OrderOptions>(
+                  const PopupMenuItem<OrderOptions>(
                     child: Text("Sair"),
                     value: OrderOptions.logout,
                   ),
@@ -192,27 +232,11 @@ double bannerAjuste=50;
                 });
                 print(indexx.toString() + 'indez');
               },
-              tabs: <Widget>[
-                Tab(
-                  child: iconePiramideAdm(),
-                ),
-                Tab(
-                  child: iconePiramideFazParte(),
-                ),
-                Tab(
-                  child: iconePiramides(),
-                ),
-              ],
+              tabs: listTab,
             ),
           ),
           body: TabBarView(
-            children: [
-              PiramideAdministro(),
-              PiramidePodeRelatar(
-                novoUsuario: widget.novoUsuario,
-              ),
-              Piramides(),
-            ],
+            children: listWidgets,
           ),
         ),
       ),

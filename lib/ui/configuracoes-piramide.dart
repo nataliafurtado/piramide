@@ -3,6 +3,7 @@ import 'package:comportamentocoletivo/bloc/configuracoes-piramide-bloc.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/ui/abas-ui.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 ConfiguracoesPiramideBloc blocConfiguracoesPiramide =
     BlocProvider.getBloc<ConfiguracoesPiramideBloc>();
@@ -56,41 +57,56 @@ class _ConfiguracoesPiramideState extends State<ConfiguracoesPiramide> {
                             actions: <Widget>[
                               FlatButton(
                                 onPressed: () async {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text('ATENÇÃO'),
+                                          content: Text(
+                                              'Depois de excluída não poderá mais ser recuperada?'),
+                                          actions: <Widget>[
+                                            FlatButton(
+                                              onPressed: () async {
+                                                await blocConfiguracoesPiramide
+                                                    .excluirPiramide(widget
+                                                        .piramide.piramideId);
+                                                SharedPreferences prefs =
+                                                    await SharedPreferences
+                                                        .getInstance();
 
- showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('ATENÇÃO'),
-                            content: Text(
-                                'Depois de excluída não poderá mais ser recuperada?'),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () async {
-                                  await blocConfiguracoesPiramide
-                                      .excluirPiramide(
-                                          widget.piramide.piramideId);
-                                  Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      AbaUi.route,
-                                      ModalRoute.withName(AbaUi.route));
-                                  // Navigator.of(context).pop();
-                                  //  Navigator.of(context).pop();
-                                },
-                                child: Text('EXCLUIR'),
-                              ),
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                   Navigator.of(context).pop();
-                                },
-                                child: Text('CANCELAR'),
-                              ),
-                            ],
-                          );
-                        });
-
-
+                                                Navigator.of(context)
+                                                    .pushAndRemoveUntil(
+                                                        MaterialPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    AbaUi(
+                                                                      aba: 0,
+                                                                      mostraPiramideAdm:
+                                                                          prefs.getBool(
+                                                                              'mostraPiramideAdm'),
+                                                                    )),
+                                                        (Route<dynamic>
+                                                                route) =>
+                                                            false);
+                                                // Navigator.pushNamedAndRemoveUntil(
+                                                //     context,
+                                                //     AbaUi.route,
+                                                //     ModalRoute.withName(AbaUi.route));
+                                                // Navigator.of(context).pop();
+                                                //  Navigator.of(context).pop();
+                                              },
+                                              child: Text('EXCLUIR'),
+                                            ),
+                                            FlatButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                                Navigator.of(context).pop();
+                                              },
+                                              child: Text('CANCELAR'),
+                                            ),
+                                          ],
+                                        );
+                                      });
                                 },
                                 child: Text('EXCLUIR'),
                               ),

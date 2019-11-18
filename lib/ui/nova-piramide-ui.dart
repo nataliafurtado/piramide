@@ -11,6 +11,7 @@ import 'package:comportamentocoletivo/ui/configuracoes-piramide.dart';
 import 'package:comportamentocoletivo/ui/piramides-ui.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum OrderOptions { comofunciona, logout }
 
@@ -111,9 +112,10 @@ class _NovaPiramideState extends State<NovaPiramide> {
 //                   builder: (context) => AbaUi(
 //                         aba: 0,
 //                       )));
-
-                  Navigator.pushNamedAndRemoveUntil(
-                      context, AbaUi.route, ModalRoute.withName(AbaUi.route));
+ SharedPreferences prefs = await SharedPreferences.getInstance();
+  prefs.setBool('mostraPiramideAdm', true);
+Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+    AbaUi(aba: 0,mostraPiramideAdm :true,)), (Route<dynamic> route) => false);
                 }
 
                 // Navigator.of(context).pop();

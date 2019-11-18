@@ -37,9 +37,9 @@ class Piramides extends StatelessWidget {
                       ),
 
                       Container(
-                        width: 200,
+                      //  width: MediaQuery.of(context).size.width*0.5,
                         child: Text(
-                          'PEDIR PARA PARTICIPAR DE UMA PIRÂMIDE',
+                          'PROCURAR PIRÂMIDE',
                           style: TextStyle(fontSize: 15),
                         ),
                       )

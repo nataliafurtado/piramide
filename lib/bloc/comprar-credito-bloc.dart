@@ -55,6 +55,7 @@ class ComprarCreditoBloc extends BlocBase {
     carteiraEvent
         .add(Carteira.fromMap(documents[0].data, documents[0].documentID));
 
+
     final bool available = await InAppPurchaseConnection.instance.isAvailable();
     print(available);
     if (available) {
@@ -64,7 +65,8 @@ class ComprarCreditoBloc extends BlocBase {
       final ProductDetailsResponse response =
           await InAppPurchaseConnection.instance.queryProductDetails(_kIds);
       if (!response.notFoundIDs.isEmpty) {
-        // Handle the error.
+        
+        
       }
       List<ProductDetails> products = response.productDetails;
 

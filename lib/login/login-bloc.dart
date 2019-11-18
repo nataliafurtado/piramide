@@ -30,9 +30,6 @@ class LoginBloc extends BlocBase {
 //PIRÂMIDE COLETIVAca-app-pub-4315692542852907~8105772849
 //intersticialca-app-pub-4315692542852907/8181794467
 
-
-
-
   GoogleSignInAccount _currentUser;
 
   final Atenticacao _autenticacao = Atenticacao();
@@ -180,6 +177,8 @@ class LoginBloc extends BlocBase {
   }
 
   Future<String> novoUsuario() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.setBool('mostraPiramideAdm', false);
     String aviso = '';
     String uid = '';
     if (_senhaCotroller.value != _senha2Cotroller.value) {
@@ -215,7 +214,7 @@ class LoginBloc extends BlocBase {
       DocumentReference usuDoc = await db.collection('usuarios').document(uid);
 
       db.collection('usuarios').document(usuDoc.documentID).setData(Usuario(
-        publicidade: true,
+          publicidade: true,
           nome: nomeCotroller.value,
           npiramides: 0,
           piramidesPodeRelatarId: []).toMap());
@@ -228,14 +227,12 @@ class LoginBloc extends BlocBase {
       user1.piramidesPodeRelatarId.add('Ay9fVHcq2nhDxJJXqPiA');
       await db.collection('usuarios').document(uid).updateData(user1.toMap());
 
-
       DocumentReference carteiraDoc =
           await db.collection('carteiras').document();
       db
           .collection('carteiras')
           .document(carteiraDoc.documentID)
           .setData(Carteira(saldo: 1.0, usuarioId: usuDoc.documentID).toMap());
-
 
       //      DocumentReference fff =
       //     await db.collection('carteiras').document();
@@ -261,7 +258,7 @@ class LoginBloc extends BlocBase {
     if (snap == null || !snap.exists) {
       DocumentReference usuDoc = await db.collection('usuarios').document(uid);
       db.collection('usuarios').document(usuDoc.documentID).setData(Usuario(
-        publicidade: true,
+          publicidade: true,
           nome: nomeCotroller.value,
           npiramides: 0,
           piramidesPodeRelatarId: []).toMap());
@@ -276,12 +273,11 @@ class LoginBloc extends BlocBase {
     user1.piramidesPodeRelatarId.add('Fl6Qod4bU0BrmPRUIx5y');
     user1.piramidesPodeRelatarId.add('Ay9fVHcq2nhDxJJXqPiA');
     await db.collection('usuarios').document(uid).updateData(user1.toMap());
-      DocumentReference carteiraDoc =
-          await db.collection('carteiras').document();
-      db
-          .collection('carteiras')
-          .document(carteiraDoc.documentID)
-          .setData(Carteira(saldo: 1.0, usuarioId: uid).toMap());
+    DocumentReference carteiraDoc = await db.collection('carteiras').document();
+    db
+        .collection('carteiras')
+        .document(carteiraDoc.documentID)
+        .setData(Carteira(saldo: 1.0, usuarioId: uid).toMap());
   }
 
   String _excecaoAviso(String aviso) {
@@ -331,7 +327,7 @@ class LoginBloc extends BlocBase {
     final FirebaseUser user = await _auth.currentUser();
     // print(user);
     final String uid = user.uid;
-    print('zzxxxzzxxzzxxzzxx' + uid);
+    //  print('zzxxxzzxxzzxxzzxx' + uid);
     QuerySnapshot rrr = await db
         .collection('piramides')
         .where('usuarioId', isEqualTo: uid)
@@ -339,7 +335,9 @@ class LoginBloc extends BlocBase {
         .getDocuments();
 
     final List<DocumentSnapshot> documents = rrr.documents;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     if (documents.isEmpty) {
+      prefs.setBool('mostraPiramideAdm', false);
       DocumentSnapshot result =
           await db.collection('usuarios').document(uid).get();
       print(result.data.toString());
@@ -351,6 +349,7 @@ class LoginBloc extends BlocBase {
         return 2;
       }
     } else {
+      prefs.setBool('mostraPiramideAdm', true);
       return 0;
     }
   }

@@ -144,7 +144,7 @@ class _PiramidePodeRelatarState extends State<PiramidePodeRelatar> {
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) =>
-                                          AbaUi(aba: 1, novoUsuario: false)));
+                                          AbaUi(aba: 1, novoUsuario: false, mostraPiramideAdm: false,  )));
                              
                             },
                           ),

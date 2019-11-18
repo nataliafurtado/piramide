@@ -43,13 +43,14 @@ class _LoginScreen3State extends State<LoginScreen3>
     super.initState();
 //print('emailLogado');
     bloc = LoginBloc(context);
-    Future.delayed(Duration(seconds: 2)).then((g){
+    Future.delayed(Duration(seconds: 2)).then((g) {
       controlLogin.play('go');
     });
     taLogadoEssaBosta();
   }
+
   final FlareControls controlLogin = FlareControls();
-    Widget iconePiramideFazParte() {
+  Widget iconePiramideFazParte() {
     // print(pirAdmAnime.toString());
     return FlareActor(
       'assets/login1.flr',
@@ -57,7 +58,7 @@ class _LoginScreen3State extends State<LoginScreen3>
       fit: BoxFit.contain,
       animation: 'idle',
       controller: controlLogin,
-     // color: Colors.white70,
+      // color: Colors.white70,
     );
   }
 
@@ -82,15 +83,14 @@ class _LoginScreen3State extends State<LoginScreen3>
                 : false,
             child: Container(
               padding: EdgeInsets.only(top: 100.0),
-             height: MediaQuery.of(context).size.height*0.3,
-              child: Center(
-                child:iconePiramideFazParte()
-                //  Icon(
-                //   Icons.change_history,
-                //   color: Colors.white,
-                //   size: 40.0,
-                // ),
-              ),
+              height: MediaQuery.of(context).size.height * 0.3,
+              child: Center(child: iconePiramideFazParte()
+                  //  Icon(
+                  //   Icons.change_history,
+                  //   color: Colors.white,
+                  //   size: 40.0,
+                  // ),
+                  ),
             ),
           ),
           Container(
@@ -189,6 +189,21 @@ class _LoginScreen3State extends State<LoginScreen3>
         ],
       ),
     );
+  }
+
+  void logar() async {
+    setState(() {
+      mostrarCircularProgress = true;
+    });
+    String g = await bloc.logar();
+    if (g != null) {
+      setState(() {
+        mostrarCircularProgress = false;
+      });
+      _mostrarDialog(g);
+    } else {
+      _navagarParaInicio();
+    }
   }
 
   Widget LoginPage() {
@@ -300,6 +315,9 @@ class _LoginScreen3State extends State<LoginScreen3>
                   new Expanded(
                     child: TextField(
                       onChanged: bloc.senhaEvent.add,
+                      onSubmitted: (s) {
+                        logar();
+                      },
                       obscureText: true,
                       textAlign: TextAlign.left,
                       decoration: InputDecoration(
@@ -333,7 +351,8 @@ class _LoginScreen3State extends State<LoginScreen3>
                     onPressed: () async {
                       String aviso = await bloc.resetPassword();
                       if (aviso == null) {
-                        _mostrarDialog('E-mail de recuperação enviado ao seu e-mail!');
+                        _mostrarDialog(
+                            'E-mail de recuperação enviado ao seu e-mail!');
                       } else {
                         _mostrarDialog(aviso);
                       }
@@ -355,18 +374,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                       ),
                       color: Colors.pink,
                       onPressed: () async {
-                        setState(() {
-                          mostrarCircularProgress = true;
-                        });
-                        String g = await bloc.logar();
-                        if (g != null) {
-                          setState(() {
-                            mostrarCircularProgress = false;
-                          });
-                          _mostrarDialog(g);
-                        } else {
-                          _navagarParaInicio();
-                        }
+                        logar();
                       },
                       child: new Container(
                         padding: const EdgeInsets.symmetric(
@@ -793,8 +801,9 @@ class _LoginScreen3State extends State<LoginScreen3>
               context,
               MaterialPageRoute(
                   builder: (context) => AbaUi(
-                        aba: 2,
-                        novoUsuario:true
+                        aba: 1,
+                        novoUsuario: true,
+                        mostraPiramideAdm: false,
                       )));
         }
       },
@@ -882,12 +891,20 @@ class _LoginScreen3State extends State<LoginScreen3>
   }
 
   void _navagarParaInicio() async {
+    bool mostraPiramideAdmbool;
     int i = await bloc.verOndeDirecionar();
+    if (i == 0) {
+      mostraPiramideAdmbool = true;
+    } else {
+       mostraPiramideAdmbool = false;
+      i = i - 1;
+    }
     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => AbaUi(
                   aba: i,
+                  mostraPiramideAdm:  mostraPiramideAdmbool,
                 )));
   }
 }

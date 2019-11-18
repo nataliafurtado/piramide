@@ -61,7 +61,7 @@ class NovoRelatoBloc extends BlocBase {
   Observable<bool> get semSaldoFluxo => semSaldoController.stream;
   Sink<bool> get semSaldoEvent => semSaldoController.sink;
 
-  Future<String> novoRelato(Piramide piramideId, int numerocamada) async {
+  Future<String> novoRelato(Piramide piramide, int numerocamada) async {
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
 
@@ -70,7 +70,7 @@ class NovoRelatoBloc extends BlocBase {
     Usuario user1 = Usuario.fromMap(result.data, result.documentID);
 
     Relato relato = Relato(
-      piramideId: piramideId.piramideId,
+      piramideId: piramide.piramideId,
       datacriacao: DateTime.now().toIso8601String(),
       numeroCamada: numerocamada,
       qtdPerguntas: perguntasRelatoController.value.length,
@@ -88,18 +88,18 @@ class NovoRelatoBloc extends BlocBase {
         .document(relatoDoc.documentID)
         .setData(relato.toMap());
 
-    piramideId.camadasDaPiramide[numerocamada].total =
-        piramideId.camadasDaPiramide[numerocamada].total + 1;
+    piramide.camadasDaPiramide[numerocamada].total =
+        piramide.camadasDaPiramide[numerocamada].total + 1;
     await db
         .collection('piramides')
-        .document(piramideId.piramideId)
-        .updateData(piramideId.toMap());
+        .document(piramide.piramideId)
+        .updateData(piramide.toMap());
 
     //informacoes
 
     QuerySnapshot rrr = await db
         .collection('informacoes')
-        .where('piramideId', isEqualTo: piramideId.piramideId)
+        .where('piramideId', isEqualTo: piramide.piramideId)
         .limit(1)
         .getDocuments();
 
@@ -122,7 +122,8 @@ class NovoRelatoBloc extends BlocBase {
         .document(documents[0].documentID)
         .updateData(infor.toMap());
 
-    DocumentReference tranDoc = await db.collection('debitos').document();
+ if (!piramide.publica) {
+      DocumentReference tranDoc = await db.collection('debitos').document();
     db.collection('debitos').document(tranDoc.documentID).setData(Debito(
             usuarioId: uid,
             data: DateTime.now().toIso8601String(),
@@ -135,6 +136,8 @@ class NovoRelatoBloc extends BlocBase {
         .collection('carteiras')
         .document(carteira.carteiraId)
         .updateData(carteira.toMap());
+   
+ }
 
     return null;
   }

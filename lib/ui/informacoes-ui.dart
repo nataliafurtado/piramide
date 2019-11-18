@@ -8,6 +8,7 @@ import 'package:date_format/date_format.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 InformacoesBloc infoBloc = BlocProvider.getBloc<InformacoesBloc>();
 
@@ -75,10 +76,17 @@ class _InformacoesUiState extends State<InformacoesUi> {
                 await infoBloc.deixarDeSeguirPiramide(widget.piramide);
               //  Future.delayed(Duration(seconds: 2));
                // Navigator.of(context).pop();
-                   Navigator.pushNamedAndRemoveUntil(
-                                      context,
-                                      AbaUi.route,
-                                      ModalRoute.withName(AbaUi.route));
+
+               SharedPreferences prefs = await SharedPreferences.getInstance();
+
+Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
+    AbaUi(aba: 1,mostraPiramideAdm: prefs.getBool('mostraPiramideAdm'),)), (Route<dynamic> route) => false);
+
+    
+                  //  Navigator.pushNamedAndRemoveUntil(
+                  //                     context,
+                  //                     AbaUi.route,
+                  //                     ModalRoute.withName(AbaUi.route));
               },
               child: Text(
                 'Deixar de Seguir',
