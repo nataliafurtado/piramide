@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:comportamentocoletivo/model/carteira.dart';
@@ -55,7 +57,6 @@ class ComprarCreditoBloc extends BlocBase {
     carteiraEvent
         .add(Carteira.fromMap(documents[0].data, documents[0].documentID));
 
-
     final bool available = await InAppPurchaseConnection.instance.isAvailable();
     print(available);
     if (available) {
@@ -64,10 +65,7 @@ class ComprarCreditoBloc extends BlocBase {
       const Set<String> _kIds = {'credito29.99', 'credito99.99'};
       final ProductDetailsResponse response =
           await InAppPurchaseConnection.instance.queryProductDetails(_kIds);
-      if (!response.notFoundIDs.isEmpty) {
-        
-        
-      }
+      if (!response.notFoundIDs.isEmpty) {}
       List<ProductDetails> products = response.productDetails;
 
       listEvent.add(products);
@@ -78,38 +76,12 @@ class ComprarCreditoBloc extends BlocBase {
     }
   }
 
-  void listarJaCOmprados() async {
-    print('dddddd');
-    final QueryPurchaseDetailsResponse response =
-        await InAppPurchaseConnection.instance.queryPastPurchases();
-    print(response.pastPurchases.length);
-    if (response.error != null) {
-      // Handle the error.
-    }
-    for (PurchaseDetails purchase in response.pastPurchases) {
-//    // _verifyPurchase(purchase);  // Verify the purchase following the best practices for each storefront.
-//    // _deliverPurchase(purchase); // Deliver the purchase to the user in your app.
-//     if (Platform.isIOS) {
-//         // Mark that you've delivered the purchase. Only the App Store requires
-//         // this final confirmation.
-//         InAppPurchaseConnection.instance.completePurchase(purchase);
-//     }
-      print(purchase.toString());
-    }
-  }
-
-  void comprar(int index) async {
-    //   final ProductDetails productDetails = ... // Saved earlier from queryPastPurchases().
+  void somarCompraNoSitema(PurchaseDetails pdVoltou) async {
     final FirebaseUser user = await _auth.currentUser();
     final String uid = user.uid;
-    // final PurchaseParam purchaseParam =
-    //     PurchaseParam(productDetails: listController.value[index]);
-    // bool deucerto = await InAppPurchaseConnection.instance
-    //     .buyConsumable(purchaseParam: purchaseParam);
 
-    // InAppPurchaseConnection.instance.buyNonConsumable(purchaseParam: purchaseParam);
-    // print(deucerto.toString() +
-    //     '  deucerto  deucertodeucerto deucertodeucerto deucertodeucerto');
+ ProductDetails pd  =listController.value.where((pd)=>pd.id==pdVoltou.productID).first;
+print('object');
 
     Carteira c = carteiraController.value;
 
@@ -117,9 +89,9 @@ class ComprarCreditoBloc extends BlocBase {
     db.collection('creditos').document(tranDoc.documentID).setData(Credito(
             usuarioId: c.usuarioId,
             data: DateTime.now().toIso8601String(),
-            idLoja: listController.value[index].id,
-            sku: listController.value[index].skuDetail.sku,
-            valor: valor(listController.value[index].id))
+            idLoja: pd.id,
+            sku: pdVoltou.purchaseID,
+            valor: valor(pd.id))
         .toMap());
 //comeca atualza usuarios publicidae
     DocumentSnapshot result =
@@ -144,14 +116,30 @@ class ComprarCreditoBloc extends BlocBase {
     }
     batch.commit();
 
-    c.saldo = c.saldo + valor(listController.value[index].id);
+    c.saldo = c.saldo + valor(pd.id);
     await db
         .collection('carteiras')
         .document(c.carteiraId)
         .updateData(c.toMap());
 
     carteiraEvent.add(c);
-    print('checou finalo ');
+   
+  }
+
+  void comprar(int index) async {
+    //   final ProductDetails productDetails = ... // Saved earlier from queryPastPurchases().
+    final FirebaseUser user = await _auth.currentUser();
+    final String uid = user.uid;
+    final PurchaseParam purchaseParam = PurchaseParam(
+        productDetails: listController.value[index],
+        applicationUserName: 'piramideColetivaId');
+    bool deucerto = await InAppPurchaseConnection.instance
+        .buyConsumable(purchaseParam: purchaseParam);
+
+    // InAppPurchaseConnection.instance.buyNonConsumable(purchaseParam: purchaseParam);
+    print(deucerto.toString() +
+        '  deucerto  deucertodeucerto deucertodeucerto deucertodeucerto');
+
     // DocumentSnapshot snapNovo =
     //       await db.collection('carteiras').where(field).get();
     //  Usuario user1 = Usuario.fromMap(snapNovo.data, snapNovo.documentID);

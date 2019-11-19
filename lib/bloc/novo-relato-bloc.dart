@@ -31,10 +31,9 @@ class NovoRelatoBloc extends BlocBase {
   // Observable<Piramide> get piramideFluxo => piramideController.stream;
   // Sink<Piramide> get piramideEvent => piramideController.sink;
 
-  // final camadaSelecinadaController = BehaviorSubject<int>.seeded(0);
-  // Observable<int> get camadaSelecinadaFluxo =>
-  //     camadaSelecinadaController.stream;
-  // Sink<int> get camadaSelecinadaEvent => camadaSelecinadaController.sink;
+  final normalController = BehaviorSubject<bool>.seeded(true);
+  Observable<bool> get normalFluxo => normalController.stream;
+  Sink<bool> get normalEvent => normalController.sink;
 
   static List<Pergunta> listPerg = [
     Pergunta(obrigatoria: false, perguntaTitulo: '')
@@ -74,8 +73,9 @@ class NovoRelatoBloc extends BlocBase {
       datacriacao: DateTime.now().toIso8601String(),
       numeroCamada: numerocamada,
       qtdPerguntas: perguntasRelatoController.value.length,
-      usuarioRelatouId: uid,
-      usarioNome: user1.nome,
+      usuarioRelatouId: normalController.value ? uid : 'ANÔNIMO',
+      anonimo: !normalController.value,
+      usarioNome: normalController.value ? user1.nome : 'ANÔNIMO',
       perguntasRelato: [],
     );
 
@@ -122,22 +122,21 @@ class NovoRelatoBloc extends BlocBase {
         .document(documents[0].documentID)
         .updateData(infor.toMap());
 
- if (!piramide.publica) {
+    if (!piramide.publica) {
       DocumentReference tranDoc = await db.collection('debitos').document();
-    db.collection('debitos').document(tranDoc.documentID).setData(Debito(
-            usuarioId: uid,
-            data: DateTime.now().toIso8601String(),
-            relatoId: relatoDoc.documentID,
-            valor: 0.1)
-        .toMap());
+      db.collection('debitos').document(tranDoc.documentID).setData(Debito(
+              usuarioId: uid,
+              data: DateTime.now().toIso8601String(),
+              relatoId: relatoDoc.documentID,
+              valor: 0.1)
+          .toMap());
 
-    carteira.saldo = carteira.saldo - 0.1;
-    await db
-        .collection('carteiras')
-        .document(carteira.carteiraId)
-        .updateData(carteira.toMap());
-   
- }
+      carteira.saldo = carteira.saldo - 0.1;
+      await db
+          .collection('carteiras')
+          .document(carteira.carteiraId)
+          .updateData(carteira.toMap());
+    }
 
     return null;
   }
@@ -253,6 +252,7 @@ class NovoRelatoBloc extends BlocBase {
     perguntasRelatoController.close();
     usuariosController.close();
     semSaldoController.close();
+    normalController.close();
     // camadaSelecinadaController.close();
     // piramideController.close();
     // cpiController.close();

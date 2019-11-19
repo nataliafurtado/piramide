@@ -10,6 +10,7 @@ class Relato {
   List<PerguntaRelato> perguntasRelato;
   String usarioNome;
   String relatoId;
+  bool anonimo;
 
   Relato(
       {this.datacriacao,
@@ -19,7 +20,8 @@ class Relato {
       this.qtdPerguntas,
       this.usuarioRelatouId,
       this.usarioNome,
-      this.relatoId});
+      this.relatoId,
+      this.anonimo});
 
   Map toMap() {
     Map<String, dynamic> map = {
@@ -29,6 +31,7 @@ class Relato {
       'usuarioRelatouId': usuarioRelatouId,
       'qtdPerguntas': qtdPerguntas,
       'usarioNome': usarioNome,
+      'anonimo': anonimo,
     };
     if (perguntasRelato == null) {
       perguntasRelato = [];
@@ -54,6 +57,8 @@ class Relato {
     numeroCamada = map['numeroCamada'];
     usuarioRelatouId = map['usuarioRelatouId'];
     usarioNome = map['usarioNome'];
+    anonimo = map['anonimo'];
+
     relatoId = relatoPassadoId;
     if (perguntasRelato == null) {
       perguntasRelato = [];

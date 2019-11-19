@@ -116,8 +116,104 @@ class _NovoRelatoState extends State<NovoRelato> {
               )
             ],
           ),
-          Container(
+
+
+  Container(
             height: 30,
+          ),
+           Container(
+                      height: 40,
+                      alignment: Alignment.center,
+                      // color: Colors.limeAccent,
+                      child:
+                          //  SizedBox(
+                          //   height: 45,
+                          //   child:
+                          // Text('data')
+
+                          StreamBuilder(
+                              stream: blocnovoRelat.normalFluxo,
+                              builder: (context, snapPiramide) {
+                                return Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    InkWell(
+                                      onTap: () {
+                                       blocnovoRelat.normalController.value =
+                                            !blocnovoRelat.normalController.value;
+                                        blocnovoRelat.normalEvent
+                                            .add(blocnovoRelat.normalController.value);
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 75,
+                                        decoration: BoxDecoration(
+                                          color: blocnovoRelat.normalController.value                                                  
+                                              ? Colors.blue.shade400
+                                              : Colors.grey.shade200,
+                                          //border: Border.all(width: 1.0),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  3.0) //         <--- border radius here
+                                              ),
+                                        ),
+                                        child: Center(
+                                          child: Text('NORMAL'),
+                                        ),
+                                      ),
+                                    ),
+                                    Switch(
+                                      value: !blocnovoRelat.normalController.value,
+                                                  
+                                      onChanged: (value) {
+                                        blocnovoRelat.normalController.value =
+                                            !blocnovoRelat.normalController.value;
+                                        blocnovoRelat.normalEvent
+                                            .add(blocnovoRelat.normalController.value);
+                                      },
+                                      activeTrackColor: Colors.orange.shade200,
+                                      activeColor: Colors.orange,
+                                      inactiveThumbColor: Colors.blue,
+                                      inactiveTrackColor: Colors.blue.shade100,
+                                    ),
+                                    InkWell(
+                                      onTap: () {
+                                         blocnovoRelat.normalController.value =
+                                            !blocnovoRelat.normalController.value;
+                                        blocnovoRelat.normalEvent
+                                            .add(blocnovoRelat.normalController.value);
+                                      },
+                                      child: Container(
+                                        height: 40,
+                                        width: 75,
+                                        decoration: BoxDecoration(
+                                          color: blocnovoRelat.normalController.value
+                                                  
+                                              ? Colors.grey.shade200
+                                              : Colors.orangeAccent,
+                                          //border: Border.all(width: 1.0),
+                                          borderRadius: BorderRadius.all(
+                                              Radius.circular(
+                                                  3.0) //         <--- border radius here
+                                              ),
+                                        ),
+                                        child: Center(
+                                          child: Text('ANÔNIMA'),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              })
+
+                   
+                      ),
+
+
+
+
+          Container(
+            height: 15,
           ),
           StreamBuilder(
               stream: blocnovoRelat.perguntasRelatoFluxo,

@@ -112,10 +112,16 @@ class _NovaPiramideState extends State<NovaPiramide> {
 //                   builder: (context) => AbaUi(
 //                         aba: 0,
 //                       )));
- SharedPreferences prefs = await SharedPreferences.getInstance();
-  prefs.setBool('mostraPiramideAdm', true);
-Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-    AbaUi(aba: 0,mostraPiramideAdm :true,)), (Route<dynamic> route) => false);
+                  SharedPreferences prefs =
+                      await SharedPreferences.getInstance();
+                  prefs.setBool('mostraPiramideAdm', true);
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (context) => AbaUi(
+                                aba: 0,
+                                mostraPiramideAdm: true,
+                              )),
+                      (Route<dynamic> route) => false);
                 }
 
                 // Navigator.of(context).pop();
@@ -202,7 +208,8 @@ Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                         width: 75,
                                         decoration: BoxDecoration(
                                           color: bloc.piramideController.value
-                                                  .publica ??false
+                                                      .publica ??
+                                                  false
                                               ? Colors.blue.shade400
                                               : Colors.grey.shade200,
                                           //border: Border.all(width: 1.0),
@@ -217,10 +224,11 @@ Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                       ),
                                     ),
                                     Switch(
-                                      value: bloc
-                                          .piramideController.value.publica!=null ?
-                                          !bloc
-                                          .piramideController.value.publica
+                                      value: bloc.piramideController.value
+                                                  .publica !=
+                                              null
+                                          ? !bloc
+                                              .piramideController.value.publica
                                           : false,
                                       onChanged: (value) {
                                         bloc.piramideController.value.publica =
@@ -247,7 +255,8 @@ Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
                                         width: 75,
                                         decoration: BoxDecoration(
                                           color: bloc.piramideController.value
-                                                  .publica ??false
+                                                      .publica ??
+                                                  false
                                               ? Colors.grey.shade200
                                               : Colors.orangeAccent,
                                           //border: Border.all(width: 1.0),
