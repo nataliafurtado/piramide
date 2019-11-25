@@ -2,8 +2,11 @@ import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
 import 'package:comportamentocoletivo/bloc/novo-relato-bloc.dart';
 import 'package:comportamentocoletivo/model/enums.dart';
+import 'package:comportamentocoletivo/model/informacoes.dart';
+import 'package:comportamentocoletivo/model/periodo.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/aux/draw-tronco.dart';
+import 'package:comportamentocoletivo/model/relato.dart';
 import 'package:comportamentocoletivo/model/usuario.dart';
 import 'package:comportamentocoletivo/ui/abas-ui.dart';
 import 'package:date_format/date_format.dart';
@@ -15,7 +18,18 @@ class NovoRelato extends StatefulWidget {
   final Piramide piramide;
   final int camadaIndex;
 
-  NovoRelato({this.piramide, this.camadaIndex});
+  final Relato relato;
+  final Periodo periodo;
+  final Informacoes informacoes;
+  final String usuarioLogadoId;
+
+  NovoRelato(
+      {this.piramide,
+      this.camadaIndex,
+      this.relato,
+      this.periodo,
+      this.informacoes,
+      this.usuarioLogadoId});
   static const route = '/novo-relato';
 
   @override
@@ -30,8 +44,11 @@ class _NovoRelatoState extends State<NovoRelato> {
   @override
   void initState() {
     blocnovoRelat = NovoRelatoBloc();
-    blocnovoRelat.carregaPerguntas(
-        widget.piramide, widget.camadaIndex);
+    if (widget.relato == null) {
+      blocnovoRelat.carregaPerguntas(widget.piramide, widget.camadaIndex);
+    } else {
+      blocnovoRelat.carregaPerguntasRelatoVelho(widget.relato);
+    }
     // mostrarCircularProgress = false;
     super.initState();
   }
@@ -116,102 +133,91 @@ class _NovoRelatoState extends State<NovoRelato> {
               )
             ],
           ),
-
-
-  Container(
+          Container(
             height: 30,
           ),
-           Container(
-                      height: 40,
-                      alignment: Alignment.center,
-                      // color: Colors.limeAccent,
-                      child:
-                          //  SizedBox(
-                          //   height: 45,
-                          //   child:
-                          // Text('data')
+          Container(
+              height: 40,
+              alignment: Alignment.center,
+              // color: Colors.limeAccent,
+              child:
+                  //  SizedBox(
+                  //   height: 45,
+                  //   child:
+                  // Text('data')
 
-                          StreamBuilder(
-                              stream: blocnovoRelat.normalFluxo,
-                              builder: (context, snapPiramide) {
-                                return Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: <Widget>[
-                                    InkWell(
-                                      onTap: () {
-                                       blocnovoRelat.normalController.value =
-                                            !blocnovoRelat.normalController.value;
-                                        blocnovoRelat.normalEvent
-                                            .add(blocnovoRelat.normalController.value);
-                                      },
-                                      child: Container(
-                                        height: 40,
-                                        width: 75,
-                                        decoration: BoxDecoration(
-                                          color: blocnovoRelat.normalController.value                                                  
-                                              ? Colors.blue.shade400
-                                              : Colors.grey.shade200,
-                                          //border: Border.all(width: 1.0),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(
-                                                  3.0) //         <--- border radius here
-                                              ),
-                                        ),
-                                        child: Center(
-                                          child: Text('NORMAL'),
-                                        ),
+                  StreamBuilder(
+                      stream: blocnovoRelat.normalFluxo,
+                      builder: (context, snapPiramide) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () {
+                                blocnovoRelat.normalController.value =
+                                    !blocnovoRelat.normalController.value;
+                                blocnovoRelat.normalEvent
+                                    .add(blocnovoRelat.normalController.value);
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 75,
+                                decoration: BoxDecoration(
+                                  color: blocnovoRelat.normalController.value
+                                      ? Colors.blue.shade400
+                                      : Colors.grey.shade200,
+                                  //border: Border.all(width: 1.0),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          3.0) //         <--- border radius here
                                       ),
-                                    ),
-                                    Switch(
-                                      value: !blocnovoRelat.normalController.value,
-                                                  
-                                      onChanged: (value) {
-                                        blocnovoRelat.normalController.value =
-                                            !blocnovoRelat.normalController.value;
-                                        blocnovoRelat.normalEvent
-                                            .add(blocnovoRelat.normalController.value);
-                                      },
-                                      activeTrackColor: Colors.orange.shade200,
-                                      activeColor: Colors.orange,
-                                      inactiveThumbColor: Colors.blue,
-                                      inactiveTrackColor: Colors.blue.shade100,
-                                    ),
-                                    InkWell(
-                                      onTap: () {
-                                         blocnovoRelat.normalController.value =
-                                            !blocnovoRelat.normalController.value;
-                                        blocnovoRelat.normalEvent
-                                            .add(blocnovoRelat.normalController.value);
-                                      },
-                                      child: Container(
-                                        height: 40,
-                                        width: 75,
-                                        decoration: BoxDecoration(
-                                          color: blocnovoRelat.normalController.value
-                                                  
-                                              ? Colors.grey.shade200
-                                              : Colors.orangeAccent,
-                                          //border: Border.all(width: 1.0),
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(
-                                                  3.0) //         <--- border radius here
-                                              ),
-                                        ),
-                                        child: Center(
-                                          child: Text('ANÔNIMA'),
-                                        ),
+                                ),
+                                child: Center(
+                                  child: Text('NORMAL'),
+                                ),
+                              ),
+                            ),
+                            Switch(
+                              value: !blocnovoRelat.normalController.value,
+                              onChanged: (value) {
+                                blocnovoRelat.normalController.value =
+                                    !blocnovoRelat.normalController.value;
+                                blocnovoRelat.normalEvent
+                                    .add(blocnovoRelat.normalController.value);
+                              },
+                              activeTrackColor: Colors.orange.shade200,
+                              activeColor: Colors.orange,
+                              inactiveThumbColor: Colors.blue,
+                              inactiveTrackColor: Colors.blue.shade100,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                blocnovoRelat.normalController.value =
+                                    !blocnovoRelat.normalController.value;
+                                blocnovoRelat.normalEvent
+                                    .add(blocnovoRelat.normalController.value);
+                              },
+                              child: Container(
+                                height: 40,
+                                width: 75,
+                                decoration: BoxDecoration(
+                                  color: blocnovoRelat.normalController.value
+                                      ? Colors.grey.shade200
+                                      : Colors.orangeAccent,
+                                  //border: Border.all(width: 1.0),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(
+                                          3.0) //         <--- border radius here
                                       ),
-                                    ),
-                                  ],
-                                );
-                              })
-
-                   
-                      ),
-
-
-
-
+                                ),
+                                child: Center(
+                                  child: Text('ANÔNIMA'),
+                                ),
+                              ),
+                            ),
+                          ],
+                        );
+                      })),
           Container(
             height: 15,
           ),
@@ -236,73 +242,77 @@ class _NovoRelatoState extends State<NovoRelato> {
     );
   }
 
+  double bannerAjuste = 48;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                'Salvar',
-                style: TextStyle(color: Colors.white, fontSize: 17),
-              ),
-              onPressed: () async {
-                setState(() {
-                  mostrarCircularProgress = true;
-                });
-                String aviso = await blocnovoRelat.novoRelato(
-                    widget.piramide, widget.camadaIndex);
-                if (aviso == null) {
-                  await Future.delayed(Duration(seconds: 2));
-                  Navigator.of(context).pop();
-                } else {
+    return Padding(
+      padding: EdgeInsets.only(bottom: bannerAjuste),
+      child: Scaffold(
+          appBar: AppBar(
+            actions: <Widget>[
+              FlatButton(
+                child: Text(
+                  'Salvar',
+                  style: TextStyle(color: Colors.white, fontSize: 17),
+                ),
+                onPressed: () async {
                   setState(() {
-                    mostrarCircularProgress = false;
+                    mostrarCircularProgress = true;
                   });
-                  showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('ATENÇÃO'),
-                          content: Text(aviso),
-                          actions: <Widget>[
-                            FlatButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        );
-                      });
-                }
-                // Navigator.pushNamedAndRemoveUntil(
-                //     context, AbaUi.route, ModalRoute.withName(AbaUi.route));
-              },
-            )
-          ],
-          title: Text(widget.piramide.nome),
-        ),
-        body: StreamBuilder(
-          stream: blocnovoRelat.semSaldoFluxo,
-          builder: (ctx, snap3) {
-            return Center(
-              child: blocnovoRelat.semSaldoController.value
-                  ? Container(
-                      height: 200,
-                      width: 200,
-                      child: Text(
-                          'Sem saldo: Entre em contato com administrador(a) da Pirâmide'),
-                    )
-                  : mostrarCircularProgress
-                      //|| blocnovoRelat.perguntasRelatoController.value==null
-                      ? Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : SingleChildScrollView(child: _perguntas(context)),
-            );
-          },
-        ));
+                  String aviso = await blocnovoRelat.novoRelato(
+                      widget.piramide, widget.camadaIndex);
+                  if (aviso == null) {
+                    await Future.delayed(Duration(seconds: 2));
+                    Navigator.of(context).pop();
+                  } else {
+                    setState(() {
+                      mostrarCircularProgress = false;
+                    });
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            title: Text('ATENÇÃO'),
+                            content: Text(aviso),
+                            actions: <Widget>[
+                              FlatButton(
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                                child: Text('OK'),
+                              ),
+                            ],
+                          );
+                        });
+                  }
+                  // Navigator.pushNamedAndRemoveUntil(
+                  //     context, AbaUi.route, ModalRoute.withName(AbaUi.route));
+                },
+              )
+            ],
+            title: Text(widget.piramide.nome),
+          ),
+          body: StreamBuilder(
+            stream: blocnovoRelat.semSaldoFluxo,
+            builder: (ctx, snap3) {
+              return Center(
+                child: blocnovoRelat.semSaldoController.value
+                    ? Container(
+                        height: 200,
+                        width: 200,
+                        child: Text(
+                            'Sem saldo: Entre em contato com administrador(a) da Pirâmide'),
+                      )
+                    : mostrarCircularProgress
+                        //|| blocnovoRelat.perguntasRelatoController.value==null
+                        ? Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : SingleChildScrollView(child: _perguntas(context)),
+              );
+            },
+          )),
+    );
   }
 
   List<Usuario> lisUser = [Usuario(nome: 'dddd'), Usuario(nome: 'ummm')];

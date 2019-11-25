@@ -43,7 +43,7 @@ class Exemplo extends StatelessWidget {
                   padding: EdgeInsets.all(15),
                   height: 100,
                   child: Text(
-                    'Nesse exemplo utilizaremos a Pirâmide de BIRT,' +
+                    'Nesse exemplo utilizaremos a Pirâmide de BIRD,' +
                         ' mas vocễ pode criar pirâmides personalizadas para qualquer problema multifatorial.',
                       textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),

@@ -8,6 +8,7 @@ import 'package:comportamentocoletivo/bloc/informacoes-bloc.dart';
 import 'package:comportamentocoletivo/bloc/nova-piramide-bloc.dart';
 import 'package:comportamentocoletivo/bloc/novo-relato-bloc.dart';
 import 'package:comportamentocoletivo/bloc/procurar-piramide-bloc.dart';
+import 'package:comportamentocoletivo/bloc/singleton-bloc.dart';
 import 'package:comportamentocoletivo/bloc/usuarios-bloc.dart';
 import 'package:comportamentocoletivo/bloc/ver-relatos-bloc.dart';
 import 'package:comportamentocoletivo/login/login-bloc.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-     // title: 'Flutter Demo',
+      // title: 'Flutter Demo',
       theme: ThemeData(
           fontFamily: 'OpenSans',
           primarySwatch: Colors.blue,
@@ -58,6 +59,7 @@ class MyApp extends StatelessWidget {
             Bloc((i) => UsuariosBloc()),
             Bloc((i) => ConfiguracoesPiramideBloc()),
             Bloc((i) => ComprarCreditoBloc()),
+            Bloc((i) => SingletonBloc()),
           ],
           child: LoginScreen3(),
           //   child: AbaUi(),

@@ -298,4 +298,9 @@ class NovoRelatoBloc extends BlocBase {
         usuariosController.value[indexUsuarios].nome;
     //  perguntasRelatoEvent.add(perguntasRelatoController.value);
   }
+
+  void carregaPerguntasRelatoVelho(Relato relato) {
+
+    
+  }
 }

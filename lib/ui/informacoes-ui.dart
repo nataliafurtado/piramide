@@ -46,90 +46,98 @@ class _InformacoesUiState extends State<InformacoesUi> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        actions: <Widget>[
-          Visibility(
-            visible: podeSalvar,
-            child: FlatButton(
-              onPressed: () async {
-                setState(() {
-                  mostrarCircularProgress = true;
-                });
-                await infoBloc.salvar(widget.piramide);
+    return StreamBuilder(
+     stream: blocSingleton.bannerFluxo,
+      builder: (context, snapshotBanner) {
+        return Padding(
+        padding: EdgeInsets.only(bottom: snapshotBanner.data??0),
+          child: Scaffold(
+            appBar: AppBar(
+              actions: <Widget>[
+                Visibility(
+                  visible: podeSalvar,
+                  child: FlatButton(
+                    onPressed: () async {
+                      setState(() {
+                        mostrarCircularProgress = true;
+                      });
+                      await infoBloc.salvar(widget.piramide);
 
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                'Salvar',
-                style: TextStyle(color: Colors.white),
-              ),
-            ),
-          ),
-          Visibility(
-            visible: widget.podeDeixarSeguir,
-            child: FlatButton(
-              onPressed: () async {
-                setState(() {
-                  mostrarCircularProgress = true;
-                });
-                await infoBloc.deixarDeSeguirPiramide(widget.piramide);
-              //  Future.delayed(Duration(seconds: 2));
-               // Navigator.of(context).pop();
+                      Navigator.of(context).pop();
+                    },
+                    child: Text(
+                      'Salvar',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                ),
+                Visibility(
+                  visible: widget.podeDeixarSeguir,
+                  child: FlatButton(
+                    onPressed: () async {
+                      setState(() {
+                        mostrarCircularProgress = true;
+                      });
+                      await infoBloc.deixarDeSeguirPiramide(widget.piramide);
+                    //  Future.delayed(Duration(seconds: 2));
+                     // Navigator.of(context).pop();
 
-               SharedPreferences prefs = await SharedPreferences.getInstance();
+                     SharedPreferences prefs = await SharedPreferences.getInstance();
 
 Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) =>
-    AbaUi(aba: 1,mostraPiramideAdm: prefs.getBool('mostraPiramideAdm'),)), (Route<dynamic> route) => false);
+          AbaUi(aba: 1,mostraPiramideAdm: prefs.getBool('mostraPiramideAdm'),)), (Route<dynamic> route) => false);
 
-    
-                  //  Navigator.pushNamedAndRemoveUntil(
-                  //                     context,
-                  //                     AbaUi.route,
-                  //                     ModalRoute.withName(AbaUi.route));
-              },
-              child: Text(
-                'Deixar de Seguir',
-                style: TextStyle(color: Colors.white),
-              ),
+          
+                        //  Navigator.pushNamedAndRemoveUntil(
+                        //                     context,
+                        //                     AbaUi.route,
+                        //                     ModalRoute.withName(AbaUi.route));
+                    },
+                    child: Text(
+                      'Deixar de Seguir',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ),
+                )
+              ],
+              title: Text(widget.piramide.nome),
             ),
-          )
-        ],
-        title: Text(widget.piramide.nome),
-      ),
-      body: mostrarCircularProgress
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : StreamBuilder(
-              stream: infoBloc.informacoesFluxo,
-              builder: (ctx, snapshot) {
-                return infoBloc.informacoesController.value != null
-                    ? ListView.builder(
-                        itemCount: widget.usuarioAdm == true
-                            ? infoBloc.informacoesController.value.periodos
-                                    .length +
-                                1
-                            : infoBloc
-                                .informacoesController.value.periodos.length,
-                        itemBuilder: (ctx, periIndex) {
-                          if (periIndex ==
-                              infoBloc.informacoesController.value.periodos
-                                  .length) {
-                            return _addPeriodo();
-                          } else if (infoBloc.informacoesController.value
-                              .periodos[periIndex].geral) {
-                            return _piramideCardGeral(periIndex);
-                          } else {
-                            return _piramideCard(periIndex);
-                          }
-                        },
-                      )
-                    : Center(
-                        child: CircularProgressIndicator(),
-                      );
-              },
-            ),
+            body: mostrarCircularProgress
+                ? Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : StreamBuilder(
+                    stream: infoBloc.informacoesFluxo,
+                    builder: (ctx, snapshot) {
+                      return infoBloc.informacoesController.value != null
+                          ? ListView.builder(
+                              itemCount: widget.usuarioAdm == true
+                                  ? infoBloc.informacoesController.value.periodos
+                                          .length +
+                                      1
+                                  : infoBloc
+                                      .informacoesController.value.periodos.length,
+                              itemBuilder: (ctx, periIndex) {
+                                if (periIndex ==
+                                    infoBloc.informacoesController.value.periodos
+                                        .length) {
+                                  return _addPeriodo();
+                                } else if (infoBloc.informacoesController.value
+                                    .periodos[periIndex].geral) {
+                                  return _piramideCardGeral(periIndex);
+                                } else {
+                                  return _piramideCard(periIndex);
+                                }
+                              },
+                            )
+                          : Center(
+                              child: CircularProgressIndicator(),
+                            );
+                    },
+                  ),
+          ),
+        );
+      }
     );
   }
 

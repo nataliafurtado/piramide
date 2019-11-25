@@ -1,3 +1,5 @@
+import 'package:bloc_pattern/bloc_pattern.dart';
+import 'package:comportamentocoletivo/bloc/singleton-bloc.dart';
 import 'package:comportamentocoletivo/main.dart';
 import 'package:comportamentocoletivo/ui/ajuda/ajuda-ui.dart';
 import 'package:comportamentocoletivo/ui/comprar-credito-ui.dart';
@@ -15,7 +17,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 enum OrderOptions { comofunciona, logout, comprar }
 
 final FirebaseAuth _auth = FirebaseAuth.instance;
-
+SingletonBloc blocSingleton = BlocProvider.getBloc<SingletonBloc>();
 class AbaUi extends StatefulWidget {
   final int aba;
   final bool novoUsuario;
@@ -58,6 +60,7 @@ class _AbaUiState extends State<AbaUi> {
     // Future.delayed(Duration(seconds: 1)).then((d) {
 
     // });
+   // singletonBloc = SingletonBloc();
     titulo = _tituloApp(widget.aba);
     moverAnimeIcons(widget.aba);
     carregaTabs();
@@ -165,10 +168,10 @@ class _AbaUiState extends State<AbaUi> {
 
       targetingInfo: targetingInfo,
       listener: (MobileAdEvent event) {
+
         if (event == MobileAdEvent.failedToLoad) {
-          setState(() {
-            bannerAjuste = 0;
-          });
+          print('ddddddddddddddddddddddddddddddddeweeeeeeeeeeeeeeee');
+          blocSingleton.bannerEvent.add(0);
           // MobileAdEvent.opened
           // MobileAdEvent.clicked
           // MobileAdEvent.closed
@@ -189,7 +192,7 @@ class _AbaUiState extends State<AbaUi> {
   );
 
   BannerAd myBanner;
-  double bannerAjuste = 50;
+
   final FlareControls controllPirAdmAnime = FlareControls();
   final FlareControls controllPirFazParteAnime = FlareControls();
   final FlareControls controllPiramidesAnime = FlareControls();
@@ -198,47 +201,52 @@ class _AbaUiState extends State<AbaUi> {
     return DefaultTabController(
       initialIndex: widget.aba == null ? 0 : widget.aba,
       length: widget.mostraPiramideAdm ? 3 : 2,
-      child: Padding(
-        padding: EdgeInsets.only(bottom: bannerAjuste),
-        child: Scaffold(
-          appBar: AppBar(
-            actions: <Widget>[
-              PopupMenuButton<OrderOptions>(
-                itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
-                  const PopupMenuItem<OrderOptions>(
-                    child: Text("Como funciona ?"),
-                    value: OrderOptions.comofunciona,
-                  ),
-                  const PopupMenuItem<OrderOptions>(
-                    child: Text("Comprar Créditos"),
-                    value: OrderOptions.comprar,
-                  ),
-                  const PopupMenuItem<OrderOptions>(
-                    child: Text("Sair"),
-                    value: OrderOptions.logout,
+      child: StreamBuilder(
+                stream: blocSingleton.bannerFluxo,
+        builder: (context, snapshot) {
+          return Padding(
+            padding: EdgeInsets.only(bottom: snapshot.data??0),
+            child: Scaffold(
+              appBar: AppBar(
+                actions: <Widget>[
+                  PopupMenuButton<OrderOptions>(
+                    itemBuilder: (context) => <PopupMenuEntry<OrderOptions>>[
+                      const PopupMenuItem<OrderOptions>(
+                        child: Text("Como funciona ?"),
+                        value: OrderOptions.comofunciona,
+                      ),
+                      const PopupMenuItem<OrderOptions>(
+                        child: Text("Comprar Créditos"),
+                        value: OrderOptions.comprar,
+                      ),
+                      const PopupMenuItem<OrderOptions>(
+                        child: Text("Sair"),
+                        value: OrderOptions.logout,
+                      ),
+                    ],
+                    onSelected: _orderList,
                   ),
                 ],
-                onSelected: _orderList,
+                title: Center(
+                  child: Text(titulo),
+                ),
+                bottom: TabBar(
+                  onTap: (indexx) {
+                    setState(() {
+                      titulo = _tituloApp(indexx);
+                      moverAnimeIcons(indexx);
+                    });
+                    print(indexx.toString() + 'indez');
+                  },
+                  tabs: listTab,
+                ),
               ),
-            ],
-            title: Center(
-              child: Text(titulo),
+              body: TabBarView(
+                children: listWidgets,
+              ),
             ),
-            bottom: TabBar(
-              onTap: (indexx) {
-                setState(() {
-                  titulo = _tituloApp(indexx);
-                  moverAnimeIcons(indexx);
-                });
-                print(indexx.toString() + 'indez');
-              },
-              tabs: listTab,
-            ),
-          ),
-          body: TabBarView(
-            children: listWidgets,
-          ),
-        ),
+          );
+        }
       ),
     );
   }

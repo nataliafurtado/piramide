@@ -35,6 +35,11 @@ class _PiramidePodeRelatarState extends State<PiramidePodeRelatar> {
   // void didChangeDependencies() {
   //   super.didChangeDependencies();
   // }
+  // @override
+  // void dispose() {
+  //  abasBloc.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {

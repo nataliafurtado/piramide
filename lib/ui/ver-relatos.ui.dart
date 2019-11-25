@@ -4,6 +4,7 @@ import 'package:comportamentocoletivo/model/informacoes.dart';
 import 'package:comportamentocoletivo/model/periodo.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/model/relato.dart';
+import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
 import 'package:comportamentocoletivo/ui/relato-ui.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +16,7 @@ class VerRelatos extends StatefulWidget {
   final int camada;
   final Periodo periodo;
   final Informacoes informacoes;
-  VerRelatos({this.piramide, this.camada, this.periodo,this.informacoes});
+  VerRelatos({this.piramide, this.camada, this.periodo, this.informacoes});
   static const route = '/ver-relatos';
   @override
   _VerRelatosState createState() => _VerRelatosState();
@@ -27,8 +28,8 @@ class _VerRelatosState extends State<VerRelatos> {
   @override
   void initState() {
     verRealatoBloc = VerRelatosBloc();
-   // print(widget.periodo.geral);
-   verRealatoBloc.carregaUsuarioId();
+    // print(widget.periodo.geral);
+    verRealatoBloc.carregaUsuarioId();
     verRealatoBloc.carregaRelatosVazio(
         widget.piramide.piramideId, widget.camada, widget.periodo);
     super.initState();
@@ -73,8 +74,8 @@ class _VerRelatosState extends State<VerRelatos> {
                                         verRealatoBloc.txController.value,
                                     onChanged: (tx) {
                                       setState(() {
-                                                mostrausuario = true;
-                                              });
+                                        mostrausuario = true;
+                                      });
                                       if (tx.isNotEmpty && tx.length > 2) {
                                         // verRealatoBloc.txEvent.add(tx);
                                         // verRealatoBloc.carregaRelatos(
@@ -184,7 +185,6 @@ class _VerRelatosState extends State<VerRelatos> {
                                                       onPressed: () {
                                                         verRealatoBloc
                                                             .carregaMaisRelatos(
-
                                                                 widget.piramide
                                                                     .piramideId,
                                                                 widget.camada,
@@ -196,17 +196,34 @@ class _VerRelatosState extends State<VerRelatos> {
                                           : InkWell(
                                               splashColor: Colors.orange,
                                               onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => RelatoUi(
-                                                              relato: snapshotRelatos.data[index],
+                                                // if (snapshotRelatos.data[index]
+                                                //         .usuarioRelatouId ==
+                                                //     verRealatoBloc
+                                                //         .usuarioOnlineId) {
+                                                //   Navigator.push(
+                                                //       context,
+                                                //       MaterialPageRoute(
+                                                //           builder: (context) =>
+                                                //               NovoRelato(
+                                                //            relato:snapshotRelatos.data[index],
+                                                //               piramide: widget.piramide,
+                                                //               camadaIndex:widget.camada,
+                                                //               periodo: widget.periodo,
+                                                //               informacoes: widget.informacoes,
+                                                //               usuarioLogadoId:verRealatoBloc.usuarioOnlineId
+                                                //               )));
+                                                // } else {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => RelatoUi(
+                                                              relato:snapshotRelatos.data[index],
                                                               piramide: widget.piramide,
-                                                              camada: widget.camada,
+                                                              camada:widget.camada,
                                                               periodo: widget.periodo,
                                                               informacoes: widget.informacoes,
-                                                              usuarioLogadoId: verRealatoBloc.usuarioOnlineId,
-                                                            )));
+                                                              usuarioLogadoId:verRealatoBloc.usuarioOnlineId)));
+                                               // }
                                               },
                                               child: Card(
                                                 color: Colors.blue.shade50,
