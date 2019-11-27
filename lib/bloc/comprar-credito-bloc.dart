@@ -81,7 +81,7 @@ class ComprarCreditoBloc extends BlocBase {
     final String uid = user.uid;
 
  ProductDetails pd  =listController.value.where((pd)=>pd.id==pdVoltou.productID).first;
-print('object');
+print(pdVoltou.purchaseID);
 
     Carteira c = carteiraController.value;
 
@@ -148,10 +148,11 @@ print('object');
   double valor(String id) {
     if (id == 'credito29.99') {
       return 29.99;
-    } else if (id == 'credito29.99') {
+    } else if (id == 'credito99.99') {
       return 99.99;
     } else if (id == 'credito00.99') {
       return 00.99;
     }
+    return 00.00;
   }
 }

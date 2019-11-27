@@ -196,23 +196,23 @@ class _VerRelatosState extends State<VerRelatos> {
                                           : InkWell(
                                               splashColor: Colors.orange,
                                               onTap: () {
-                                                // if (snapshotRelatos.data[index]
-                                                //         .usuarioRelatouId ==
-                                                //     verRealatoBloc
-                                                //         .usuarioOnlineId) {
-                                                //   Navigator.push(
-                                                //       context,
-                                                //       MaterialPageRoute(
-                                                //           builder: (context) =>
-                                                //               NovoRelato(
-                                                //            relato:snapshotRelatos.data[index],
-                                                //               piramide: widget.piramide,
-                                                //               camadaIndex:widget.camada,
-                                                //               periodo: widget.periodo,
-                                                //               informacoes: widget.informacoes,
-                                                //               usuarioLogadoId:verRealatoBloc.usuarioOnlineId
-                                                //               )));
-                                                // } else {
+                                                if (snapshotRelatos.data[index]
+                                                        .usuarioRelatouId ==
+                                                    verRealatoBloc
+                                                        .usuarioOnlineId) {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              NovoRelato(
+                                                           relato:snapshotRelatos.data[index],
+                                                              piramide: widget.piramide,
+                                                              camadaIndex:widget.camada,
+                                                              periodo: widget.periodo,
+                                                              informacoes: widget.informacoes,
+                                                              usuarioLogadoId:verRealatoBloc.usuarioOnlineId
+                                                              )));
+                                                } else {
                                                   Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
@@ -223,7 +223,7 @@ class _VerRelatosState extends State<VerRelatos> {
                                                               periodo: widget.periodo,
                                                               informacoes: widget.informacoes,
                                                               usuarioLogadoId:verRealatoBloc.usuarioOnlineId)));
-                                               // }
+                                                }
                                               },
                                               child: Card(
                                                 color: Colors.blue.shade50,

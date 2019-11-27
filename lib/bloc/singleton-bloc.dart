@@ -71,12 +71,12 @@ class SingletonBloc extends BlocBase {
 
   
 
-  @override
-  void dispose() {
-     bannerController.close();
-    // piramidesPodeRelatarController.close();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //    bannerController.close();
+  //   // piramidesPodeRelatarController.close();
+  //   super.dispose();
+  // }
 
 
 }

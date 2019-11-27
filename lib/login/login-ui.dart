@@ -5,6 +5,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flare_flutter/flare_controls.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginScreen3 extends StatefulWidget {
@@ -48,6 +49,8 @@ class _LoginScreen3State extends State<LoginScreen3>
     });
     taLogadoEssaBosta();
   }
+
+  //String data = '';
 
   final FlareControls controlLogin = FlareControls();
   Widget iconePiramideFazParte() {
@@ -224,12 +227,13 @@ class _LoginScreen3State extends State<LoginScreen3>
             Container(
               padding: EdgeInsets.all(80.0),
               child: Center(
+                  child: Container(
                 child: Icon(
                   Icons.change_history,
                   color: Colors.pink,
                   size: 50.0,
                 ),
-              ),
+              )),
             ),
             new Row(
               children: <Widget>[
@@ -375,6 +379,16 @@ class _LoginScreen3State extends State<LoginScreen3>
                       color: Colors.pink,
                       onPressed: () async {
                         logar();
+                        // print('sswswswswsws');
+                        // Future<void> _getLogs() async {
+                        //   final String logs = await Logcat.execute();
+
+                        //   print(logs);
+                        //   // setState(() {
+                        //   //   data = data +"123";
+                        //   //   print(logs);
+                        //   // });
+                        // }
                       },
                       child: new Container(
                         padding: const EdgeInsets.symmetric(
@@ -738,7 +752,7 @@ class _LoginScreen3State extends State<LoginScreen3>
                   padding: const EdgeInsets.only(right: 20.0),
                   child: new FlatButton(
                     child: new Text(
-                      "Already have an account?",
+                      "JÁ POSSUI UMA CONTA?",
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Colors.pink,
@@ -896,7 +910,7 @@ class _LoginScreen3State extends State<LoginScreen3>
     if (i == 0) {
       mostraPiramideAdmbool = true;
     } else {
-       mostraPiramideAdmbool = false;
+      mostraPiramideAdmbool = false;
       i = i - 1;
     }
     Navigator.pushReplacement(
@@ -904,7 +918,7 @@ class _LoginScreen3State extends State<LoginScreen3>
         MaterialPageRoute(
             builder: (context) => AbaUi(
                   aba: i,
-                  mostraPiramideAdm:  mostraPiramideAdmbool,
+                  mostraPiramideAdm: mostraPiramideAdmbool,
                 )));
   }
 }

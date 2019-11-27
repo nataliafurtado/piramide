@@ -88,12 +88,12 @@ class _AbaUiState extends State<AbaUi> {
     listWidgets.add(Piramides());
   }
 
-  @override
-  void dispose() {
-    myBanner?.dispose();
-    //myInterstitial?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   myBanner?.dispose();
+  //   //myInterstitial?.dispose();
+  //   super.dispose();
+  // }
 
   void moverAnimeIcons(int index) {
     print(index);
@@ -118,6 +118,8 @@ class _AbaUiState extends State<AbaUi> {
     switch (result) {
       case OrderOptions.comofunciona:
         Navigator.pushNamed(context, AjudaUi.route);
+      //  print('gg');
+      //       blocSingleton.bannerEvent.add(0);
         break;
       case OrderOptions.logout:
         SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -170,7 +172,7 @@ class _AbaUiState extends State<AbaUi> {
       listener: (MobileAdEvent event) {
 
         if (event == MobileAdEvent.failedToLoad) {
-          print('ddddddddddddddddddddddddddddddddeweeeeeeeeeeeeeeee');
+        //  print('ddddddddddddddddddddddddddddddddeweeeeeeeeeeeeeeee');
           blocSingleton.bannerEvent.add(0);
           // MobileAdEvent.opened
           // MobileAdEvent.clicked
