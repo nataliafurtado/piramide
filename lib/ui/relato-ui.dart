@@ -10,7 +10,7 @@ import 'package:comportamentocoletivo/ui/ver-relatos.ui.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
+//nao editavel
 class RelatoUi extends StatefulWidget {
   static const route = '/relato';
   final Relato relato;

@@ -10,7 +10,7 @@ import 'package:comportamentocoletivo/ui/aceitar-usuarios/aceitar-usuarios-ui.da
 import 'package:comportamentocoletivo/ui/configuracoes-piramide.dart';
 import 'package:comportamentocoletivo/ui/informacoes-ui.dart';
 import 'package:comportamentocoletivo/ui/nova-piramide-ui.dart';
-import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
+import 'package:comportamentocoletivo/ui/relato-ui-editavel.dart';
 import 'package:comportamentocoletivo/ui/piramides-ui.dart';
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/material.dart';
@@ -210,7 +210,7 @@ Widget _piramideCard(int index, BuildContext context) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NovoRelato(
+                                      builder: (context) => RelatoUIEditavel(
                                             piramide: abasBloc
                                                 .piramidesController
                                                 .value[index],

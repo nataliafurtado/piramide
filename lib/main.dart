@@ -6,7 +6,7 @@ import 'package:comportamentocoletivo/bloc/configuracoes-piramide-bloc.dart';
 import 'package:comportamentocoletivo/bloc/informacoes-bloc.dart';
 
 import 'package:comportamentocoletivo/bloc/nova-piramide-bloc.dart';
-import 'package:comportamentocoletivo/bloc/novo-relato-bloc.dart';
+import 'package:comportamentocoletivo/bloc/relato-bloc.dart';
 import 'package:comportamentocoletivo/bloc/procurar-piramide-bloc.dart';
 import 'package:comportamentocoletivo/bloc/singleton-bloc.dart';
 import 'package:comportamentocoletivo/bloc/usuarios-bloc.dart';
@@ -23,7 +23,7 @@ import 'package:comportamentocoletivo/ui/comprar-credito-ui.dart';
 import 'package:comportamentocoletivo/ui/configuracoes-piramide.dart';
 import 'package:comportamentocoletivo/ui/informacoes-ui.dart';
 import 'package:comportamentocoletivo/ui/nova-piramide-ui.dart';
-import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
+import 'package:comportamentocoletivo/ui/relato-ui-editavel.dart';
 import 'package:comportamentocoletivo/ui/precos-ui.dart';
 import 'package:comportamentocoletivo/ui/procurar-piramide-ui.dart';
 import 'package:comportamentocoletivo/ui/relato-ui.dart';
@@ -50,7 +50,7 @@ class MyApp extends StatelessWidget {
           blocs: [
             Bloc((i) => NovaPiramideBLoc()),
             Bloc((i) => AbasBloc()),
-            Bloc((i) => NovoRelatoBloc()),
+            Bloc((i) => RelatoBloc()),
             Bloc((i) => LoginBloc(context)),
             Bloc((i) => ProcurarPiramideBloc()),
             Bloc((i) => AceitarUsuarioBloc()),
@@ -71,7 +71,7 @@ class MyApp extends StatelessWidget {
         NovaPiramide.route: (context) => NovaPiramide(),
         AbaUi.route: (context) => AbaUi(),
         ConfiguracoesPiramide.route: (context) => ConfiguracoesPiramide(),
-        NovoRelato.route: (context) => NovoRelato(),
+        RelatoUIEditavel.route: (context) => RelatoUIEditavel(),
         ProcurarPiramide.route: (context) => ProcurarPiramide(),
         InformacoesUi.route: (context) => InformacoesUi(),
         AceitarUsuario.route: (context) => AceitarUsuario(),

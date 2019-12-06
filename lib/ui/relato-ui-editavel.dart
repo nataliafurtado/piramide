@@ -1,6 +1,6 @@
 import 'package:autocomplete_textfield/autocomplete_textfield.dart';
 import 'package:bloc_pattern/bloc_pattern.dart';
-import 'package:comportamentocoletivo/bloc/novo-relato-bloc.dart';
+import 'package:comportamentocoletivo/bloc/relato-bloc.dart';
 import 'package:comportamentocoletivo/model/enums.dart';
 import 'package:comportamentocoletivo/model/informacoes.dart';
 import 'package:comportamentocoletivo/model/periodo.dart';
@@ -11,10 +11,11 @@ import 'package:comportamentocoletivo/model/usuario.dart';
 import 'package:comportamentocoletivo/ui/abas-ui.dart';
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
-NovoRelatoBloc blocnovoRelat = BlocProvider.getBloc<NovoRelatoBloc>();
+RelatoBloc blocnovoRelat = BlocProvider.getBloc<RelatoBloc>();
 
-class NovoRelato extends StatefulWidget {
+class RelatoUIEditavel extends StatefulWidget {
   final Piramide piramide;
   final int camadaIndex;
 
@@ -23,7 +24,7 @@ class NovoRelato extends StatefulWidget {
   final Informacoes informacoes;
   final String usuarioLogadoId;
 
-  NovoRelato(
+  RelatoUIEditavel(
       {this.piramide,
       this.camadaIndex,
       this.relato,
@@ -33,17 +34,17 @@ class NovoRelato extends StatefulWidget {
   static const route = '/novo-relato';
 
   @override
-  _NovoRelatoState createState() => _NovoRelatoState();
+  _RelatoUIEditavelState createState() => _RelatoUIEditavelState();
 }
 
-class _NovoRelatoState extends State<NovoRelato> {
+class _RelatoUIEditavelState extends State<RelatoUIEditavel> {
   AutoCompleteTextField search;
 
   bool mostrarCircularProgress = false;
 
   @override
   void initState() {
-    blocnovoRelat = NovoRelatoBloc();
+    blocnovoRelat = RelatoBloc();
     if (widget.relato == null) {
       blocnovoRelat.carregaPerguntas(widget.piramide, widget.camadaIndex);
     } else {
@@ -259,31 +260,60 @@ class _NovoRelatoState extends State<NovoRelato> {
                   setState(() {
                     mostrarCircularProgress = true;
                   });
-                  String aviso = await blocnovoRelat.novoRelato(
-                      widget.piramide, widget.camadaIndex);
-                  if (aviso == null) {
-                    await Future.delayed(Duration(seconds: 2));
-                    Navigator.of(context).pop();
+                  if (widget.relato != null) {
+                    String aviso = await blocnovoRelat.salvarRelato(
+                        widget.piramide, widget.relato);
+                    if (aviso == null) {
+                      await Future.delayed(Duration(seconds: 2));
+                      Navigator.of(context).pop();
+                    } else {
+                      setState(() {
+                        mostrarCircularProgress = false;
+                      });
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('ATENÇÃO'),
+                              content: Text(aviso),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          });
+                    }
                   } else {
-                    setState(() {
-                      mostrarCircularProgress = false;
-                    });
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text('ATENÇÃO'),
-                            content: Text(aviso),
-                            actions: <Widget>[
-                              FlatButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('OK'),
-                              ),
-                            ],
-                          );
-                        });
+                    String aviso = await blocnovoRelat.novoRelato(
+                        widget.piramide, widget.camadaIndex);
+                    if (aviso == null) {
+                      await Future.delayed(Duration(seconds: 2));
+                      Navigator.of(context).pop();
+                    } else {
+                      setState(() {
+                        mostrarCircularProgress = false;
+                      });
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              title: Text('ATENÇÃO'),
+                              content: Text(aviso),
+                              actions: <Widget>[
+                                FlatButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: Text('OK'),
+                                ),
+                              ],
+                            );
+                          });
+                    }
                   }
                   // Navigator.pushNamedAndRemoveUntil(
                   //     context, AbaUi.route, ModalRoute.withName(AbaUi.route));
@@ -319,11 +349,14 @@ class _NovoRelatoState extends State<NovoRelato> {
 
   Widget _resposta(perguntasEnum perguntaEnum, int indexPergunta) {
     GlobalKey<AutoCompleteTextFieldState<Usuario>> key = GlobalKey();
+    List<String> tempo =
+        blocnovoRelat.respostasController.value[indexPergunta].text.split(":");
     if (perguntaEnum == perguntasEnum.onde ||
         perguntaEnum == perguntasEnum.como ||
         perguntaEnum == perguntasEnum.porque ||
         perguntaEnum == perguntasEnum.oque) {
       return TextField(
+        controller: blocnovoRelat.respostasController.value[indexPergunta],
         onChanged: (tx) {
           blocnovoRelat
               .perguntasRelatoController.value[indexPergunta].resposta = tx;
@@ -340,7 +373,11 @@ class _NovoRelatoState extends State<NovoRelato> {
       Future _selectTime() async {
         TimeOfDay picked = await showTimePicker(
           context: context,
-          initialTime: TimeOfDay.now(),
+          initialTime: (widget.relato == null || tempo.length <= 2)
+              ? TimeOfDay.now()
+              : TimeOfDay(
+                  hour: int.parse(tempo[1].trim()),
+                  minute: int.parse(tempo[2].trim())),
         );
         if (picked != null) {
           if (blocnovoRelat
@@ -368,9 +405,17 @@ class _NovoRelatoState extends State<NovoRelato> {
       }
 
       Future _selectDate() async {
+      //  print(tempo[0].trim());
+        DateFormat dateFormat = DateFormat("dd/MM/yyyy");
+        DateTime data = DateTime.now();
+        if (tempo[0].isNotEmpty) {
+          DateTime data = dateFormat.parse(tempo[0].trim());
+        }
         DateTime picked = await showDatePicker(
             context: context,
-            initialDate: new DateTime.now(),
+            initialDate: (widget.relato == null || tempo.length <= 2)
+                ? DateTime.now()
+                : data,
             firstDate: new DateTime(2016),
             lastDate: new DateTime(2020));
         if (picked != null) {
@@ -426,6 +471,10 @@ class _NovoRelatoState extends State<NovoRelato> {
       );
     } else if (perguntaEnum == perguntasEnum.quem) {
       TextEditingController controller = TextEditingController();
+      if (widget.relato != null) {
+     
+        controller.text= blocnovoRelat.respostasController.value[indexPergunta].text;
+      }
       return StreamBuilder(
         initialData: [],
         stream: blocnovoRelat.usuariosFluxo,

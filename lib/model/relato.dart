@@ -58,11 +58,15 @@ class Relato {
     usuarioRelatouId = map['usuarioRelatouId'];
     usarioNome = map['usarioNome'];
     anonimo = map['anonimo'];
+    qtdPerguntas = map['qtdPerguntas'];
 
     relatoId = relatoPassadoId;
     if (perguntasRelato == null) {
       perguntasRelato = [];
     }
+    print('fffffffffffffffffffffffffffffffff');
+    print(relatoPassadoId);
+    print(map['qtdPerguntas']);
     for (var i = 0; i < map['qtdPerguntas']; i++) {
       PerguntaRelato c = PerguntaRelato(
         perguntaId: map['perguntaRelato$i']['perguntaId'],

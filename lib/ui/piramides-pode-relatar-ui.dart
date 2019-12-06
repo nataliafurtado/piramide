@@ -5,7 +5,7 @@ import 'package:comportamentocoletivo/bloc/abas-bloc.dart';
 import 'package:comportamentocoletivo/ui/abas-ui.dart';
 
 import 'package:comportamentocoletivo/ui/informacoes-ui.dart';
-import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
+import 'package:comportamentocoletivo/ui/relato-ui-editavel.dart';
 import 'package:comportamentocoletivo/ui/procurar-piramide-ui.dart';
 import 'package:flutter/material.dart';
 
@@ -237,7 +237,7 @@ Widget _piramideCard(int index, BuildContext context) {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => NovoRelato(
+                                      builder: (context) => RelatoUIEditavel(
                                             piramide: abasBloc
                                                 .piramidesPodeRelatarController
                                                 .value[index],

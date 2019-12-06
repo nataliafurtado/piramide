@@ -11,11 +11,12 @@ import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/model/relato.dart';
 import 'package:comportamentocoletivo/model/usuario.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:rxdart/rxdart.dart';
 
-class NovoRelatoBloc extends BlocBase {
+class RelatoBloc extends BlocBase {
   Carteira carteira;
-  NovoRelatoBloc();
+  RelatoBloc();
 
   // final cpiController = BehaviorSubject<bool>.seeded(false);
   // Observable<bool> get cpiFluxo => cpiController.stream;
@@ -56,9 +57,37 @@ class NovoRelatoBloc extends BlocBase {
   Observable<List<Usuario>> get usuariosFluxo => usuariosController.stream;
   Sink<List<Usuario>> get usuariosEvent => usuariosController.sink;
 
+  var respostasController =
+      BehaviorSubject<List<TextEditingController>>.seeded([]);
+  Observable<List<TextEditingController>> get respostasFluxo =>
+      respostasController.stream;
+  Sink<List<TextEditingController>> get respostasEvent =>
+      respostasController.sink;
+
   var semSaldoController = BehaviorSubject<bool>.seeded(false);
   Observable<bool> get semSaldoFluxo => semSaldoController.stream;
   Sink<bool> get semSaldoEvent => semSaldoController.sink;
+
+  salvarRelato(Piramide piramide, Relato relato) async {
+        final FirebaseUser user = await _auth.currentUser();
+        
+    final String uid = user.uid;
+        DocumentSnapshot result =
+        await db.collection('usuarios').document(uid).get();
+    Usuario user1 = Usuario.fromMap(result.data, result.documentID);
+    // relato.perguntasRelato.addAll(perguntasRelatoController.value);
+    for (var i = 0; i < relato.perguntasRelato.length; i++) {
+      relato.perguntasRelato[i].resposta= perguntasRelatoController.value[i].resposta;
+
+    }
+  relato.usuarioRelatouId=normalController.value ? uid : 'ANÔNIMO';
+  relato.anonimo=!normalController.value;
+  relato.usarioNome=normalController.value ? user1.nome : 'ANÔNIMO';
+    await db
+        .collection('relatos')
+        .document(relato.relatoId)
+        .updateData(relato.toMap());
+  }
 
   Future<String> novoRelato(Piramide piramide, int numerocamada) async {
     final FirebaseUser user = await _auth.currentUser();
@@ -224,13 +253,15 @@ class NovoRelatoBloc extends BlocBase {
         .where('ncamada', isEqualTo: camadaIndex.toString())
         .getDocuments();
     final List<DocumentSnapshot> documents = result.documents;
-
+    List<TextEditingController> listaRespoosta = [];
     List<PerguntaRelato> lpr = [];
     documents.forEach((data) {
       lpr.add(PerguntaRelato.fromMapDePergunta(data.data, data.documentID));
+      listaRespoosta.add(TextEditingController());
     });
 
     lll = lpr;
+    respostasEvent.add(listaRespoosta);
     perguntasRelatoEvent.add(lll);
 
     final QuerySnapshot result1 = await db
@@ -253,6 +284,7 @@ class NovoRelatoBloc extends BlocBase {
     usuariosController.close();
     semSaldoController.close();
     normalController.close();
+    respostasController.close();
     // camadaSelecinadaController.close();
     // piramideController.close();
     // cpiController.close();
@@ -300,7 +332,13 @@ class NovoRelatoBloc extends BlocBase {
   }
 
   void carregaPerguntasRelatoVelho(Relato relato) {
-
-    
+    perguntasRelatoEvent.add(relato.perguntasRelato);
+    List<TextEditingController> listaRespoosta = [];
+    for (var i = 0; i < relato.perguntasRelato.length; i++) {
+      TextEditingController controller = TextEditingController();
+      controller.text = relato.perguntasRelato[i].resposta;
+      listaRespoosta.add(controller);
+    }
+    respostasEvent.add(listaRespoosta);
   }
 }

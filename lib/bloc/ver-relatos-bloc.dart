@@ -189,12 +189,17 @@ class VerRelatosBloc extends BlocBase {
 
     List<Relato> l = [];
     //print(documents.length);
-    documents.forEach((data) {
+    if (documents!=null) {
+        documents.forEach((data) {
+          // print('tgtgtgtgtg');
+          // print(data.data);
       l.add(Relato.fromMap(data.data, data.documentID));
     });
     list = l;
 
     relatoEvent.add(list);
+    }
+  
   }
 
   @override

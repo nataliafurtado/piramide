@@ -4,7 +4,7 @@ import 'package:comportamentocoletivo/model/informacoes.dart';
 import 'package:comportamentocoletivo/model/periodo.dart';
 import 'package:comportamentocoletivo/model/piramide.dart';
 import 'package:comportamentocoletivo/model/relato.dart';
-import 'package:comportamentocoletivo/ui/novo-relato-ui.dart';
+import 'package:comportamentocoletivo/ui/relato-ui-editavel.dart';
 import 'package:comportamentocoletivo/ui/relato-ui.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -204,7 +204,7 @@ class _VerRelatosState extends State<VerRelatos> {
                                                       context,
                                                       MaterialPageRoute(
                                                           builder: (context) =>
-                                                              NovoRelato(
+                                                              RelatoUIEditavel(
                                                            relato:snapshotRelatos.data[index],
                                                               piramide: widget.piramide,
                                                               camadaIndex:widget.camada,
